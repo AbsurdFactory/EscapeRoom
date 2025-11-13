@@ -26,7 +26,7 @@ A Java-based virtual Escape Room management system built collaboratively using G
 |-------------|------|--------|
 | Leila Weicman | [@leilaweicman](link) |
 | Esther Arias | [@eariasvalor](link) |
-| Yvan Gabrieli | [@]yvangabrieli(link) |
+| Yvan Gabrieli | [@yvangabrieli](link)  |
 | Esther Herrero| [@estherBlacksmith](link) |
 
 ## 🧩 UML and Database
