@@ -24,10 +24,10 @@ A Java-based virtual Escape Room management system built collaboratively using G
 ## 👥 Team
 | Name        | Role | GitHub |
 |-------------|------|--------|
-| Developer 1 | [@username](link) |
-| Developer 2 | [@username](link) |
-| Developer 3 | [@username](link) |
-| Developer 4 | [@username](link) |
+| Leila Weicman | [@leilaweicman](link) |
+| Esther Arias | [@eariasvalor](link) |
+| Yvan Gabrieli | [@]Yvangabrieli(link) |
+| Esther Herrero| [@estherBlacksmith](link) |
 
 ## 🧩 UML and Database
 See `/docs/uml` and `/docs/database` for diagrams.
