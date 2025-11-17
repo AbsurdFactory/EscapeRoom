@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class MYSQLDatabaseConnection {
+public class MYSQLDatabaseConnection implements DatabaseConnection{
 
     private static volatile MYSQLDatabaseConnection instance;
     private final Connection connection;
@@ -32,8 +32,18 @@ public class MYSQLDatabaseConnection {
         return instance;
     }
 
+    @Override
     public Connection getConnection() {
         return connection;
+    }
+
+    @Override
+    public void closeConnection() {
+        try {
+            this.connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void getDatabaseProperties() throws IOException {
