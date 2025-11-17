@@ -7,25 +7,25 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class DatabaseConnection {
+public class MYSQLDatabaseConnection {
 
-    private static volatile DatabaseConnection instance;
+    private static volatile MYSQLDatabaseConnection instance;
     private final Connection connection;
     private String urlDatabase;
     private String databaseUser;
     private String passwordDatabase;
 
-    public DatabaseConnection() throws SQLException, ClassNotFoundException, IOException {
+    public MYSQLDatabaseConnection() throws SQLException, ClassNotFoundException, IOException {
         getDatabaseProperties();
 
         this.connection = DriverManager.getConnection(urlDatabase, databaseUser, passwordDatabase);
     }
 
-    public static DatabaseConnection getInstance() throws SQLException, ClassNotFoundException, IOException {
+    public static MYSQLDatabaseConnection getInstance() throws SQLException, ClassNotFoundException, IOException {
         if (instance == null) {
-            synchronized (DatabaseConnection.class) {
+            synchronized (MYSQLDatabaseConnection.class) {
                 if (instance == null) {
-                    instance = new DatabaseConnection();
+                    instance = new MYSQLDatabaseConnection();
                 }
             }
         }
