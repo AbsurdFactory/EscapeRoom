@@ -14,21 +14,14 @@ public class DatabaseConnection {
     private String urlDatabase;
     private String databaseUser;
     private String passwordDatabase;
-    private String driverClassName;
 
-    public DatabaseConnection() {
+    public DatabaseConnection() throws SQLException, ClassNotFoundException, IOException {
         getDatabaseProperties();
-        try {
-            Class.forName(driverClassName);
-            this.connection = DriverManager.getConnection(urlDatabase, databaseUser, passwordDatabase);
-        } catch (SQLException e) {
-            throw new RuntimeException("Error connecting to the database", e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+
+        this.connection = DriverManager.getConnection(urlDatabase, databaseUser, passwordDatabase);
     }
 
-    public static DatabaseConnection getInstance() {
+    public static DatabaseConnection getInstance() throws SQLException, ClassNotFoundException, IOException {
         if (instance == null) {
             synchronized (DatabaseConnection.class) {
                 if (instance == null) {
@@ -43,17 +36,13 @@ public class DatabaseConnection {
         return connection;
     }
 
-    private void getDatabaseProperties() {
+    private void getDatabaseProperties() throws IOException {
         Properties databaseProperties = new Properties();
-        try {
-            databaseProperties.load(new FileInputStream("src/main/java/properties/escaperoom_db.properties"));
-            urlDatabase = databaseProperties.getProperty("url");
-            databaseUser = databaseProperties.getProperty("user");
-            passwordDatabase = databaseProperties.getProperty("password");
-            driverClassName = databaseProperties.getProperty("driver-class-name");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        databaseProperties.load(new FileInputStream("src/main/java/properties/escaperoom_db.properties"));
+        urlDatabase = databaseProperties.getProperty("url");
+        databaseUser = databaseProperties.getProperty("user");
+        passwordDatabase = databaseProperties.getProperty("password");
 
     }
 }
