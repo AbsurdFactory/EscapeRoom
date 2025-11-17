@@ -5,13 +5,12 @@ import clue.model.Clue;
 import java.util.List;
 
 public interface ClueDao {
-    Clue createClue();
-    void deleteClue();
-    String getClueName();
-    String getClueTheme();
-    void setClueTheme();
-    void setClueAction();
-    String getClueAction();
+    void createClue(Clue clue);
+    void deleteClue(Clue clue);
+    String getClueName(Clue clue);
+    String getClueTheme(Clue clue);
+    void setClueTheme(Clue clue,String theme);
+    void setClueAction(Clue clue,String action);
+    String getClueAction(Clue clue);
     List<Clue> getAllClues();
-
 }
