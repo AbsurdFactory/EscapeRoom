@@ -7,18 +7,16 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class MYSQLDatabaseConnection implements DatabaseConnection{
+public class MYSQLDatabaseConnection implements DatabaseConnection {
 
     private static volatile MYSQLDatabaseConnection instance;
-    private final Connection connection;
+    private Connection connection;
     private String urlDatabase;
     private String databaseUser;
     private String passwordDatabase;
 
     public MYSQLDatabaseConnection() throws SQLException, ClassNotFoundException, IOException {
         getDatabaseProperties();
-
-        this.connection = DriverManager.getConnection(urlDatabase, databaseUser, passwordDatabase);
     }
 
     public static MYSQLDatabaseConnection getInstance() throws SQLException, ClassNotFoundException, IOException {
@@ -30,6 +28,15 @@ public class MYSQLDatabaseConnection implements DatabaseConnection{
             }
         }
         return instance;
+    }
+
+    @Override
+    public void openConnection() {
+        try {
+            this.connection = DriverManager.getConnection(urlDatabase, databaseUser, passwordDatabase);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
