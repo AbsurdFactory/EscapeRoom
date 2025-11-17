@@ -1,24 +1,30 @@
 package databaseconnection;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DatabaseConnection {
 
     private static volatile DatabaseConnection instance;
-    private Connection connection;
+    private final Connection connection;
+    private String urlDatabase;
+    private String databaseUser;
+    private String passwordDatabase;
+    private String driverClassName;
 
-    private static final String URL = "";
-    private static final String USER = "";
-    private static final String PASSWORD = "";
-
-    private DatabaseConnection() {
+    public DatabaseConnection() {
+        getDatabaseProperties();
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (SQLException | ClassNotFoundException e) {
+            Class.forName(driverClassName);
+            this.connection = DriverManager.getConnection(urlDatabase, databaseUser, passwordDatabase);
+        } catch (SQLException e) {
             throw new RuntimeException("Error connecting to the database", e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -35,5 +41,19 @@ public class DatabaseConnection {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    private void getDatabaseProperties() {
+        Properties databaseProperties = new Properties();
+        try {
+            databaseProperties.load(new FileInputStream("src/main/java/properties/escaperoom_db.properties"));
+            urlDatabase = databaseProperties.getProperty("url");
+            databaseUser = databaseProperties.getProperty("user");
+            passwordDatabase = databaseProperties.getProperty("password");
+            driverClassName = databaseProperties.getProperty("driver-class-name");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
