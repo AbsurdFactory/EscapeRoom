@@ -1,4 +1,4 @@
-package clue;
+package clue.service;
 
 public class ClueService {
 }

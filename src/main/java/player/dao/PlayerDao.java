@@ -1,4 +1,4 @@
-package player;
+package player.dao;
 
 public class PlayerDao {
 }

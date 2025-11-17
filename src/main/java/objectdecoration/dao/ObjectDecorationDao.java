@@ -1,4 +1,4 @@
-package objectdecoration;
+package objectdecoration.dao;
 
 public class ObjectDecorationDao {
 }

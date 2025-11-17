@@ -1,4 +1,4 @@
-package clue;
+package clue.model;
 
 public class Clue {
 }
