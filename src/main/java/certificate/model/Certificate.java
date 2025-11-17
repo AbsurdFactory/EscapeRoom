@@ -1,4 +1,4 @@
-package certificate;
+package certificate.model;
 
 public class Certificate {
 }

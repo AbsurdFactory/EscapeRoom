@@ -1,4 +1,4 @@
-package player;
+package player.service;
 
 public class PlayerService {
 }

@@ -1,4 +1,4 @@
-package escaperoom;
+package escaperoom.service;
 
 public class EscapeRoomService {
 }

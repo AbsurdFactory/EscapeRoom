@@ -1,4 +1,4 @@
-package escaperoom;
+package escaperoom.dao;
 
 public class EscapeRoomDao {
 }

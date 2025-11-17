@@ -1,4 +1,4 @@
-package certificate;
+package certificate.service;
 
 public class CertificateService {
 }

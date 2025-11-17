@@ -1,4 +1,4 @@
-package clue;
+package clue.dao;
 
 public class ClueDao {
 }

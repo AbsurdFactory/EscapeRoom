@@ -1,4 +1,4 @@
-package room;
+package room.dao;
 
 public class RoomDao {
 }
