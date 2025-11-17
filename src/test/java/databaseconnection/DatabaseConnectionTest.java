@@ -13,7 +13,7 @@ class DatabaseConnectionTest {
     @Test
     @DisplayName("Testing if the connection have value")
     void getConnection() {
-        MYSQLDatabaseConnection databaseConnection = null;
+        MYSQLDatabaseConnection databaseConnection ;
         try {
             databaseConnection = new MYSQLDatabaseConnection();
         } catch (SQLException | ClassNotFoundException | IOException e) {
