@@ -205,6 +205,45 @@ CREATE INDEX `fk_room_has_decoration_object_decoration_object1_idx` ON `escape_r
 CREATE INDEX `fk_room_has_decoration_object_room1_idx` ON `escape_room`.`room_has_decoration_object` (`room_id_room` ASC) VISIBLE;
 
 
+-- -----------------------------------------------------
+-- Table `escape_room`.`escape`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `escape_room`.`escape` ;
+
+CREATE TABLE IF NOT EXISTS `escape_room`.`escape` (
+  `id_escape` INT NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id_escape`))
+ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `idescape_UNIQUE` ON `escape_room`.`escape` (`id_escape` ASC) VISIBLE;
+
+
+-- -----------------------------------------------------
+-- Table `escape_room`.`escape_has_room`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `escape_room`.`escape_has_room` ;
+
+CREATE TABLE IF NOT EXISTS `escape_room`.`escape_has_room` (
+  `escape_id_escape` INT NOT NULL,
+  `room_id_room` INT NOT NULL,
+  PRIMARY KEY (`escape_id_escape`, `room_id_room`),
+  CONSTRAINT `fk_escape_has_room_escape1`
+    FOREIGN KEY (`escape_id_escape`)
+    REFERENCES `escape_room`.`escape` (`id_escape`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_escape_has_room_room1`
+    FOREIGN KEY (`room_id_room`)
+    REFERENCES `escape_room`.`room` (`id_room`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_escape_has_room_room1_idx` ON `escape_room`.`escape_has_room` (`room_id_room` ASC) VISIBLE;
+
+CREATE INDEX `fk_escape_has_room_escape1_idx` ON `escape_room`.`escape_has_room` (`escape_id_escape` ASC) VISIBLE;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
