@@ -1,4 +1,8 @@
 package room.dao;
 
-public class RoomDao {
+import dao.BaseDao;
+import room.model.Room;
+
+public interface RoomDao extends BaseDao<Room> {
+
 }
