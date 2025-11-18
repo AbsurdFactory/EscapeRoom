@@ -1,9 +1,11 @@
 package objectdecoration.dao;
 
+import databaseconnection.DatabaseConnection;
+import databaseconnection.MYSQLDatabaseConnection;
 import objectdecoration.model.ObjectDecoration;
 import exceptions.DataAccessException;
-import utils.DatabaseConnection;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,10 +42,18 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
         DELETE FROM decoration_object
         WHERE id_decoration_object = ?
         """;
-
+    private final DatabaseConnection dbConnection;
+    public ObjectDecorationDaoImpl() {
+        try {
+            this.dbConnection = MYSQLDatabaseConnection.getInstance();
+        } catch (SQLException | ClassNotFoundException | IOException e) {
+            throw new DataAccessException("Failed to initialize database connection", e);
+        }
+    }
     @Override
     public void save(ObjectDecoration object) {
-        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
 
             ps.setString(1, object.getName());
@@ -53,34 +63,38 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Error inserting decoration", e);
+        } finally {
+            dbConnection.closeConnection();
         }
     }
 
     @Override
     public Optional<ObjectDecoration> findById(int id) {
-        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID)) {
 
             ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(mapRow(rs));
-                }
+            if (rs.next()) {
+                return Optional.of(mapRow(rs));
             }
+            return Optional.empty();
 
         } catch (SQLException e) {
             throw new DataAccessException("Error finding decoration with ID: " + id, e);
+        } finally {
+            dbConnection.closeConnection();
         }
-
-        return Optional.empty();
     }
 
     @Override
     public List<ObjectDecoration> findAll() {
+        dbConnection.openConnection();
         List<ObjectDecoration> decorations = new ArrayList<>();
 
-        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+        try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_ALL);
              ResultSet rs = ps.executeQuery()) {
 
@@ -89,7 +103,9 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
             }
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error retrieving all decorations", e);
+            throw new DataAccessException("Error retrieving decorations", e);
+        } finally {
+            dbConnection.closeConnection();
         }
 
         return decorations;
@@ -97,24 +113,27 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
 
     @Override
     public boolean update(ObjectDecoration object) {
-        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
 
             ps.setString(1, object.getName());
             ps.setString(2, object.getMaterial());
             ps.setDouble(3, object.getPrice());
             ps.setInt(4, object.getId());
-
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error updating decoration with ID: " + object.getId(), e);
+            throw new DataAccessException("Error updating decoration", e);
+        } finally {
+            dbConnection.closeConnection();
         }
     }
 
     @Override
     public boolean delete(int id) {
-        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
 
             ps.setInt(1, id);
@@ -122,6 +141,8 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Error deleting decoration with ID: " + id, e);
+        } finally {
+            dbConnection.closeConnection();
         }
     }
 
