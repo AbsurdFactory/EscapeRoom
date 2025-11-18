@@ -2,6 +2,7 @@ package objectdecoration.service;
 
 import objectdecoration.dao.ObjectDecorationDao;
 import objectdecoration.model.ObjectDecoration;
+import validators.ObjectDecorationValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ public class ObjectDecorationService {
     }
 
     public void createDecoration(ObjectDecoration decoration) {
-        validate(decoration);
+        ObjectDecorationValidator.validate(decoration);
         decorationDao.save(decoration);
     }
 
@@ -30,7 +31,7 @@ public class ObjectDecorationService {
     }
 
     public boolean updateDecoration(ObjectDecoration decoration) {
-        validate(decoration);
+        ObjectDecorationValidator.validate(decoration);
         return decorationDao.update(decoration);
     }
 
@@ -39,20 +40,5 @@ public class ObjectDecorationService {
             throw new IllegalArgumentException("Invalid ID.");
         }
         return decorationDao.delete(id);
-    }
-
-    private void validate(ObjectDecoration decoration) {
-        if (decoration == null) {
-            throw new IllegalArgumentException("Decoration cannot be null.");
-        }
-        if (decoration.getName() == null || decoration.getName().isBlank()) {
-            throw new IllegalArgumentException("Decoration name is required.");
-        }
-        if (decoration.getMaterial() == null || decoration.getMaterial().isBlank()) {
-            throw new IllegalArgumentException("Material is required.");
-        }
-        if (decoration.getPrice() < 0) {
-            throw new IllegalArgumentException("Price cannot be negative.");
-        }
     }
 }
