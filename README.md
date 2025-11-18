@@ -25,13 +25,12 @@ A Java-based virtual Escape Room management system built collaboratively using G
 4. Execute `MainApp.java`
 
 ## 👥 Team
-
-| Name           | Role                      | GitHub |
-|----------------|---------------------------|--------|
-| Leila Weicman  | [@leilaweicman](link)     |
-| Esther Arias   | [@eariasvalor](link)      |
-| Yvan Gabrieli  | [@yvangabrieli](link)     |
-| Esther Herrero | [@estherBlacksmith](link) |
+| Name        | Role                             | GitHub                |
+|-------------|----------------------------------|-----------------------|
+| Leila Weicman | Developer | [@leilaweicman](link) |
+| Esther Arias |  Developer | [@eariasvalor](link)             |
+| Yvan Gabrieli |  Developer | [@yvangabrieli](link)            |
+| Esther Herrero|  Developer | [@estherBlacksmith](link)        |
 
 ## 🧩 UML and Database
 
