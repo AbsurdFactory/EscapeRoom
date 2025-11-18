@@ -1,4 +1,4 @@
-package utils;
+package databaseconnection;
 
 import java.io.FileInputStream;
 import java.io.IOException;

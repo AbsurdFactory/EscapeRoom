@@ -3,7 +3,6 @@ package databaseconnection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import utils.MYSQLDatabaseConnection;
 
 import java.io.IOException;
 import java.sql.SQLException;
