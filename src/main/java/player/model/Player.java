@@ -1,17 +1,17 @@
 package player.model;
 
-import player.valueobjects.Age;
-import player.valueobjects.Email;
-import player.valueobjects.NickName;
-import player.valueobjects.PlayerId;
+import valueobjects.Age;
+import valueobjects.Email;
+import valueobjects.NickName;
+import valueobjects.Id;
 
 public class Player {
-    private final PlayerId id;
+    private final Id<Player> id;
     private final NickName nickName;
     private final Email email;
     private final Age age;
 
-    private Player(PlayerId id, NickName nickName, Email email, Age age) {
+    private Player(Id<Player> id, NickName nickName, Email email, Age age) {
         this.id = id;
         this.nickName = nickName;
         this.email = email;
@@ -23,10 +23,10 @@ public class Player {
     }
 
     public static Player rehydrate(int id, String nickName, String email, int age) {
-        return new Player(new PlayerId(id), new NickName(nickName), new Email(email), new Age(age));
+        return new Player(new Id(id), new NickName(nickName), new Email(email), new Age(age));
     }
 
-    public PlayerId getId() {
+    public Id<Player> getId() {
         return id;
     }
 

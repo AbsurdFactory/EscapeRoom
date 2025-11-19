@@ -1,4 +1,4 @@
-package player.valueobjects;
+package valueobjects;
 
 import exceptions.ValidationException;
 
