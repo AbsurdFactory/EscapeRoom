@@ -58,7 +58,7 @@ public class TicketDaoImpl implements TicketDao {
             ps.setInt(3, ticket.getPlayerId());
             ps.setDate(4, Date.valueOf(ticket.getDate()));
             ps.setTime(5, Time.valueOf(ticket.getTime()));
-            ps.setDouble(6, ticket.getPrice());
+            ps.setBigDecimal(6, ticket.getPrice());
 
             ps.executeUpdate();
 
@@ -124,7 +124,7 @@ public class TicketDaoImpl implements TicketDao {
             ps.setInt(2, ticket.getPlayerId());
             ps.setDate(3, Date.valueOf(ticket.getDate()));
             ps.setTime(4, Time.valueOf(ticket.getTime()));
-            ps.setDouble(5, ticket.getPrice());
+            ps.setBigDecimal(5, ticket.getPrice());
             ps.setInt(6, ticket.getId());
 
             return ps.executeUpdate() > 0;
