@@ -4,11 +4,11 @@ public class Room {
     private int id;
     private String name;
     private double price;
-    private int difficultyLevel;
+    private String difficultyLevel;
 
     public Room(){};
 
-    public Room(int id, String name, double price, int difficultyLevel) {
+    public Room(int id, String name, double price, String difficultyLevel) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -27,7 +27,7 @@ public class Room {
         return price;
     }
 
-    public int getDifficultyLevel() {
+    public String getDifficultyLevel() {
         return difficultyLevel;
     }
 

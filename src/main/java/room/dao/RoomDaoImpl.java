@@ -60,7 +60,7 @@ public class RoomDaoImpl implements RoomDao {
 
             ps.setString(1, object.getName());
             ps.setDouble(2, object.getPrice());
-            ps.setInt(3, object.getDifficultyLevel());
+            ps.setString(3, object.getDifficultyLevel());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -121,7 +121,7 @@ public class RoomDaoImpl implements RoomDao {
 
             ps.setString(1, object.getName());
             ps.setDouble(2, object.getPrice());
-            ps.setInt(3, object.getDifficultyLevel());
+            ps.setString(3, object.getDifficultyLevel());
             ps.setInt(4, object.getId());
             return ps.executeUpdate() > 0;
 
@@ -153,7 +153,7 @@ public class RoomDaoImpl implements RoomDao {
                 rs.getInt("id_decoration_object"),
                 rs.getString("name"),
                 rs.getDouble("price"),
-                rs.getInt("difficulty_level")
+                rs.getString("difficulty_level")
         );
     }
 
