@@ -21,7 +21,7 @@ public class RoomValidator {
             throw new ValidationException("The price cannot be negative.");
         }
 
-        if (room.getDifficultyLevel() <= 0) {
+        if (room.getDifficultyLevel().isBlank() || room.getDifficultyLevel().isEmpty()) {
             throw new ValidationException("The difficulty level must be greater than 0.");
         }
     }
