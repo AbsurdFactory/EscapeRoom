@@ -1,4 +1,7 @@
 package escaperoom.dao;
 
-public class EscapeRoomDao {
+import dao.BaseDao;
+import escaperoom.model.EscapeRoom;
+
+public interface EscapeRoomDao extends BaseDao<EscapeRoom> {
 }
