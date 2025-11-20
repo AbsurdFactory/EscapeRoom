@@ -9,6 +9,7 @@ target/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/uiDesigner.xml
 *.iws
 *.iml
 *.ipr
@@ -37,3 +38,5 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/src/main/java/properties/
+/.env
