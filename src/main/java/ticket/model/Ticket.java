@@ -71,7 +71,7 @@ public class Ticket {
                 Player = %d,
                 Date = %s,
                 Time = %s,
-                Price = %s,
+                Price = %s
                 }
                 """.formatted(id, roomId, playerId, date, time, price.setScale(2, RoundingMode.HALF_UP));
     }
