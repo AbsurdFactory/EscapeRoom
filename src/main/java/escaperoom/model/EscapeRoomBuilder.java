@@ -29,7 +29,7 @@ public class EscapeRoomBuilder {
         return this;
     }
 
-    public EscapeRoomBuilder addRoom(RoomBuilder roomBuilder) {
+    public EscapeRoomBuilder addRoomBuilder(RoomBuilder roomBuilder) {
         if (roomBuilder != null) {
             this.rooms.add(roomBuilder.build());
         }
