@@ -6,10 +6,10 @@ services:
     container_name: escape_room_mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: escape_room
-      MYSQL_USER: escaperoom_user
-      MYSQL_PASSWORD: escaperoom_pass
+      MYSQL_DATABASE: $url
+      MYSQL_USER: $user
+      MYSQL_PASSWORD: $password
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
     ports:
       - "3306:3306"
     volumes:
@@ -17,7 +17,7 @@ services:
       - ./init/escape_room.sql:/docker-entrypoint-initdb.d/escape_room.sql
     command: --default-authentication-plugin=mysql_native_password
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
       timeout: 5s
       retries: 5

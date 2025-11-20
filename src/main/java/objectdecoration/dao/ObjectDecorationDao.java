@@ -1,4 +1,8 @@
 package objectdecoration.dao;
 
-public class ObjectDecorationDao {
+import dao.BaseDao;
+import objectdecoration.model.ObjectDecoration;
+
+public interface ObjectDecorationDao extends BaseDao<ObjectDecoration> {
+
 }

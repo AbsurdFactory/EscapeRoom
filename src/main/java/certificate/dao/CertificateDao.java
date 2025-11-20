@@ -1,4 +1,7 @@
 package certificate.dao;
 
-public class CertificateDao {
+import certificate.model.Certificate;
+import dao.BaseDao;
+
+public interface CertificateDao extends BaseDao<Certificate> {
 }
