@@ -1,15 +1,49 @@
 package clue.dao;
 
 import clue.model.Clue;
+import databaseconnection.DatabaseConnection;
+import databaseconnection.MYSQLDatabaseConnection;
+import exceptions.DataAccessException;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
+
 //TODO: this class must implement also the connectionDatabase interface
 public class ClueDaoImplementation implements ClueDao {
+    private final DatabaseConnection dbConnection;
+
+    private static final String INSERT_SQL = """
+        INSERT INTO clue (name)
+        VALUES (?)
+        """;
+
+
+    public ClueDaoImplementation() {
+        try {
+            this.dbConnection = MYSQLDatabaseConnection.getInstance();
+        } catch (SQLException | ClassNotFoundException | IOException e) {
+            throw new DataAccessException("Failed to initialize database connection", e);
+        }
+    }
 
     @Override
     public void createClue(Clue clue) {
-        //insert clue into clue table
-        //"INSERT INTO escaperoom.clue values("+ clue.name + "," + clue.text +"," + clue.theme + "," + clue.price)"
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
+
+            ps.setString(1, clue.getName());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error inserting escape room", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
     }
 
     @Override
@@ -57,5 +91,30 @@ public class ClueDaoImplementation implements ClueDao {
         //"SELECT * FROM escaperoom.clue "
         //foreach record -> new clue(name,text,theme,price)
         return List.of();
+    }
+
+    @Override
+    public void save(ClueDao entity) {
+
+    }
+
+    @Override
+    public Optional<ClueDao> findById(int id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<ClueDao> findAll() {
+        return List.of();
+    }
+
+    @Override
+    public boolean update(ClueDao entity) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(int id) {
+        return false;
     }
 }
