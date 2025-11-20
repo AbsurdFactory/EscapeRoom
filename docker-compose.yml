@@ -9,6 +9,7 @@ services:
       MYSQL_DATABASE: $url
       MYSQL_USER: $user
       MYSQL_PASSWORD: $password
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
     ports:
       - "3306:3306"
     volumes:
