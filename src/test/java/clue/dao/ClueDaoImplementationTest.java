@@ -28,7 +28,7 @@ class ClueDaoImplementationTest {
     @Test
     void createClue() {
 
-        Clue clue = new Clue("pista2","lalala","lolo",20.0);
+        Clue clue = new Clue("pista1","lalala","lolo",20.0);
         final String INSERT_SQL = """
            INSERT INTO clue (name,text,theme,price)
            VALUES (?,?,?,?)
@@ -45,7 +45,7 @@ class ClueDaoImplementationTest {
             preparedStatement.execute();
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error inserting escape room", e);
+            throw new DataAccessException("Error inserting clue", e);
         } finally {
             dbConnection.closeConnection();
         }
@@ -53,7 +53,7 @@ class ClueDaoImplementationTest {
 
     @Test
     void deleteClue() {
-        Clue clue = new Clue("pista2","lalala","lolo",20.0);
+        Clue clue = new Clue("pista1","lalala","lolo",20.0);
         final String DELETE_SQL = """
            DELETE FROM clue WHERE name = ?
         """;
@@ -67,7 +67,7 @@ class ClueDaoImplementationTest {
             preparedStatement.execute();
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error inserting escape room", e);
+            throw new DataAccessException("Error deleting clue", e);
         } finally {
             dbConnection.closeConnection();
         }
@@ -89,7 +89,7 @@ class ClueDaoImplementationTest {
             preparedStatement.execute();
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error inserting escape room", e);
+            throw new DataAccessException("Error getting clue name", e);
         } finally {
             dbConnection.closeConnection();
         }
@@ -111,14 +111,35 @@ class ClueDaoImplementationTest {
             preparedStatement.execute();
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error inserting escape room", e);
+            throw new DataAccessException("Error getting clue theme", e);
         } finally {
             dbConnection.closeConnection();
         }
     }
 
     @Test
-    void setClueTheme() {
+    void setClueThemeByName() {
+        Clue clue = new Clue("pista3","lalala","lolo",20.0);
+        final String SELECT_SQL = """
+           UPDATE clue SET theme = ? WHERE name = ?
+        """;
+
+        dbConnection.openConnection();
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SQL)) {
+
+            preparedStatement.setString(1, clue.getTheme());
+            preparedStatement.setString(2, clue.getName());
+
+
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error getting clue theme", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+
     }
 
     @Test
