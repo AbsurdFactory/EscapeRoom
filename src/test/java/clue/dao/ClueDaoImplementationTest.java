@@ -28,7 +28,7 @@ class ClueDaoImplementationTest {
     @Test
     void createClue() {
 
-        Clue clue = new Clue("pista1","lalala","lolo",20.0);
+        Clue clue = new Clue("pista3","lalala","lolo",20.0);
         final String INSERT_SQL = """
            INSERT INTO clue (name,text,theme,price)
            VALUES (?,?,?,?)
