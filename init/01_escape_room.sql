@@ -8,15 +8,9 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema escape_room
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `escape_room` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS escape_room DEFAULT CHARACTER SET utf8 ;
 USE `escape_room` ;
 
-
-CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
-
-GRANT ALL PRIVILEGES ON *.* TO '${DB_USER}'@'%';
-
-FLUSH PRIVILEGES;
 
 -- -----------------------------------------------------
 -- Table `escape_room`.`room`
