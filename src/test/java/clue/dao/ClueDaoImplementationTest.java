@@ -28,10 +28,10 @@ class ClueDaoImplementationTest {
     @Test
     void createClue() {
 
-        Clue clue = new Clue("pista4","fsdfsdf","lalala",20.0);
+        Clue clue = new Clue("pista2","fsdfsdf","lalala",20.0);
         final String INSERT_SQL = """
-           INSERT INTO clue (name,text,price)
-           VALUES (?,?,?)
+           INSERT INTO clue (name,text,theme,price)
+           VALUES (?,?,?,?)
         """;
 
         dbConnection.openConnection();
@@ -40,8 +40,8 @@ class ClueDaoImplementationTest {
 
             preparedStatement.setString(1, clue.getName());
             preparedStatement.setString(2, clue.getText());
-          //  preparedStatement.setString(3, clue.getTheme());
-            preparedStatement.setDouble(3, clue.getPrice());
+            preparedStatement.setString(3, clue.getTheme());
+            preparedStatement.setDouble(4, clue.getPrice());
             preparedStatement.execute();
 
         } catch (SQLException e) {
