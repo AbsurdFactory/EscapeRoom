@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//TODO: this class must implement also the connectionDatabase interface
 public class ClueDaoImplementation implements ClueDao {
 
     private static final String INSERT_CLUE_SQL = """
@@ -30,17 +29,27 @@ public class ClueDaoImplementation implements ClueDao {
                SELECT * FROM clue WHERE name = ?
             """;
 
-    private static final String UPDATE_CLUE_BY_NAME = """
-               UPDATE clue SET text = ?, theme = ?, price = ?  WHERE name = ?
+    private static final String SELECT_ID_CLUE_BY_NAME_SQL = """
+               SELECT id FROM clue WHERE name = ?
             """;
 
-
-    private static final String UPDATE_CLUE_BY_ID = """
-               UPDATE clue SET name=?, text = ?, theme = ?, price = ? WHERE name = ?
+    private static final String SELECT_ALL_THEMES = """
+               SELECT theme FROM clue
             """;
 
     private static final String SELECT_ALL_CLUE_SQL = """
                SELECT * FROM clue
+            """;
+
+
+    private static final String UPDATE_CLUE_SQL = """
+            UPDATE clue
+            SET name = ?, material = ?, price = ?
+            WHERE id_clue = ?
+            """;
+
+    private static final String DELETE_CLUE_BY_ID_SQL = """
+            DELETE clue  WHERE id_clue = ?
             """;
 
     private final DatabaseConnection dbConnection;
@@ -52,7 +61,6 @@ public class ClueDaoImplementation implements ClueDao {
             throw new DataAccessException("Failed to initialize database connection", e);
         }
     }
-
 
     public void createClue(Clue clue) {
         dbConnection.openConnection();
@@ -88,51 +96,42 @@ public class ClueDaoImplementation implements ClueDao {
         }
     }
 
-    public String getClueByName(Clue clue) {
+    public Clue getClueByName(String name) {
         dbConnection.openConnection();
-        String name = "";
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CLUE_BY_NAME_SQL)) {
-            preparedStatement.setString(1, clue.getName());
 
-            ResultSet resultSet =preparedStatement.executeQuery();
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()){
-                name = resultSet.getString("name");
-            }
+            return getCLue(resultSet);
 
-        } catch (SQLException e) {
-            throw new DataAccessException("Error getting clue name", e);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         } finally {
             dbConnection.closeConnection();
         }
-        return name;
     }
 
+    public List<String> getAllCluesThemes() {
 
-    public String getClueTheme(Clue clue) {
-        //Find clue theme
-        //"SELECT theme FROM escaperoom.clue WHERE name = " + clue.name
-        return "";
+        List<String> themeList = new ArrayList<>();
+        dbConnection.openConnection();
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_THEMES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                themeList.add(resultSet.getString("theme"));
+            }
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            dbConnection.closeConnection();
+        }
+        return themeList;
     }
-
-
-    public void setClueTheme(Clue clue, String theme) {
-        //UPDATE theme into clue table
-        //"UPDATE escaperoom.clue SET theme = " + theme + " WHERE name = " + clue.name
-    }
-
-    public void setClueAction(Clue clue, String action) {
-        //UPDATE text into clue table
-        //"UPDATE escaperoom.clue SET text = " + text + " WHERE name = " + clue.name
-    }
-
-    public String getClueAction(Clue clue) {
-        //Find clue action
-        //"SELECT text FROM escaperoom.clue WHERE name = " + clue.name
-        return "";
-    }
-
 
     @Override
     public List<Clue> findAll() {
@@ -140,13 +139,14 @@ public class ClueDaoImplementation implements ClueDao {
         List<Clue> clueList = new ArrayList<>();
 
         try (Connection connection = dbConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CLUE_SQL)) {
-            ResultSet resultSet =preparedStatement.executeQuery();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_CLUE_SQL)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()){
-                clueList.add(ClueMapRow(resultSet));                }
+            while (resultSet.next()) {
+                clueList.add(getCLue(resultSet));
+            }
 
-              } catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DataAccessException("Error getting Clue", e);
         } finally {
             dbConnection.closeConnection();
@@ -155,7 +155,7 @@ public class ClueDaoImplementation implements ClueDao {
     }
 
 
-    private Clue ClueMapRow(ResultSet resultSet) {
+    private Clue getCLue(ResultSet resultSet) {
         try {
             return new Clue(
                     resultSet.getString("name"),
@@ -168,6 +168,15 @@ public class ClueDaoImplementation implements ClueDao {
         }
     }
 
+    private int getCLueId(ResultSet resultSet) {
+        int id_clue;
+        try {
+            id_clue = resultSet.getInt("id_clue");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return id_clue;
+    }
 
 
     @Override
@@ -182,9 +191,60 @@ public class ClueDaoImplementation implements ClueDao {
 
 
     @Override
-    public boolean update(Clue entity) {
-        return false;
+    public boolean update(Clue clue) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_CLUE_SQL)) {
+
+            preparedStatement.setString(1, clue.getName());
+            preparedStatement.setString(2, clue.getTheme());
+            preparedStatement.setDouble(3, clue.getPrice());
+            preparedStatement.setInt(4, getIdClueByCLue(clue));
+            return preparedStatement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error updating decoration", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
     }
+
+    private int getIdClueByCLue(Clue clue) {
+        int id_clue;
+        dbConnection.openConnection();
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID_CLUE_BY_NAME_SQL)) {
+            preparedStatement.setString(1, clue.getName());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            id_clue = resultSet.getInt("id_clue");
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            dbConnection.closeConnection();
+        }
+        return id_clue;
+    }
+
+    private int getIdClueByName(String name) {
+        int id_clue;
+        dbConnection.openConnection();
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID_CLUE_BY_NAME_SQL)) {
+            preparedStatement.setString(1,name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            id_clue = resultSet.getInt("id_clue");
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            dbConnection.closeConnection();
+        }
+        return id_clue;
+    }
+
 
     @Override
     public boolean delete(int id) {
