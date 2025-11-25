@@ -1,9 +1,10 @@
-package room.dao;
+package escaperoom.dao;
 
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
+import escaperoom.model.EscapeRoom;
 import exceptions.DataAccessException;
-import room.model.Room;
+
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -14,37 +15,43 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RoomDaoImpl implements RoomDao {
-
+public class EscapeRoomDaoImpl implements EscapeRoomDao {
     private static final String INSERT_SQL = """
-            INSERT INTO room (name, price, difficultyLevel)
-            VALUES (?, ?, ?)
-            """;
-
-    private static final String SELECT_BY_ID = """
-        SELECT id_room, name, price, difficulty_level
-        FROM room
-        WHERE id_room = ?
+        INSERT INTO escape (name)
+        VALUES (?)
         """;
 
+    private static final String SELECT_BY_ID = """
+        SELECT id_escape, name
+        FROM escape
+        WHERE id_escape = ?
+        """;
+
+    private static final String SELECT_BY_NAME = """
+    SELECT id_escape, name
+    FROM escape
+    WHERE name = ?
+    """;
+
     private static final String SELECT_ALL = """
-        SELECT id_room, name, price, difficulty_level
-        FROM room
+        SELECT id_escape, name
+        FROM escape
         """;
 
     private static final String UPDATE_SQL = """
-        UPDATE room
-        SET name = ?, price = ?, difficulty_level = ?
-        WHERE id_room = ?
+        UPDATE escape
+        SET name = ?
+        WHERE id_escape = ?
         """;
 
     private static final String DELETE_SQL = """
-        DELETE FROM room
-        WHERE id_room = ?
+        DELETE FROM escape
+        WHERE id_escape = ?
         """;
 
+
     private final DatabaseConnection dbConnection;
-    public RoomDaoImpl() {
+    public EscapeRoomDaoImpl() {
         try {
             this.dbConnection = MYSQLDatabaseConnection.getInstance();
         } catch (SQLException | ClassNotFoundException | IOException e) {
@@ -52,26 +59,47 @@ public class RoomDaoImpl implements RoomDao {
         }
     }
 
+    public List<EscapeRoom> findByName(String name) {
+        dbConnection.openConnection();
+        List<EscapeRoom> results = new ArrayList<>();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_BY_NAME)) {
+
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                results.add(mapRow(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding escape room with name: " + name, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+
+        return results;
+    }
+
     @Override
-    public void save(Room object) {
+    public void save(EscapeRoom object) {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
 
             ps.setString(1, object.getName());
-            ps.setDouble(2, object.getPrice());
-            ps.setString(3, object.getDifficultyLevel());
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error inserting room", e);
+            throw new DataAccessException("Error inserting escape room", e);
         } finally {
             dbConnection.closeConnection();
         }
     }
 
     @Override
-    public Optional<Room> findById(int id) {
+    public Optional<EscapeRoom> findById(int id) {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID)) {
@@ -85,48 +113,46 @@ public class RoomDaoImpl implements RoomDao {
             return Optional.empty();
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error finding room with ID: " + id, e);
+            throw new DataAccessException("Error finding escape room with ID: " + id, e);
         } finally {
             dbConnection.closeConnection();
         }
     }
 
     @Override
-    public List<Room> findAll() {
+    public List<EscapeRoom> findAll() {
         dbConnection.openConnection();
-        List<Room> rooms = new ArrayList<>();
+        List<EscapeRoom> escapeRooms = new ArrayList<>();
 
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_ALL);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                rooms.add(mapRow(rs));
+                escapeRooms.add(mapRow(rs));
             }
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error retrieving rooms", e);
+            throw new DataAccessException("Error retrieving escape rooms", e);
         } finally {
             dbConnection.closeConnection();
         }
 
-        return rooms;
+        return escapeRooms;
     }
 
     @Override
-    public boolean update(Room object) {
+    public boolean update(EscapeRoom object) {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
 
             ps.setString(1, object.getName());
-            ps.setDouble(2, object.getPrice());
-            ps.setString(3, object.getDifficultyLevel());
             ps.setInt(4, object.getId());
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error updating room", e);
+            throw new DataAccessException("Error updating escape room", e);
         } finally {
             dbConnection.closeConnection();
         }
@@ -142,20 +168,17 @@ public class RoomDaoImpl implements RoomDao {
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            throw new DataAccessException("Error deleting room with ID: " + id, e);
+            throw new DataAccessException("Error deleting escape room with ID: " + id, e);
         } finally {
             dbConnection.closeConnection();
         }
     }
 
-    private Room mapRow(ResultSet rs) throws SQLException {
-        return new Room(
-                rs.getInt("id_decoration_object"),
-                rs.getString("name"),
-                rs.getDouble("price"),
-                rs.getString("difficulty_level")
+    private EscapeRoom mapRow(ResultSet rs) throws SQLException {
+        return new EscapeRoom(
+                rs.getInt("id_escape"),
+                rs.getString("name")
         );
     }
-
 
 }

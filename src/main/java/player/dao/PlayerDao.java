@@ -1,4 +1,10 @@
 package player.dao;
 
-public class PlayerDao {
+import dao.BaseDao;
+import player.model.Player;
+
+import java.util.Optional;
+
+public interface PlayerDao extends BaseDao<Player> {
+    Optional<Player> findByEmail(String email);
 }

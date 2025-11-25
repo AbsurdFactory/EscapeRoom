@@ -4,21 +4,17 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
--- -----------------------------------------------------
--- Schema escape_room
--- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `escape_room` ;
 
 -- -----------------------------------------------------
 -- Schema escape_room
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `escape_room` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS escape_room DEFAULT CHARACTER SET utf8 ;
 USE `escape_room` ;
+
 
 -- -----------------------------------------------------
 -- Table `escape_room`.`room`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `escape_room`.`room` ;
 
 CREATE TABLE IF NOT EXISTS `escape_room`.`room` (
   `id_room` INT NOT NULL AUTO_INCREMENT,
@@ -36,7 +32,6 @@ CREATE UNIQUE INDEX `name_UNIQUE` ON `escape_room`.`room` (`name` ASC) VISIBLE;
 -- -----------------------------------------------------
 -- Table `escape_room`.`clue`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `escape_room`.`clue` ;
 
 CREATE TABLE IF NOT EXISTS `escape_room`.`clue` (
   `id_clue` INT NOT NULL AUTO_INCREMENT,
@@ -55,7 +50,6 @@ CREATE UNIQUE INDEX `name_UNIQUE` ON `escape_room`.`clue` (`name` ASC) VISIBLE;
 -- -----------------------------------------------------
 -- Table `escape_room`.`decoration_object`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `escape_room`.`decoration_object` ;
 
 CREATE TABLE IF NOT EXISTS `escape_room`.`decoration_object` (
   `id_decoration_object` INT NOT NULL AUTO_INCREMENT,
@@ -74,7 +68,6 @@ CREATE UNIQUE INDEX `name_UNIQUE` ON `escape_room`.`decoration_object` (`name` A
 -- -----------------------------------------------------
 -- Table `escape_room`.`player`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `escape_room`.`player` ;
 
 CREATE TABLE IF NOT EXISTS `escape_room`.`player` (
   `id_player` INT NOT NULL AUTO_INCREMENT,
@@ -93,7 +86,6 @@ CREATE UNIQUE INDEX `email_UNIQUE` ON `escape_room`.`player` (`email` ASC) VISIB
 -- -----------------------------------------------------
 -- Table `escape_room`.`certificate`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `escape_room`.`certificate` ;
 
 CREATE TABLE IF NOT EXISTS `escape_room`.`certificate` (
   `id_certificate` INT NOT NULL AUTO_INCREMENT,
@@ -124,7 +116,6 @@ CREATE INDEX `fk_certificate_room1_idx` ON `escape_room`.`certificate` (`room_id
 -- -----------------------------------------------------
 -- Table `escape_room`.`ticket`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `escape_room`.`ticket` ;
 
 CREATE TABLE IF NOT EXISTS `escape_room`.`ticket` (
   `id_ticket` INT NOT NULL AUTO_INCREMENT,
@@ -156,7 +147,6 @@ CREATE INDEX `fk_ticket_room1_idx` ON `escape_room`.`ticket` (`room_id_room` ASC
 -- -----------------------------------------------------
 -- Table `escape_room`.`room_has_clues`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `escape_room`.`room_has_clues` ;
 
 CREATE TABLE IF NOT EXISTS `escape_room`.`room_has_clues` (
   `clue_id_clue` INT NOT NULL,
@@ -182,7 +172,6 @@ CREATE INDEX `fk_clue_has_room_clue1_idx` ON `escape_room`.`room_has_clues` (`cl
 -- -----------------------------------------------------
 -- Table `escape_room`.`room_has_decoration_object`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `escape_room`.`room_has_decoration_object` ;
 
 CREATE TABLE IF NOT EXISTS `escape_room`.`room_has_decoration_object` (
   `room_id_room` INT NOT NULL,
@@ -208,7 +197,7 @@ CREATE INDEX `fk_room_has_decoration_object_room1_idx` ON `escape_room`.`room_ha
 -- -----------------------------------------------------
 -- Table `escape_room`.`escape`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `escape_room`.`escape` ;
+
 
 CREATE TABLE IF NOT EXISTS `escape_room`.`escape` (
   `id_escape` INT NOT NULL AUTO_INCREMENT,
@@ -221,7 +210,6 @@ CREATE UNIQUE INDEX `idescape_UNIQUE` ON `escape_room`.`escape` (`id_escape` ASC
 -- -----------------------------------------------------
 -- Table `escape_room`.`escape_has_room`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `escape_room`.`escape_has_room` ;
 
 CREATE TABLE IF NOT EXISTS `escape_room`.`escape_has_room` (
   `escape_id_escape` INT NOT NULL,

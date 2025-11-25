@@ -6,14 +6,15 @@ services:
     container_name: escape_room_mysql
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: $url
-      MYSQL_USER: $user
-      MYSQL_PASSWORD: $password
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
+      - ./init/01_escape_room.sql:/docker-entrypoint-initdb.d/01_escape_room.sql
       - db_data:/var/lib/mysql
-      - ./init/escape_room.sql:/docker-entrypoint-initdb.d/escape_room.sql
     command: --default-authentication-plugin=mysql_native_password
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
