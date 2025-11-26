@@ -1,9 +1,15 @@
 package clue.model;
 
-public record ClueName(String value) {
+public record ClueName(String name) {
+
     public ClueName {
-        if (value == null || value.isBlank()) {
+        if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

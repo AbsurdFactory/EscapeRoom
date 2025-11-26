@@ -22,11 +22,8 @@ public class Clue {
         this.price = price;
     }
 
-    public ClueName getNameValue() {
+    public ClueName getName() {
         return name;
-    }
-    public String getName() {
-        return name.toString();
     }
     public String getText() {
         return text;
@@ -42,7 +39,7 @@ public class Clue {
 
     @Override
     public String toString() {
-        return "Clue = " + name +
+        return "Clue = " + name.toString() +
                 ", Action = " + text +
                 ", Theme = "+ theme +
                 ", Price = "+ price ;

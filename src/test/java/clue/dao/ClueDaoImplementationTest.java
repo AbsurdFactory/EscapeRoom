@@ -13,6 +13,14 @@ class ClueDaoImplementationTest {
     ClueDaoImplementation clueDaoImplementation = new ClueDaoImplementation();
 
     @Test
+    void save() {
+        Clue clue1 = new Clue(new ClueName("pista32"),"lalala","lolololo",30.0);
+        clueDaoImplementation.save(clue1);
+        Clue clue2 = (clueDaoImplementation.getClueByName(new ClueName(("pista32"))));
+        assertEquals(Clue.class, clue2.getClass());
+    }
+
+    @Test
     void deleteClue() {
         Clue clue1 = new Clue(new ClueName("pista34"),"lalala","lolololo",30.0);
         List<Clue> list1 = clueDaoImplementation.findAll();
@@ -27,7 +35,7 @@ class ClueDaoImplementationTest {
     void getClueByName() {
         Clue clue2 = (clueDaoImplementation.getClueByName(new ClueName("pista40")));
 
-        assertEquals("pista40", clue2.getName());
+        assertEquals("pista40", clue2.getName().toString());
     }
 
     @Test
@@ -45,13 +53,6 @@ class ClueDaoImplementationTest {
         assertFalse(clueList.isEmpty());
     }
 
-    @Test
-    void save() {
-        Clue clue1 = new Clue(new ClueName("pista40"),"lalala","lolololo",30.0);
-        clueDaoImplementation.save(clue1);
-        Clue clue2 = (clueDaoImplementation.getClueByName(new ClueName(("pista40"))));
-        assertEquals(Clue.class, clue2.getClass());
-    }
 
 
     @Test

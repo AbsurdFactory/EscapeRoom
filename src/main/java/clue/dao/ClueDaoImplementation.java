@@ -69,7 +69,7 @@ public class ClueDaoImplementation implements ClueDao {
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CLUE_BY_NAME_SQL)) {
 
-            preparedStatement.setString(1, clue.getName());
+            preparedStatement.setString(1, clue.getName().toString());
 
             preparedStatement.execute();
             succes = true;
@@ -87,7 +87,7 @@ public class ClueDaoImplementation implements ClueDao {
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CLUE_BY_NAME_SQL)) {
 
-            preparedStatement.setString(1, String.valueOf(name));
+            preparedStatement.setString(1, name.toString());
 
             preparedStatement.execute();
             succes = true;
@@ -122,7 +122,7 @@ public class ClueDaoImplementation implements ClueDao {
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CLUE_BY_NAME_SQL)) {
 
-            preparedStatement.setString(1, String.valueOf(name));
+            preparedStatement.setString(1, name.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 clue1 =  getCLue(resultSet);
@@ -180,7 +180,7 @@ public class ClueDaoImplementation implements ClueDao {
     private Clue getCLue(ResultSet resultSet) {
         try {
             return new Clue(
-                    resultSet.getObject("name",ClueName.class),
+                    new ClueName(resultSet.getString("name")),
                     resultSet.getString("text"),
                     resultSet.getString("theme"),
                     resultSet.getDouble("price")
@@ -206,7 +206,7 @@ public class ClueDaoImplementation implements ClueDao {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(INSERT_CLUE_SQL)) {
-            preparedStatement.setString(1, clue.getName());
+            preparedStatement.setString(1, clue.getName().toString());
             preparedStatement.setString(2, clue.getText());
             preparedStatement.setString(3, clue.getTheme());
             preparedStatement.setDouble(4, clue.getPrice());
@@ -236,7 +236,7 @@ public class ClueDaoImplementation implements ClueDao {
             preparedStatement.setString(1, clue.getText());
             preparedStatement.setString(2, clue.getTheme());
             preparedStatement.setDouble(3, clue.getPrice());
-            preparedStatement.setString(4, clue.getName());
+            preparedStatement.setString(4, clue.getName().toString());
             return preparedStatement.executeUpdate() > 0;
 
         } catch (SQLException e) {
@@ -251,7 +251,7 @@ public class ClueDaoImplementation implements ClueDao {
         dbConnection.openConnection();
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID_CLUE_BY_NAME_SQL)) {
-            preparedStatement.setString(1, clue.getName());
+            preparedStatement.setString(1, clue.getName().toString());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             id_clue = resultSet.getInt("id_clue");
