@@ -22,10 +22,12 @@ public class Clue {
         this.price = price;
     }
 
-    public ClueName getName() {
+    public ClueName getNameValue() {
         return name;
     }
-
+    public String getName() {
+        return name.toString();
+    }
     public String getText() {
         return text;
     }
