@@ -19,6 +19,7 @@ public class MYSQLDatabaseConnection implements DatabaseConnection {
         getDatabaseProperties();
     }
 
+
     public static MYSQLDatabaseConnection getInstance() throws SQLException, ClassNotFoundException, IOException {
         if (instance == null) {
             synchronized (MYSQLDatabaseConnection.class) {
@@ -29,6 +30,7 @@ public class MYSQLDatabaseConnection implements DatabaseConnection {
         }
         return instance;
     }
+
 
     @Override
     public void openConnection() {
