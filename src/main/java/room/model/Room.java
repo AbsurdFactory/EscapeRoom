@@ -14,7 +14,7 @@ public class Room {
     private String difficultyLevel;
     private List<Clue> clues = new ArrayList<>();
     private List<ObjectDecoration> objectDecorations = new ArrayList<>();
-
+    private RoomEventPublisher publisher;
     public Room(){};
 
     public Room(int id, String name, double price, String difficultyLevel) {
@@ -34,7 +34,17 @@ public class Room {
         this.name = name;
         this.price = price;
         this.difficultyLevel = difficultyLevel;
+        this.publisher = publisher;
+        publisher.notifyRoomCreated(this);
+
     }
+    public Room (String name, double price, String difficultyLevel){
+        this.name = name;
+        this.price = price;
+        this.difficultyLevel = difficultyLevel;
+        publisher.notifyRoomCreated(this);
+
+    };
 
 
     public int getId() {
@@ -66,6 +76,9 @@ public class Room {
             throw new IllegalArgumentException("The clue cannot be empty");
         }
         clues.add(clue);
+        // Clue.getName(). once it's created.
+        publisher.notifySubscribers("New clue added to room :" + name + "' → " + clue);
+
     }
 
     public void addDecorations(ObjectDecoration objectDecoration){
@@ -73,6 +86,7 @@ public class Room {
             throw new IllegalArgumentException("The decoration cannot be null.");
         }
         objectDecorations.add(objectDecoration);
+        publisher.notifySubscribers("New decoration added to room :" + name + "' → " + objectDecoration.getName());
     }
 
     @Override
