@@ -1,7 +1,6 @@
 package clue.dao;
 
-import clue.model.Clue;
-import clue.model.ClueName;
+import clue.model.*;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
@@ -181,9 +180,9 @@ public class ClueDaoImplementation implements ClueDao {
         try {
             return new Clue(
                     new ClueName(resultSet.getString("name")),
-                    resultSet.getString("text"),
-                    resultSet.getString("theme"),
-                    resultSet.getDouble("price")
+                    new ClueText(resultSet.getString("text")),
+                    new ClueTheme(resultSet.getString("theme")),
+                    new CluePrice(resultSet.getDouble("price"))
             );
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -207,9 +206,9 @@ public class ClueDaoImplementation implements ClueDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(INSERT_CLUE_SQL)) {
             preparedStatement.setString(1, clue.getName().toString());
-            preparedStatement.setString(2, clue.getText());
-            preparedStatement.setString(3, clue.getTheme());
-            preparedStatement.setDouble(4, clue.getPrice());
+            preparedStatement.setString(2, clue.getText().toString());
+            preparedStatement.setString(3, clue.getTheme().toString());
+            preparedStatement.setDouble(4, clue.getPrice().toDouble());
 
             preparedStatement.execute();
 
@@ -233,9 +232,9 @@ public class ClueDaoImplementation implements ClueDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_CLUE_BY_NAME_SQL)) {
 
-            preparedStatement.setString(1, clue.getText());
-            preparedStatement.setString(2, clue.getTheme());
-            preparedStatement.setDouble(3, clue.getPrice());
+            preparedStatement.setString(1, clue.getText().toString());
+            preparedStatement.setString(2, clue.getTheme().toString());
+            preparedStatement.setDouble(3, clue.getPrice().toDouble());
             preparedStatement.setString(4, clue.getName().toString());
             return preparedStatement.executeUpdate() > 0;
 

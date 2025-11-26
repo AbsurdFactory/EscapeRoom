@@ -3,6 +3,8 @@ package clue.service;
 import clue.dao.ClueDaoImplementation;
 import clue.model.Clue;
 import clue.model.ClueName;
+import clue.model.ClueText;
+import clue.model.ClueTheme;
 
 import java.util.List;
 
@@ -13,7 +15,7 @@ public class ClueService {
         this.clueDaoImplementation = clueDao;
     }
 
-    public void createClue(ClueName name, String text, String theme, Double price) {
+    public void createClue(ClueName name, ClueText text, ClueTheme theme, Double price) {
         Clue clue = new Clue(name, text,theme,price);
 
         clueDaoImplementation.save(clue);

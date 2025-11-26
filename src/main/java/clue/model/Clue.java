@@ -4,18 +4,16 @@ import java.util.Objects;
 
 public class Clue {
     ClueName name;
-    String text;
-    String theme;
-    double price;
+    ClueText text;
+    ClueTheme theme;
+    CluePrice price;
 
     public Clue(ClueName name) {
         this.name = Objects.requireNonNull(name, "The name must be informed");
     }
 
-    public Clue(ClueName name, String text, String theme, double price) {
-        if (price <= 0) {
-            throw new RuntimeException("The price can't be negative or zero");
-        }
+    public Clue(ClueName name, ClueText text, ClueTheme theme, CluePrice price) {
+
         this.name = Objects.requireNonNull(name, "The name must be informed");
         this.text = Objects.requireNonNull(text, "The action must be indicated");
         this.theme = Objects.requireNonNull(theme, "The theme must be indicated");
@@ -25,24 +23,24 @@ public class Clue {
     public ClueName getName() {
         return name;
     }
-    public String getText() {
+    public ClueText getText() {
         return text;
     }
 
-    public String getTheme() {
+    public ClueTheme getTheme() {
         return theme;
     }
 
-    public double getPrice() {
+    public CluePrice getPrice() {
         return price;
     }
 
     @Override
     public String toString() {
         return "Clue = " + name.toString() +
-                ", Action = " + text +
-                ", Theme = "+ theme +
-                ", Price = "+ price ;
+                ", Action = " + text.toString() +
+                ", Theme = "+ theme.toString() +
+                ", Price = "+ price.toDouble() ;
 
     }
 }
