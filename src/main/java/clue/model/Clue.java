@@ -38,5 +38,12 @@ public class Clue {
         return price;
     }
 
+    @Override
+    public String toString() {
+        return "Clue = " + name +
+                ", Action = " + text +
+                ", Theme = "+ theme +
+                ", Price = "+ price ;
 
+    }
 }

@@ -2,7 +2,6 @@ package clue.service;
 
 import clue.dao.ClueDaoImplementation;
 import clue.model.Clue;
-import validators.ClueValidator;
 
 import java.util.List;
 
@@ -15,12 +14,11 @@ public class ClueService {
 
     public void createClue(String name, String text, String theme, Double price) {
         Clue clue = new Clue(name, text,theme,price);
-        ClueValidator.validate(clue);
+
         clueDaoImplementation.save(clue);
     }
 
     public void createClue(Clue clue) {
-        ClueValidator.validate(clue);
         clueDaoImplementation.save(clue);
     }
 
@@ -33,7 +31,6 @@ public class ClueService {
     }
 
     public boolean updateClue(Clue clue) {
-        ClueValidator.validate(clue);
         return clueDaoImplementation.update(clue);
     }
 
