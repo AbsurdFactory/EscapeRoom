@@ -78,6 +78,23 @@ public class ClueDaoImplementation implements ClueDao {
         }
     }
 
+    public void deleteClueByName(String name) {
+        dbConnection.openConnection();
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CLUE_BY_NAME_SQL)) {
+
+            preparedStatement.setString(1, name);
+
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting Clue", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+
     public void deleteClueById(int id) {
         dbConnection.openConnection();
         try (Connection connection = dbConnection.getConnection();
@@ -168,7 +185,7 @@ public class ClueDaoImplementation implements ClueDao {
         }
     }
 
-    private int getCLueId(ResultSet resultSet) {
+    private int getClueId(ResultSet resultSet) {
         int id_clue;
         try {
             id_clue = resultSet.getInt("id_clue");

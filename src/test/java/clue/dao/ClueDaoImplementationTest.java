@@ -1,176 +1,77 @@
 package clue.dao;
 
 import clue.model.Clue;
-import databaseconnection.DatabaseConnection;
-import databaseconnection.MYSQLDatabaseConnection;
-import exceptions.DataAccessException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.List;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
-
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class ClueDaoImplementationTest {
-    private  DatabaseConnection dbConnection;
-    @BeforeEach
-    void setUp() {
-        try {
-            this.dbConnection = MYSQLDatabaseConnection.getInstance();
-        } catch (SQLException | ClassNotFoundException | IOException e) {
-            throw new DataAccessException("Failed to initialize database connection", e);
-        }
-    }
-
-    @Test
-    void createClue() {
-
-        Clue clue = new Clue("pista2","fsdfsdf","lalala",20.0);
-        final String INSERT_SQL = """
-           INSERT INTO clue (name,text,theme,price)
-           VALUES (?,?,?,?)
-        """;
-
-        dbConnection.openConnection();
-        try (Connection connection = dbConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SQL)) {
-
-            preparedStatement.setString(1, clue.getName());
-            preparedStatement.setString(2, clue.getText());
-            preparedStatement.setString(3, clue.getTheme());
-            preparedStatement.setDouble(4, clue.getPrice());
-            preparedStatement.execute();
-
-        } catch (SQLException e) {
-            throw new DataAccessException("Error inserting clue", e);
-        } finally {
-            dbConnection.closeConnection();
-        }
-    }
+    ClueDaoImplementation clueDaoImplementation = new ClueDaoImplementation();
 
     @Test
     void deleteClue() {
-        Clue clue = new Clue("pista1","lalala","lolo",20.0);
-        final String DELETE_SQL = """
-           DELETE FROM clue WHERE name = ?
-        """;
+        Clue clue1 = new Clue("pista34","lalala","lolololo",30.0);
+        List<Clue> list1 = clueDaoImplementation.findAll();
+        clueDaoImplementation.deleteClue(clue1);
+        List<Clue> list2 = clueDaoImplementation.findAll();
 
-        dbConnection.openConnection();
-        try (Connection connection = dbConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SQL)) {
+        assertFalse(list1.containsAll(list2));
+    }
 
-            preparedStatement.setString(1, clue.getName());
 
-            preparedStatement.execute();
+    @Test
+    void getClueByName() {
+        Clue clue2 = (clueDaoImplementation.getClueByName("pista40"));
 
-        } catch (SQLException e) {
-            throw new DataAccessException("Error deleting clue", e);
-        } finally {
-            dbConnection.closeConnection();
-        }
+        assertEquals("pista40", clue2.getName());
     }
 
     @Test
-    void getClueName() {
-        Clue clue = new Clue("pista1","lalala","lolo",20.0);
-        final String SELECT_SQL = """
-           SELECT * FROM clue WHERE name = ?
-        """;
+    void getAllCluesThemes() {
+        List <String> themesList;
+        themesList = clueDaoImplementation.getAllCluesThemes();
 
-        dbConnection.openConnection();
-        try (Connection connection = dbConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SQL)) {
-
-            preparedStatement.setString(1, clue.getName());
-
-            preparedStatement.execute();
-
-        } catch (SQLException e) {
-            throw new DataAccessException("Error getting clue name", e);
-        } finally {
-            dbConnection.closeConnection();
-        }
-    }
-
-    @Test
-    void getClueTheme() {
-        Clue clue = new Clue("pista1","lalala","lolo",20.0);
-        final String SELECT_SQL = """
-           SELECT * FROM clue WHERE theme = ?
-        """;
-
-        dbConnection.openConnection();
-        try (Connection connection = dbConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SQL)) {
-
-            preparedStatement.setString(1, clue.getTheme());
-
-            preparedStatement.execute();
-
-        } catch (SQLException e) {
-            throw new DataAccessException("Error getting clue theme", e);
-        } finally {
-            dbConnection.closeConnection();
-        }
-    }
-
-    @Test
-    void setClueThemeByName() {
-        Clue clue = new Clue("pista3","lalala","lolo",20.0);
-        final String SELECT_SQL = """
-           UPDATE clue SET theme = ? WHERE name = ?
-        """;
-
-        dbConnection.openConnection();
-        try (Connection connection = dbConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SQL)) {
-
-            preparedStatement.setString(1, clue.getTheme());
-            preparedStatement.setString(2, clue.getName());
-
-
-            preparedStatement.execute();
-
-        } catch (SQLException e) {
-            throw new DataAccessException("Error getting clue theme", e);
-        } finally {
-            dbConnection.closeConnection();
-        }
-
-    }
-
-    @Test
-    void setClueAction() {
-    }
-
-    @Test
-    void getClueAction() {
-    }
-
-    @Test
-    void getAllClues() {
-    }
-
-    @Test
-    void save() {
-    }
-
-    @Test
-    void findById() {
+        assertFalse(themesList.isEmpty());
     }
 
     @Test
     void findAll() {
+        List<Clue> clueList = clueDaoImplementation.findAll();
+
+        assertFalse(clueList.isEmpty());
     }
+
+    @Test
+    void save() {
+        Clue clue1 = new Clue("pista40","lalala","lolololo",30.0);
+        clueDaoImplementation.save(clue1);
+        Clue clue2 = (clueDaoImplementation.getClueByName("pista40"));
+        assertEquals(Clue.class, clue2.getClass());
+    }
+
 
     @Test
     void update() {
+        Clue clue1 = clueDaoImplementation.getClueByName("pista555");
+        Clue clue1bis = new Clue("pista555","lararirla","lalurari",40.0);
+        clueDaoImplementation.update(clue1bis);
+        Clue clue2 = (clueDaoImplementation.getClueByName("pista555"));
+        assertEquals(clue2.getName(), clue1.getName());
+        assertNotEquals(clue2.getPrice(), clue1.getPrice());
+        assertNotEquals(clue2.getText(), clue1.getText());
     }
 
+
     @Test
-    void delete() {
+    void deleteClueByName() {
+        Clue clue1 = new Clue("pista32323","lalala","lolololo",30.0);
+        List<Clue> list1 = clueDaoImplementation.findAll();
+        clueDaoImplementation.deleteClueByName("pista32323");
+        List<Clue> list2 = clueDaoImplementation.findAll();
+
+        assertFalse(list1.containsAll(list2));
     }
 }
