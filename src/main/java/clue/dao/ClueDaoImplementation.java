@@ -1,6 +1,7 @@
 package clue.dao;
 
 import clue.model.Clue;
+import clue.model.ClueName;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
@@ -80,13 +81,13 @@ public class ClueDaoImplementation implements ClueDao {
         return succes;
     }
 
-    public boolean deleteClueByName(String name) {
+    public boolean deleteClueByName(ClueName name) {
         dbConnection.openConnection();
         boolean succes = false;
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CLUE_BY_NAME_SQL)) {
 
-            preparedStatement.setString(1, name);
+            preparedStatement.setString(1, String.valueOf(name));
 
             preparedStatement.execute();
             succes = true;
@@ -115,13 +116,13 @@ public class ClueDaoImplementation implements ClueDao {
         }
     }
 
-    public Clue getClueByName(String name) {
+    public Clue getClueByName(ClueName name) {
         Clue clue1 = null;
         dbConnection.openConnection();
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CLUE_BY_NAME_SQL)) {
 
-            preparedStatement.setString(1, name);
+            preparedStatement.setString(1, String.valueOf(name));
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 clue1 =  getCLue(resultSet);
@@ -179,7 +180,7 @@ public class ClueDaoImplementation implements ClueDao {
     private Clue getCLue(ResultSet resultSet) {
         try {
             return new Clue(
-                    resultSet.getString("name"),
+                    resultSet.getObject("name",ClueName.class),
                     resultSet.getString("text"),
                     resultSet.getString("theme"),
                     resultSet.getDouble("price")

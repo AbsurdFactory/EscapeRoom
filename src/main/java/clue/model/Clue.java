@@ -3,16 +3,16 @@ package clue.model;
 import java.util.Objects;
 
 public class Clue {
-    String name;
+    ClueName name;
     String text;
     String theme;
     double price;
 
-    public Clue(String name) {
+    public Clue(ClueName name) {
         this.name = Objects.requireNonNull(name, "The name must be informed");
     }
 
-    public Clue(String name, String text, String theme, double price) {
+    public Clue(ClueName name, String text, String theme, double price) {
         if (price <= 0) {
             throw new RuntimeException("The price can't be negative or zero");
         }
@@ -22,7 +22,7 @@ public class Clue {
         this.price = price;
     }
 
-    public String getName() {
+    public ClueName getName() {
         return name;
     }
 
