@@ -62,36 +62,40 @@ public class ClueDaoImplementation implements ClueDao {
         }
     }
 
-    public void deleteClue(Clue clue) {
+    public boolean deleteClue(Clue clue) {
         dbConnection.openConnection();
+        boolean succes = false;
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CLUE_BY_NAME_SQL)) {
 
             preparedStatement.setString(1, clue.getName());
 
             preparedStatement.execute();
-
+            succes = true;
         } catch (SQLException e) {
             throw new DataAccessException("Error deleting Clue", e);
         } finally {
             dbConnection.closeConnection();
         }
+        return succes;
     }
 
-    public void deleteClueByName(String name) {
+    public boolean deleteClueByName(String name) {
         dbConnection.openConnection();
+        boolean succes = false;
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CLUE_BY_NAME_SQL)) {
 
             preparedStatement.setString(1, name);
 
             preparedStatement.execute();
-
+            succes = true;
         } catch (SQLException e) {
             throw new DataAccessException("Error deleting Clue", e);
         } finally {
             dbConnection.closeConnection();
         }
+        return succes;
     }
 
 
