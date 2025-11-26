@@ -1,7 +1,5 @@
 package dao;
 
-import objectdecoration.model.ObjectDecoration;
-
 import java.util.List;
 import java.util.Optional;
 

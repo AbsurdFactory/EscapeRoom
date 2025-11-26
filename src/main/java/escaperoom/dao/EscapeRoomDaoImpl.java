@@ -5,7 +5,6 @@ import databaseconnection.MYSQLDatabaseConnection;
 import escaperoom.model.EscapeRoom;
 import exceptions.DataAccessException;
 
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,40 +16,41 @@ import java.util.Optional;
 
 public class EscapeRoomDaoImpl implements EscapeRoomDao {
     private static final String INSERT_SQL = """
-        INSERT INTO escape (name)
-        VALUES (?)
-        """;
+            INSERT INTO escape (name)
+            VALUES (?)
+            """;
 
     private static final String SELECT_BY_ID = """
-        SELECT id_escape, name
-        FROM escape
-        WHERE id_escape = ?
-        """;
+            SELECT id_escape, name
+            FROM escape
+            WHERE id_escape = ?
+            """;
 
     private static final String SELECT_BY_NAME = """
-    SELECT id_escape, name
-    FROM escape
-    WHERE name = ?
-    """;
+            SELECT id_escape, name
+            FROM escape
+            WHERE name = ?
+            """;
 
     private static final String SELECT_ALL = """
-        SELECT id_escape, name
-        FROM escape
-        """;
+            SELECT id_escape, name
+            FROM escape
+            """;
 
     private static final String UPDATE_SQL = """
-        UPDATE escape
-        SET name = ?
-        WHERE id_escape = ?
-        """;
+            UPDATE escape
+            SET name = ?
+            WHERE id_escape = ?
+            """;
 
     private static final String DELETE_SQL = """
-        DELETE FROM escape
-        WHERE id_escape = ?
-        """;
+            DELETE FROM escape
+            WHERE id_escape = ?
+            """;
 
 
     private final DatabaseConnection dbConnection;
+
     public EscapeRoomDaoImpl() {
         try {
             this.dbConnection = MYSQLDatabaseConnection.getInstance();

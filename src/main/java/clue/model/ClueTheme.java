@@ -6,7 +6,7 @@ public record ClueTheme(String theme) {
             throw new IllegalArgumentException("Text cannot be empty");
         }
 
-        if (theme.length() > 45 ){
+        if (theme.length() > 45) {
             throw new IllegalArgumentException("Text cannot be superior to 45 characters");
         }
     }

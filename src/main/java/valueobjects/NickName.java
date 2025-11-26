@@ -4,9 +4,7 @@ import exceptions.ValidationException;
 
 import java.util.Objects;
 
-public class NickName {
-    private final String value;
-
+public record NickName(String value) {
     public NickName(String value) {
         if (value == null || value.isBlank()) {
             throw new ValidationException("NickName cannot be empty");
@@ -15,10 +13,6 @@ public class NickName {
             throw new ValidationException("NickName must be between 3 and 45 characters");
         }
         this.value = value.trim();
-    }
-
-    public String getValue() {
-        return value;
     }
 
     @Override

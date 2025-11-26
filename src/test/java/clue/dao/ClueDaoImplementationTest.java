@@ -75,4 +75,15 @@ class ClueDaoImplementationTest {
 
         assertFalse(list1.containsAll(list2));
     }
+
+    @Test
+    void getTotalCluePrice() {
+        assertTrue(clueDaoImplementation.getTotalCluePrice() >0);
+    }
+
+    @Test
+    void getTotalCluesUnits() {
+        assertTrue(clueDaoImplementation.getTotalCluesUnits() >0);
+
+    }
 }

@@ -1,6 +1,6 @@
 package clue.model;
 
-public record CluePrice (Double price){
+public record CluePrice(Double price) {
     public CluePrice {
 
         if (price == null) {

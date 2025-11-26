@@ -11,13 +11,14 @@ public class EscapeRoom {
     private String name;
     private List<Room> rooms;
 
-    public EscapeRoom(){};
+    public EscapeRoom() {
+    }
 
-    public EscapeRoom(int id, String name){
-        if(id <= 0) {
+    public EscapeRoom(int id, String name) {
+        if (id <= 0) {
             throw new IllegalArgumentException("The id must be greater than zero.");
         }
-        if(name.isBlank() || name.isEmpty()){
+        if (name.isBlank() || name.isEmpty()) {
             throw new IllegalArgumentException("The name cannot be empty or blank.");
         }
         this.id = id;
@@ -34,12 +35,12 @@ public class EscapeRoom {
         return name;
     }
 
-    public List<Room> getRooms(){
+    public List<Room> getRooms() {
         return Collections.unmodifiableList(rooms);
     }
 
-    public void addRoom(Room room){
-        if (room == null){
+    public void addRoom(Room room) {
+        if (room == null) {
             throw new IllegalArgumentException("The room cannot be null.");
         }
         rooms.add(room);

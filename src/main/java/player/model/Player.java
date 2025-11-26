@@ -2,8 +2,8 @@ package player.model;
 
 import valueobjects.Age;
 import valueobjects.Email;
-import valueobjects.NickName;
 import valueobjects.Id;
+import valueobjects.NickName;
 
 public class Player {
     private final Id<Player> id;

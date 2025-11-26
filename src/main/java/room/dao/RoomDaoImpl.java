@@ -22,28 +22,29 @@ public class RoomDaoImpl implements RoomDao {
             """;
 
     private static final String SELECT_BY_ID = """
-        SELECT id_room, name, price, difficulty_level
-        FROM room
-        WHERE id_room = ?
-        """;
+            SELECT id_room, name, price, difficulty_level
+            FROM room
+            WHERE id_room = ?
+            """;
 
     private static final String SELECT_ALL = """
-        SELECT id_room, name, price, difficulty_level
-        FROM room
-        """;
+            SELECT id_room, name, price, difficulty_level
+            FROM room
+            """;
 
     private static final String UPDATE_SQL = """
-        UPDATE room
-        SET name = ?, price = ?, difficulty_level = ?
-        WHERE id_room = ?
-        """;
+            UPDATE room
+            SET name = ?, price = ?, difficulty_level = ?
+            WHERE id_room = ?
+            """;
 
     private static final String DELETE_SQL = """
-        DELETE FROM room
-        WHERE id_room = ?
-        """;
+            DELETE FROM room
+            WHERE id_room = ?
+            """;
 
     private final DatabaseConnection dbConnection;
+
     public RoomDaoImpl() {
         try {
             this.dbConnection = MYSQLDatabaseConnection.getInstance();

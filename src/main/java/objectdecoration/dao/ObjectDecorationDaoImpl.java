@@ -2,8 +2,8 @@ package objectdecoration.dao;
 
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
-import objectdecoration.model.ObjectDecoration;
 import exceptions.DataAccessException;
+import objectdecoration.model.ObjectDecoration;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -17,32 +17,33 @@ import java.util.Optional;
 public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
 
     private static final String INSERT_SQL = """
-        INSERT INTO decoration_object (name, material, price)
-        VALUES (?, ?, ?)
-        """;
+            INSERT INTO decoration_object (name, material, price)
+            VALUES (?, ?, ?)
+            """;
 
     private static final String SELECT_BY_ID = """
-        SELECT id_decoration_object, name, material, price
-        FROM decoration_object
-        WHERE id_decoration_object = ?
-        """;
+            SELECT id_decoration_object, name, material, price
+            FROM decoration_object
+            WHERE id_decoration_object = ?
+            """;
 
     private static final String SELECT_ALL = """
-        SELECT id_decoration_object, name, material, price
-        FROM decoration_object
-        """;
+            SELECT id_decoration_object, name, material, price
+            FROM decoration_object
+            """;
 
     private static final String UPDATE_SQL = """
-        UPDATE decoration_object
-        SET name = ?, material = ?, price = ?
-        WHERE id_decoration_object = ?
-        """;
+            UPDATE decoration_object
+            SET name = ?, material = ?, price = ?
+            WHERE id_decoration_object = ?
+            """;
 
     private static final String DELETE_SQL = """
-        DELETE FROM decoration_object
-        WHERE id_decoration_object = ?
-        """;
+            DELETE FROM decoration_object
+            WHERE id_decoration_object = ?
+            """;
     private final DatabaseConnection dbConnection;
+
     public ObjectDecorationDaoImpl() {
         try {
             this.dbConnection = MYSQLDatabaseConnection.getInstance();
@@ -50,6 +51,7 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
             throw new DataAccessException("Failed to initialize database connection", e);
         }
     }
+
     @Override
     public void save(ObjectDecoration object) {
         dbConnection.openConnection();

@@ -8,13 +8,12 @@ import java.util.List;
 
 public class RoomBuilder {
 
+    private final List<Clue> clues = new ArrayList<>();
+    private final List<ObjectDecoration> objectDecorations = new ArrayList<>();
     private int id;
     private String name;
     private double price;
     private String difficultyLevel;
-
-    private final List<Clue> clues = new ArrayList<>();
-    private final List<ObjectDecoration> objectDecorations = new ArrayList<>();
 
     public RoomBuilder withId(int id) {
         this.id = id;

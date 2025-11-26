@@ -23,6 +23,7 @@ public class Clue {
     public ClueName getName() {
         return name;
     }
+
     public ClueText getText() {
         return text;
     }
@@ -39,8 +40,8 @@ public class Clue {
     public String toString() {
         return "Clue = " + name.toString() +
                 ", Action = " + text.toString() +
-                ", Theme = "+ theme.toString() +
-                ", Price = "+ price.toDouble() ;
+                ", Theme = " + theme.toString() +
+                ", Price = " + price.toDouble();
 
     }
 }

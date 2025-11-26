@@ -4,9 +4,9 @@ public class Certificate {
 
     private int id;
     private String textBody;
-    private CertificateRewardType reward;
-    private int playerId;
-    private int roomId;
+    private final CertificateRewardType reward;
+    private final int playerId;
+    private final int roomId;
 
     public Certificate(CertificateRewardType reward, int playerId, int roomId) {
 

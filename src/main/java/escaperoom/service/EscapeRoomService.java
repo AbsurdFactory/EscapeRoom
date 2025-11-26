@@ -3,7 +3,6 @@ package escaperoom.service;
 import escaperoom.dao.EscapeRoomDao;
 import escaperoom.model.EscapeRoom;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +13,7 @@ public class EscapeRoomService {
         this.escapeRoomDao = escapeRoomDao;
     }
 
-    public void createEscapeRoom(EscapeRoom escapeRoom){
+    public void createEscapeRoom(EscapeRoom escapeRoom) {
         escapeRoomDao.save(escapeRoom);
     }
 

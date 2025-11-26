@@ -2,21 +2,12 @@ package valueobjects;
 
 import exceptions.ValidationException;
 
-import java.util.Objects;
+public record Id<T>(int value) {
 
-public final class Id<T> {
-
-    private final int value;
-
-    public Id(int value) {
+    public Id {
         if (value <= 0) {
             throw new ValidationException("Entity ID must be greater than zero");
         }
-        this.value = value;
-    }
-
-    public int getValue() {
-        return value;
     }
 
     public boolean sameValueAs(Id<T> other) {
@@ -28,11 +19,6 @@ public final class Id<T> {
         if (this == o) return true;
         if (!(o instanceof Id<?> other)) return false;
         return value == other.value;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
     }
 
     @Override

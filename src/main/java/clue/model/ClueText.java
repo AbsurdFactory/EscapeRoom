@@ -7,7 +7,7 @@ public record ClueText(String text) {
             throw new IllegalArgumentException("Text cannot be empty");
         }
 
-        if (text.length() > 250 ){
+        if (text.length() > 250) {
             throw new IllegalArgumentException("Text cannot be superior to 250 characters");
         }
     }

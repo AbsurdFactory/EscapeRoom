@@ -1,6 +1,5 @@
 package ticket.dao;
 
-import dao.BaseDao;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
