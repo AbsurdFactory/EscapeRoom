@@ -46,4 +46,15 @@ public class PlayerService {
     public List<Player> getAllPlayers() {
         return playerDao.findAll();
     }
+
+    public boolean updatePlayer(int id, String newNickName, String newEmail) {
+        Player existing = getPlayerById(id);
+        Player updated = Player.rehydrate(id, newNickName, newEmail);
+        return playerDao.update(updated);
+    }
+
+    public boolean deletePlayer(int id) {
+        getPlayerById(id);
+        return playerDao.delete(id);
+    }
 }
