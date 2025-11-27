@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.sql.*;
@@ -16,12 +17,16 @@ import java.sql.*;
 public class PlayerDaoImpl implements PlayerDao {
 
     private static final String INSERT_SQL = """
-        INSERT INTO player (nick_name, email) VALUES (?, ?)
-        """;
+            INSERT INTO player (nick_name, email) VALUES (?, ?)
+            """;
 
     private static final String SELECT_BY_ID = """
-        SELECT id_player, nick_name, email FROM player WHERE id_player = ?
-        """;
+            SELECT id_player, nick_name, email FROM player WHERE id_player = ?
+            """;
+
+    private static final String SELECT_ALL = """
+            SELECT id_player, nick_name, email FROM player
+            """;
 
     private final DatabaseConnection dbConnection;
 
@@ -57,7 +62,24 @@ public class PlayerDaoImpl implements PlayerDao {
 
     @Override
     public List<Player> findAll() {
-        return null;
+        dbConnection.openConnection();
+        List<Player> players = new ArrayList<>();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_ALL);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                players.add(mapRow(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error retrieving players", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+
+        return players;
     }
 
     @Override
