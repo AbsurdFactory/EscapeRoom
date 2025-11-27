@@ -6,8 +6,7 @@ public class ObjectDecoration {
     private String material;
     private double price;
 
-    public ObjectDecoration() {
-    }
+    public ObjectDecoration() {}
 
     public ObjectDecoration(int id, String name, String material, double price) {
         this.id = id;
@@ -16,21 +15,13 @@ public class ObjectDecoration {
         this.price = price;
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
-    public String getMaterial() {
-        return material;
-    }
+    public String getMaterial() { return material; }
 
-    public double getPrice() {
-        return price;
-    }
+    public double getPrice() { return price; }
 
     @Override
     public String toString() {

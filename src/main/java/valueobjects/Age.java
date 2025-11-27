@@ -2,8 +2,10 @@ package valueobjects;
 
 import exceptions.ValidationException;
 
-public record Age(int value) {
-    public Age {
+public class Age {
+    private final int value;
+
+    public Age(int value) {
         if (value <= 0) {
             throw new ValidationException("Age must be greater than zero");
         }
@@ -13,6 +15,11 @@ public record Age(int value) {
         if (value > 120) {
             throw new ValidationException("Invalid age: must be less than 120");
         }
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
     }
 
     @Override

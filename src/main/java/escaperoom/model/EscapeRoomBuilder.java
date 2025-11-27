@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EscapeRoomBuilder {
-    private final List<Room> rooms = new ArrayList<>();
     private int id;
     private String name;
+
+    private final List<Room> rooms = new ArrayList<>();
 
     public EscapeRoomBuilder withId(int id) {
         this.id = id;

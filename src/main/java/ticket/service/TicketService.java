@@ -1,7 +1,7 @@
 package ticket.service;
 
-import exceptions.DataAccessException;
 import ticket.dao.TicketDao;
+import exceptions.DataAccessException;
 import ticket.model.Ticket;
 
 import java.util.List;

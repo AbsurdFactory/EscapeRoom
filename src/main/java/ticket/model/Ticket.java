@@ -2,8 +2,8 @@ package ticket.model;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Ticket {
@@ -34,7 +34,7 @@ public class Ticket {
         this.roomId = roomId;
         this.playerId = playerId;
         this.price = price;
-        this.date = Objects.requireNonNull(date, "Date cannot be null");
+        this.date = Objects.requireNonNull(date,"Date cannot be null");
         this.time = Objects.requireNonNull(time, "Time cannot be null.");
     }
 

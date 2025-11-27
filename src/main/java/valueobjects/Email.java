@@ -2,11 +2,14 @@ package valueobjects;
 
 import exceptions.ValidationException;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
-public record Email(String value) {
+public class Email {
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
+    private final String value;
 
     public Email(String value) {
         if (value == null || value.isBlank()) {
@@ -16,6 +19,10 @@ public record Email(String value) {
             throw new ValidationException("Invalid email format");
         }
         this.value = value.trim().toLowerCase();
+    }
+
+    public String getValue() {
+        return value;
     }
 
     @Override
@@ -30,4 +37,8 @@ public record Email(String value) {
         return value.equals(email.value);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
 }

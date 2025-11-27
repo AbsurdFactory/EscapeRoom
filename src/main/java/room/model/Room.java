@@ -12,23 +12,22 @@ public class Room {
     private String name;
     private double price;
     private String difficultyLevel;
-    private final List<Clue> clues = new ArrayList<>();
-    private final List<ObjectDecoration> objectDecorations = new ArrayList<>();
+    private List<Clue> clues = new ArrayList<>();
+    private List<ObjectDecoration> objectDecorations = new ArrayList<>();
 
-    public Room() {
-    }
+    public Room(){};
 
     public Room(int id, String name, double price, String difficultyLevel) {
-        if (id <= 0) {
+        if(id <= 0) {
             throw new IllegalArgumentException("The id must be greater than zero.");
         }
-        if (name.isBlank() || name.isEmpty()) {
+        if(name.isBlank() || name.isEmpty()) {
             throw new IllegalArgumentException("The name cannot be empty.");
         }
-        if (price < 0) {
+        if (price < 0){
             throw new IllegalArgumentException("The price cannot be negative.");
         }
-        if (difficultyLevel.isEmpty() || difficultyLevel.isBlank()) {
+        if (difficultyLevel.isEmpty() || difficultyLevel.isBlank()){
             throw new IllegalArgumentException("The difficulty level cannot be empty.");
         }
         this.id = id;
@@ -54,23 +53,23 @@ public class Room {
         return difficultyLevel;
     }
 
-    public List<Clue> getClues() {
+    public List<Clue> getClues(){
         return Collections.unmodifiableList(clues);
     }
 
-    public List<ObjectDecoration> getObjectDecorations() {
+    public List<ObjectDecoration> getObjectDecorations(){
         return Collections.unmodifiableList(objectDecorations);
     }
 
-    public void addClues(Clue clue) {
-        if (clue == null) {
+    public void addClues(Clue clue){
+        if(clue == null){
             throw new IllegalArgumentException("The clue cannot be empty");
         }
         clues.add(clue);
     }
 
-    public void addDecorations(ObjectDecoration objectDecoration) {
-        if (objectDecoration == null) {
+    public void addDecorations(ObjectDecoration objectDecoration){
+        if(objectDecoration == null){
             throw new IllegalArgumentException("The decoration cannot be null.");
         }
         objectDecorations.add(objectDecoration);
