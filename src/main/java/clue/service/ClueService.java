@@ -22,8 +22,8 @@ public class ClueService {
         clueDaoImplementation.save(clue);
     }
 
-    public boolean validateExistClueInDataBase(String name) {
-        return clueDaoImplementation.getClueByName(new ClueName(name)) != null;
+    public boolean validateExistClueInDataBase(ClueName name) {
+        return clueDaoImplementation.getClueByName(name) != null;
     }
 
     public List<Clue> getAllClues() {

@@ -133,7 +133,7 @@ public class ClueDaoImplementation implements ClueDao {
             preparedStatement.setString(1, name.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                clue1 = getCLue(resultSet);
+                clue1 = getClue(resultSet);
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
@@ -173,7 +173,7 @@ public class ClueDaoImplementation implements ClueDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                clueList.add(getCLue(resultSet));
+                clueList.add(getClue(resultSet));
             }
 
         } catch (SQLException e) {
@@ -185,7 +185,7 @@ public class ClueDaoImplementation implements ClueDao {
     }
 
 
-    private Clue getCLue(ResultSet resultSet) {
+    private Clue getClue(ResultSet resultSet) {
         try {
             return new Clue(
                     new ClueName(resultSet.getString("name")),
@@ -254,7 +254,7 @@ public class ClueDaoImplementation implements ClueDao {
         }
     }
 
-    private int getIdClueByCLue(Clue clue) {
+    private int getIdClueByClue(Clue clue) {
         int id_clue = 0;
         dbConnection.openConnection();
         try (Connection connection = dbConnection.getConnection();
@@ -319,7 +319,7 @@ public class ClueDaoImplementation implements ClueDao {
              PreparedStatement preparedStatement = connection.prepareStatement(GET_TOTAL_CLUE_UNITS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()) {
-                totalUnits = resultSet.getInt("totalCLues");
+                totalUnits = resultSet.getInt("totalClues");
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
