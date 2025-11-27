@@ -129,6 +129,11 @@ public class PlayerDaoImpl implements PlayerDao {
         return Optional.empty();
     }
 
+    @Override
+    public Optional<Player> findByNickName(String nickName) {
+        return Optional.empty();
+    }
+
     private Player mapRow(ResultSet rs) throws SQLException {
         return Player.rehydrate(
                 rs.getInt("id_player"),
