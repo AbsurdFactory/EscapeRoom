@@ -9,21 +9,19 @@ public class Player {
     private final Id<Player> id;
     private final NickName nickName;
     private final Email email;
-    private final Age age;
 
-    private Player(Id<Player> id, NickName nickName, Email email, Age age) {
+    private Player(Id<Player> id, NickName nickName, Email email) {
         this.id = id;
         this.nickName = nickName;
         this.email = email;
-        this.age = age;
     }
 
-    public static Player create(String nickName, String email, int age) {
-        return new Player(null, new NickName(nickName), new Email(email), new Age(age));
+    public static Player create(String nickName, String email) {
+        return new Player(null, new NickName(nickName), new Email(email));
     }
 
-    public static Player rehydrate(int id, String nickName, String email, int age) {
-        return new Player(new Id(id), new NickName(nickName), new Email(email), new Age(age));
+    public static Player rehydrate(int id, String nickName, String email) {
+        return new Player(new Id(id), new NickName(nickName), new Email(email));
     }
 
     public Id<Player> getId() {
@@ -36,10 +34,6 @@ public class Player {
 
     public Email getEmail() {
         return email;
-    }
-
-    public Age getAge() {
-        return age;
     }
 
     @Override
@@ -55,7 +49,6 @@ public class Player {
                 "id=" + (id != null ? id : "N/A") +
                 ", nickName=" + nickName +
                 ", email=" + email +
-                ", age=" + age +
                 '}';
     }
 }
