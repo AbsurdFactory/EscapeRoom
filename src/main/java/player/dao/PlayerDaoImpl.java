@@ -28,6 +28,14 @@ public class PlayerDaoImpl implements PlayerDao {
             SELECT id_player, nick_name, email FROM player
             """;
 
+    private static final String UPDATE_SQL = """
+            UPDATE player SET nick_name = ?, email = ? WHERE id_player = ?
+            """;
+
+    private static final String DELETE_SQL = """
+            DELETE FROM player WHERE id_player = ?
+            """;
+
     private final DatabaseConnection dbConnection;
 
     public PlayerDaoImpl() {
@@ -84,12 +92,36 @@ public class PlayerDaoImpl implements PlayerDao {
 
     @Override
     public boolean update(Player entity) {
-        return false;
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
+
+            ps.setString(1, entity.getNickName().getValue());
+            ps.setString(2, entity.getEmail().getValue());
+            ps.setInt(3, entity.getId().getValue());
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error updating player", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
     }
 
     @Override
     public boolean delete(int id) {
-        return false;
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting player", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
     }
 
     @Override
