@@ -312,15 +312,15 @@ public class ClueDaoImplementation implements ClueDao {
     }
 
     public double getTotalCluesUnits() {
-        int totalUnits;
+        int totalUnits = 0;
         dbConnection.openConnection();
 
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_TOTAL_CLUE_UNITS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-
-            totalUnits = resultSet.getInt("totalCLues");
-
+            if(resultSet.next()) {
+                totalUnits = resultSet.getInt("totalCLues");
+            }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         } finally {

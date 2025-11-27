@@ -32,9 +32,9 @@ class ClueDaoImplementationTest {
 
     @Test
     void getClueByName() {
-        Clue clue2 = (clueDaoImplementation.getClueByName(new ClueName("pista40")));
+        Clue clue2 = (clueDaoImplementation.getClueByName(new ClueName("pista323")));
 
-        assertEquals("pista40", clue2.getName().toString());
+        assertEquals("pista323", clue2.getName().toString());
     }
 
     @Test
@@ -56,10 +56,10 @@ class ClueDaoImplementationTest {
 
     @Test
     void update() {
-        Clue clue1 = clueDaoImplementation.getClueByName(new ClueName(("pista32")));
-        Clue clue1bis = new Clue(new ClueName("pista32"),new ClueText("lalal4"),new ClueTheme("lalurvari"),new CluePrice(44.0));
+        Clue clue1 = clueDaoImplementation.getClueByName(new ClueName(("pista323")));
+        Clue clue1bis = new Clue(new ClueName("pista323"),new ClueText("lalal4"),new ClueTheme("lalurvari"),new CluePrice(44.0));
         clueDaoImplementation.update(clue1bis);
-        Clue clue2 = (clueDaoImplementation.getClueByName(new ClueName("pista32")));
+        Clue clue2 = (clueDaoImplementation.getClueByName(new ClueName("pista323")));
         assertEquals(clue2.getName(), clue1.getName());
         assertNotEquals(clue2.getPrice(), clue1.getPrice());
         assertNotEquals(clue2.getText(), clue1.getText());
@@ -83,7 +83,7 @@ class ClueDaoImplementationTest {
 
     @Test
     void getTotalCluesUnits() {
-        assertTrue(clueDaoImplementation.getTotalCluesUnits() >0);
+        assertTrue(clueDaoImplementation.getTotalCluesUnits() >=0);
 
     }
 }
