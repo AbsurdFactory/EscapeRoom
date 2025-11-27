@@ -1,7 +1,7 @@
 package clue.service;
 
 import clue.dao.ClueDaoImplementation;
-import clue.model.Clue;
+import clue.model.*;
 
 import java.util.List;
 
@@ -12,14 +12,18 @@ public class ClueService {
         this.clueDaoImplementation = clueDao;
     }
 
-    public void createClue(String name, String text, String theme, Double price) {
-        Clue clue = new Clue(name, text,theme,price);
+    public void createClue(ClueName name, ClueText text, ClueTheme theme, CluePrice price) {
+        Clue clue = new Clue(name, text, theme, price);
 
         clueDaoImplementation.save(clue);
     }
 
     public void createClue(Clue clue) {
         clueDaoImplementation.save(clue);
+    }
+
+    public boolean validateExistClueInDataBase(ClueName name) {
+        return clueDaoImplementation.getClueByName(name) != null;
     }
 
     public List<Clue> getAllClues() {
@@ -34,14 +38,12 @@ public class ClueService {
         return clueDaoImplementation.update(clue);
     }
 
-    public boolean deleteClueByName(String name) {
-        if (name.isBlank()) {
-            throw new IllegalArgumentException("Invalid name");
-        }
+    public boolean deleteClueByName(ClueName name) {
+
         return clueDaoImplementation.deleteClueByName(name);
     }
 
-    public boolean deleteClue(Clue clue){
-      return  clueDaoImplementation.deleteClue(clue);
+    public boolean deleteClue(Clue clue) {
+        return clueDaoImplementation.deleteClue(clue);
     }
 }
