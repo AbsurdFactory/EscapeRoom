@@ -1,29 +1,33 @@
 package player.model;
 
+
+
 import valueobjects.Age;
 import valueobjects.Email;
 import valueobjects.NickName;
 import valueobjects.Id;
 
-public class Player {
+public class Player implements Subscriber {
     private final Id<Player> id;
     private final NickName nickName;
     private final Email email;
     private final Age age;
+    private boolean subscribed;
 
-    private Player(Id<Player> id, NickName nickName, Email email, Age age) {
+    private Player(Id<Player> id, NickName nickName, Email email, Age age, boolean subscribed) {
         this.id = id;
         this.nickName = nickName;
         this.email = email;
         this.age = age;
+        this.subscribed = subscribed;
     }
 
-    public static Player create(String nickName, String email, int age) {
-        return new Player(null, new NickName(nickName), new Email(email), new Age(age));
+    public static Player create(String nickName, String email, int age, boolean subscribed) {
+        return new Player(null, new NickName(nickName), new Email(email), new Age(age), subscribed);
     }
 
-    public static Player rehydrate(int id, String nickName, String email, int age) {
-        return new Player(new Id(id), new NickName(nickName), new Email(email), new Age(age));
+    public static Player rehydrate(int id, String nickName, String email, int age, boolean subscribed) {
+        return new Player(new Id(id), new NickName(nickName), new Email(email), new Age(age), subscribed);
     }
 
     public Id<Player> getId() {
@@ -40,6 +44,15 @@ public class Player {
 
     public Age getAge() {
         return age;
+    }
+
+    public boolean isSubscribed() {
+        return subscribed;
+    }
+
+    @Override
+    public void notification(String message){
+        System.out.println("NOTIFICATION to " + nickName + ":" + message);
     }
 
     @Override
