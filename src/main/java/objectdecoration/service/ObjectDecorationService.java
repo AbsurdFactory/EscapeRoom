@@ -1,44 +1,38 @@
 package objectdecoration.service;
 
+import exceptions.NotFoundException;
 import objectdecoration.dao.ObjectDecorationDao;
 import objectdecoration.model.ObjectDecoration;
-import validators.ObjectDecorationValidator;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ObjectDecorationService {
-    private final ObjectDecorationDao decorationDao;
+    private final ObjectDecorationDao dao;
 
-    public ObjectDecorationService(ObjectDecorationDao decorationDao) {
-        this.decorationDao = decorationDao;
+    public ObjectDecorationService(ObjectDecorationDao dao) {
+        this.dao = dao;
     }
 
-    public void createDecoration(ObjectDecoration decoration) {
-        ObjectDecorationValidator.validate(decoration);
-        decorationDao.save(decoration);
+    public void addObjectDecoration(String name, String material, double price) {
+        ObjectDecoration object = ObjectDecoration.create(name, material, price);
+        dao.save(object);
     }
 
-    public Optional<ObjectDecoration> getDecorationById(int id) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("ID must be greater than zero.");
-        }
-        return decorationDao.findById(id);
+    public ObjectDecoration getById(int id) {
+        return dao.findById(id)
+                .orElseThrow(() -> new NotFoundException("ObjectDecoration not found with id: " + id));
     }
 
-    public List<ObjectDecoration> getAllDecorations() {
-        return decorationDao.findAll();
+    public List<ObjectDecoration> getAll() {
+        return dao.findAll();
     }
 
-    public boolean updateDecoration(ObjectDecoration decoration) {
-        ObjectDecorationValidator.validate(decoration);
-        return decorationDao.update(decoration);
+    public boolean updateObjectDecoration(int id, String name, String material, double price) {
+        ObjectDecoration updated = ObjectDecoration.rehydrate(id, name, material, price);
+        return dao.update(updated);
     }
 
-    public boolean deleteDecoration(int id) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("Invalid ID.");
-        }
-        return decorationDao.delete(id);
+    public boolean deleteObjectDecoration(int id) {
+        return dao.delete(id);
     }
 }
