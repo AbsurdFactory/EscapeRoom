@@ -36,6 +36,14 @@ public class PlayerDaoImpl implements PlayerDao {
             DELETE FROM player WHERE id_player = ?
             """;
 
+    private static final String SELECT_BY_NICKNAME = """
+            SELECT id_player, nick_name, email FROM player WHERE nick_name = ?
+            """;
+
+    private static final String SELECT_BY_EMAIL = """
+            SELECT id_player, nick_name, email FROM player WHERE email = ?
+            """;
+
     private final DatabaseConnection dbConnection;
 
     public PlayerDaoImpl() {
@@ -65,7 +73,7 @@ public class PlayerDaoImpl implements PlayerDao {
 
     @Override
     public Optional<Player> findById(int id) {
-        return Optional.empty();
+        return querySingle(SELECT_BY_ID, id);
     }
 
     @Override
@@ -126,12 +134,12 @@ public class PlayerDaoImpl implements PlayerDao {
 
     @Override
     public Optional<Player> findByEmail(String email) {
-        return Optional.empty();
+        return querySingle(SELECT_BY_EMAIL, email);
     }
 
     @Override
     public Optional<Player> findByNickName(String nickName) {
-        return Optional.empty();
+        return querySingle(SELECT_BY_NICKNAME, nickName);
     }
 
     private Player mapRow(ResultSet rs) throws SQLException {
@@ -140,5 +148,25 @@ public class PlayerDaoImpl implements PlayerDao {
                 rs.getString("nick_name"),
                 rs.getString("email")
         );
+    }
+
+    private Optional<Player> querySingle(String sql, Object param) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setObject(1, param);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return Optional.of(mapRow(rs));
+            }
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Query error: " + sql, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
     }
 }
