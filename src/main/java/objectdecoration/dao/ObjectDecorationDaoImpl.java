@@ -56,9 +56,9 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
 
-            ps.setString(1, object.getName());
-            ps.setString(2, object.getMaterial());
-            ps.setDouble(3, object.getPrice());
+            ps.setString(1, object.getName().getValue());
+            ps.setString(2, object.getMaterial().getValue());
+            ps.setDouble(3, object.getPrice().getValue());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -117,10 +117,10 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
 
-            ps.setString(1, object.getName());
-            ps.setString(2, object.getMaterial());
-            ps.setDouble(3, object.getPrice());
-            ps.setInt(4, object.getId());
+            ps.setString(1, object.getName().getValue());
+            ps.setString(2, object.getMaterial().getValue());
+            ps.setDouble(3, object.getPrice().getValue());
+            ps.setInt(4, object.getId().getValue());
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
@@ -147,8 +147,8 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
     }
 
     private ObjectDecoration mapRow(ResultSet rs) throws SQLException {
-        return new ObjectDecoration(
-                rs.getInt("id_decoration_object"),
+        return ObjectDecoration.rehydrate(
+                rs.getInt("id_object"),
                 rs.getString("name"),
                 rs.getString("material"),
                 rs.getDouble("price")

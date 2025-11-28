@@ -1,35 +1,54 @@
 package objectdecoration.model;
 
+import valueobjects.Id;
+import valueobjects.Material;
+import valueobjects.Name;
+import valueobjects.Price;
+
 public class ObjectDecoration {
-    private int id;
-    private String name;
-    private String material;
-    private double price;
+    private final Id<ObjectDecoration> id;
+    private final Name name;
+    private final Material material;
+    private final Price price;
 
-    public ObjectDecoration() {}
-
-    public ObjectDecoration(int id, String name, String material, double price) {
+    private ObjectDecoration(Id<ObjectDecoration> id, Name name, Material material, Price price) {
         this.id = id;
         this.name = name;
         this.material = material;
         this.price = price;
     }
 
-    public int getId() { return id; }
+    public static ObjectDecoration create(String name, String material, double price) {
+        return new ObjectDecoration(null, new Name(name), new Material(material), new Price(price));
+    }
 
-    public String getName() { return name; }
+    public static ObjectDecoration rehydrate(int id, String name, String material, double price) {
+        return new ObjectDecoration(new Id<>(id), new Name(name), new Material(material), new Price(price));
+    }
 
-    public String getMaterial() { return material; }
+    public Id<ObjectDecoration> getId() {
+        return id;
+    }
 
-    public double getPrice() { return price; }
+    public Name getName() {
+        return name;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public Price getPrice() {
+        return price;
+    }
 
     @Override
     public String toString() {
         return "ObjectDecoration{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", material='" + material + '\'' +
-                ", price=" + price +
+                "id=" + (id != null ? id.getValue() : "null") +
+                ", name='" + name.getValue() + '\'' +
+                ", material='" + material.getValue() + '\'' +
+                ", price=" + price.getValue() +
                 '}';
     }
 }
