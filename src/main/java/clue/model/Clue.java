@@ -1,18 +1,22 @@
 package clue.model;
 
+import commonValueObjects.Name;
+import commonValueObjects.Price;
+
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Clue {
-    private final ClueName name;
+    private final Name name;
     private ClueText text;
     private ClueTheme theme;
-    private CluePrice price;
+    private Price price;
 
-    public Clue(ClueName name) {
+    public Clue(Name name) {
         this.name = Objects.requireNonNull(name, "The name must be informed");
     }
 
-    public Clue(ClueName name, ClueText text, ClueTheme theme, CluePrice price) {
+    public Clue(Name name, ClueText text, ClueTheme theme, Price price) {
 
         this.name = Objects.requireNonNull(name, "The name must be informed");
         this.text = Objects.requireNonNull(text, "The action must be indicated");
@@ -20,15 +24,15 @@ public class Clue {
         this.price = price;
     }
 
-    public Clue(String name, String text, String theme, double price) {
+    public Clue(String name, String text, String theme, BigDecimal price) {
 
-        this.name = new ClueName(name);
+        this.name = new Name(name);
         this.text = new ClueText(text);
         this.theme = new ClueTheme(theme);
-        this.price = new CluePrice(price);
+        this.price = new Price(price);
     }
 
-    public ClueName getName() {
+    public Name getName() {
         return name;
     }
 
@@ -40,7 +44,7 @@ public class Clue {
         return theme;
     }
 
-    public CluePrice getPrice() {
+    public Price getPrice() {
         return price;
     }
 
@@ -49,7 +53,7 @@ public class Clue {
         return "Clue = " + name.toString() +
                 ", Action = " + text.toString() +
                 ", Theme = " + theme.toString() +
-                ", Price = " + price.toDouble();
+                ", Price = " + price.toBigDecimal();
 
     }
 }

@@ -1,9 +1,10 @@
 package objectdecoration.model;
 
-import valueobjects.Id;
-import valueobjects.Material;
-import valueobjects.Name;
-import valueobjects.Price;
+import commonValueObjects.Id;
+import commonValueObjects.Name;
+import commonValueObjects.Price;
+
+import java.math.BigDecimal;
 
 public class ObjectDecoration {
     private final Id<ObjectDecoration> id;
@@ -19,11 +20,11 @@ public class ObjectDecoration {
     }
 
     public static ObjectDecoration create(String name, String material, double price) {
-        return new ObjectDecoration(null, new Name(name), new Material(material), new Price(price));
+        return new ObjectDecoration(null, new Name(name), new Material(material), new Price(new BigDecimal(price)));
     }
 
     public static ObjectDecoration rehydrate(int id, String name, String material, double price) {
-        return new ObjectDecoration(new Id<>(id), new Name(name), new Material(material), new Price(price));
+        return new ObjectDecoration(new Id<>(id), new Name(name), new Material(material), new Price(new BigDecimal(price)));
     }
 
     public Id<ObjectDecoration> getId() {
@@ -46,9 +47,9 @@ public class ObjectDecoration {
     public String toString() {
         return "ObjectDecoration{" +
                 "id=" + (id != null ? id.getValue() : "null") +
-                ", name='" + name.getValue() + '\'' +
+                ", name='" + name.toString() + '\'' +
                 ", material='" + material.getValue() + '\'' +
-                ", price=" + price.getValue() +
+                ", price=" + price.toBigDecimal() +
                 '}';
     }
 }

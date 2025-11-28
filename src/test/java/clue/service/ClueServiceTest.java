@@ -2,7 +2,7 @@ package clue.service;
 
 import clue.dao.ClueDaoImplementation;
 import clue.model.Clue;
-import clue.model.ClueName;
+import commonValueObjects.Name;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ class ClueServiceTest {
     @DisplayName("Validate if a Clue exist by passing the ClueName")
     void testValidateExistClueInDataBase() {
 
-       assertFalse((clueService.validateExistClueInDataBase(new ClueName("patata"))));
+       assertFalse((clueService.validateExistClueInDataBase(new Name("patata"))));
 
        List <Clue> clueList =  clueService.getAllClues();
 

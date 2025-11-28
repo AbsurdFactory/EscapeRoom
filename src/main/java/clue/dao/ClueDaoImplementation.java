@@ -1,6 +1,8 @@
 package clue.dao;
 
 import clue.model.*;
+import commonValueObjects.Name;
+import commonValueObjects.Price;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
@@ -89,7 +91,7 @@ public class ClueDaoImplementation implements ClueDao {
         return succes;
     }
 
-    public boolean deleteClueByName(ClueName name) {
+    public boolean deleteClueByName(Name name) {
         dbConnection.openConnection();
         boolean succes = false;
         try (Connection connection = dbConnection.getConnection();
@@ -124,7 +126,7 @@ public class ClueDaoImplementation implements ClueDao {
         }
     }
 
-    public Clue getClueByName(ClueName name) {
+    public Clue getClueByName(Name name) {
         Clue clue1 = null;
         dbConnection.openConnection();
         try (Connection connection = dbConnection.getConnection();
@@ -188,10 +190,10 @@ public class ClueDaoImplementation implements ClueDao {
     private Clue getClue(ResultSet resultSet) {
         try {
             return new Clue(
-                    new ClueName(resultSet.getString("name")),
+                    new Name(resultSet.getString("name")),
                     new ClueText(resultSet.getString("text")),
                     new ClueTheme(resultSet.getString("theme")),
-                    new CluePrice(resultSet.getDouble("price"))
+                    new Price(resultSet.getBigDecimal("price"))
             );
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -217,7 +219,7 @@ public class ClueDaoImplementation implements ClueDao {
             preparedStatement.setString(1, clue.getName().toString());
             preparedStatement.setString(2, clue.getText().toString());
             preparedStatement.setString(3, clue.getTheme().toString());
-            preparedStatement.setDouble(4, clue.getPrice().toDouble());
+            preparedStatement.setBigDecimal(4, clue.getPrice().toBigDecimal());
 
             preparedStatement.execute();
 
@@ -243,7 +245,7 @@ public class ClueDaoImplementation implements ClueDao {
 
             preparedStatement.setString(1, clue.getText().toString());
             preparedStatement.setString(2, clue.getTheme().toString());
-            preparedStatement.setDouble(3, clue.getPrice().toDouble());
+            preparedStatement.setBigDecimal(3, clue.getPrice().toBigDecimal());
             preparedStatement.setString(4, clue.getName().toString());
             return preparedStatement.executeUpdate() > 0;
 

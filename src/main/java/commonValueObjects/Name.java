@@ -1,8 +1,8 @@
-package clue.model;
+package commonValueObjects;
 
-public record ClueName(String name) {
+public record Name(String name) {
 
-    public ClueName {
+    public Name {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be empty");
         }

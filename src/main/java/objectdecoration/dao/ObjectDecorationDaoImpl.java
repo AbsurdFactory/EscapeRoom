@@ -56,9 +56,9 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
 
-            ps.setString(1, object.getName().getValue());
+            ps.setString(1, object.getName().toString());
             ps.setString(2, object.getMaterial().getValue());
-            ps.setDouble(3, object.getPrice().getValue());
+            ps.setBigDecimal(3, object.getPrice().toBigDecimal());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -117,9 +117,9 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
 
-            ps.setString(1, object.getName().getValue());
+            ps.setString(1, object.getName().toString());
             ps.setString(2, object.getMaterial().getValue());
-            ps.setDouble(3, object.getPrice().getValue());
+            ps.setBigDecimal(3, object.getPrice().toBigDecimal());
             ps.setInt(4, object.getId().getValue());
             return ps.executeUpdate() > 0;
 

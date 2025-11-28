@@ -36,7 +36,7 @@ class ObjectDecorationServiceTest {
 
         ObjectDecoration result = service.getById(1);
 
-        assertEquals("Candle Holder", result.getName().getValue());
+        assertEquals("Candle Holder", result.getName().toString());
         verify(dao, times(1)).findById(1);
     }
 
