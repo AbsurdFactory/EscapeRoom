@@ -1,11 +1,10 @@
-package valueobjects;
+package player.model;
 
 import exceptions.ValidationException;
 
 import java.util.Objects;
 
-public class NickName {
-    private final String value;
+public record NickName (String value){
 
     public NickName(String value) {
         if (value == null || value.isBlank()) {

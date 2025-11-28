@@ -1,7 +1,6 @@
-package valueobjects;
+package objectdecoration.model;
 
-public class Material {
-    private final String value;
+public record Material(String value) {
 
     public Material(String value) {
         if (value == null || value.isBlank()) {

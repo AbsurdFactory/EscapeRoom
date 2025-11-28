@@ -36,7 +36,7 @@ class ClueTest {
     @Test
     void getPrice() {
         Clue clue2 = new Clue("name2","text2","theme2",10.1);
-        assertEquals(10.1, clue2.getPrice().toDouble());
+        assertEquals(10.1, clue2.getPrice().toBigDecimal());
     }
 
     @Test

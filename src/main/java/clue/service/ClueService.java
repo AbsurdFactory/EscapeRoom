@@ -2,6 +2,8 @@ package clue.service;
 
 import clue.dao.ClueDaoImplementation;
 import clue.model.*;
+import commonValueObjects.Name;
+import commonValueObjects.Price;
 
 import java.util.List;
 
@@ -12,7 +14,7 @@ public class ClueService {
         this.clueDaoImplementation = clueDao;
     }
 
-    public void createClue(ClueName name, ClueText text, ClueTheme theme, CluePrice price) {
+    public void createClue(Name name, ClueText text, ClueTheme theme, Price price) {
         Clue clue = new Clue(name, text, theme, price);
 
         clueDaoImplementation.save(clue);
@@ -22,7 +24,7 @@ public class ClueService {
         clueDaoImplementation.save(clue);
     }
 
-    public boolean validateExistClueInDataBase(ClueName name) {
+    public boolean validateExistClueInDataBase(Name name) {
         return clueDaoImplementation.getClueByName(name) != null;
     }
 
@@ -38,7 +40,7 @@ public class ClueService {
         return clueDaoImplementation.update(clue);
     }
 
-    public boolean deleteClueByName(ClueName name) {
+    public boolean deleteClueByName(Name name) {
 
         return clueDaoImplementation.deleteClueByName(name);
     }

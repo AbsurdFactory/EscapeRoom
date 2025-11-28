@@ -1,16 +1,13 @@
-package valueobjects;
+package player.model;
 
 import exceptions.ValidationException;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class Email {
+public record Email (String value){
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
-
-    private final String value;
-
     public Email(String value) {
         if (value == null || value.isBlank()) {
             throw new ValidationException("Email cannot be empty");

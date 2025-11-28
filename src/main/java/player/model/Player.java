@@ -1,8 +1,6 @@
 package player.model;
 
-import valueobjects.Email;
-import valueobjects.NickName;
-import valueobjects.Id;
+import commonValueObjects.Id;
 
 public class Player implements Subscriber {
     private final Id<Player> id;
