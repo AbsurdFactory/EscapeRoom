@@ -29,16 +29,16 @@ public class PlayerServiceTest {
         when(playerDao.findByNickName("Nick")).thenReturn(Optional.empty());
         when(playerDao.findByEmail("nick@mail.com")).thenReturn(Optional.empty());
 
-        playerService.createPlayer("Nick", "nick@mail.com");
+        playerService.createPlayer("Nick", "nick@mail.com", true);
 
         verify(playerDao, times(1)).save(any(Player.class));
     }
 
     @Test
     void shouldThrowExceptionWhenNicknameExists() {
-        when(playerDao.findByNickName("Nick")).thenReturn(Optional.of(Player.create("Nick", "nick@mail.com")));
+        when(playerDao.findByNickName("Nick")).thenReturn(Optional.of(Player.create("Nick", "nick@mail.com", true)));
 
-        assertThrows(BusinessException.class, () -> playerService.createPlayer("Nick", "nick@mail.com"));
+        assertThrows(BusinessException.class, () -> playerService.createPlayer("Nick", "nick@mail.com", true));
     }
 
     @Test
@@ -50,7 +50,7 @@ public class PlayerServiceTest {
 
     @Test
     void shouldReturnAllPlayers() {
-        when(playerDao.findAll()).thenReturn(List.of(Player.create("Nick", "nick@mail.com")));
+        when(playerDao.findAll()).thenReturn(List.of(Player.create("Nick", "nick@mail.com", true)));
 
         List<Player> players = playerService.getAllPlayers();
 

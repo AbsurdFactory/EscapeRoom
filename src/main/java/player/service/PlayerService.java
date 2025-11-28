@@ -14,8 +14,8 @@ public class PlayerService {
         this.playerDao = playerDao;
     }
 
-    public void createPlayer(String nickName, String email) {
-        Player player = Player.create(nickName, email);
+    public void createPlayer(String nickName, String email, boolean subscribed) {
+        Player player = Player.create(nickName, email, subscribed);
 
         if (playerDao.findByNickName(nickName).isPresent()) {
             throw new BusinessException("NickName already taken: " + nickName);
@@ -47,9 +47,9 @@ public class PlayerService {
         return playerDao.findAll();
     }
 
-    public boolean updatePlayer(int id, String newNickName, String newEmail) {
+    public boolean updatePlayer(int id, String newNickName, String newEmail, boolean subscribed) {
         Player existing = getPlayerById(id);
-        Player updated = Player.rehydrate(id, newNickName, newEmail);
+        Player updated = Player.rehydrate(id, newNickName, newEmail, subscribed);
         return playerDao.update(updated);
     }
 

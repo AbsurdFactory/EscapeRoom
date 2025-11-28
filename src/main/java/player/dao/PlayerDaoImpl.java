@@ -146,7 +146,8 @@ public class PlayerDaoImpl implements PlayerDao {
         return Player.rehydrate(
                 rs.getInt("id_player"),
                 rs.getString("nick_name"),
-                rs.getString("email")
+                rs.getString("email"),
+                rs.getBoolean("subscribed")
         );
     }
 

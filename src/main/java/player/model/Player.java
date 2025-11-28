@@ -1,6 +1,5 @@
 package player.model;
 
-import valueobjects.Age;
 import valueobjects.Email;
 import valueobjects.NickName;
 import valueobjects.Id;
@@ -9,7 +8,7 @@ public class Player implements Subscriber {
     private final Id<Player> id;
     private final NickName nickName;
     private final Email email;
-    private boolean subscribed;
+    private final boolean subscribed;
 
     private Player(Id<Player> id, NickName nickName, Email email, boolean subscribed) {
         this.id = id;
@@ -19,11 +18,11 @@ public class Player implements Subscriber {
     }
 
     public static Player create(String nickName, String email, boolean subscribed) {
-        return new Player(null, new NickName(nickName), new Email(email), new Age(age), subscribed);
+        return new Player(null, new NickName(nickName), new Email(email), subscribed);
     }
 
-    public static Player rehydrate(int id, String nickName, String email, int age, boolean subscribed) {
-        return new Player(new Id(id), new NickName(nickName), new Email(email), new Age(age), subscribed);
+    public static Player rehydrate(int id, String nickName, String email, boolean subscribed) {
+        return new Player(new Id<>(id), new NickName(nickName), new Email(email), subscribed);
     }
 
     public Id<Player> getId() {
