@@ -3,10 +3,10 @@ package clue.model;
 import java.util.Objects;
 
 public class Clue {
-    ClueName name;
-    ClueText text;
-    ClueTheme theme;
-    CluePrice price;
+    private final ClueName name;
+    private ClueText text;
+    private ClueTheme theme;
+    private CluePrice price;
 
     public Clue(ClueName name) {
         this.name = Objects.requireNonNull(name, "The name must be informed");
@@ -18,6 +18,14 @@ public class Clue {
         this.text = Objects.requireNonNull(text, "The action must be indicated");
         this.theme = Objects.requireNonNull(theme, "The theme must be indicated");
         this.price = price;
+    }
+
+    public Clue(String name, String text, String theme, double price) {
+
+        this.name = new ClueName(name);
+        this.text = new ClueText(text);
+        this.theme = new ClueTheme(theme);
+        this.price = new CluePrice(price);
     }
 
     public ClueName getName() {
