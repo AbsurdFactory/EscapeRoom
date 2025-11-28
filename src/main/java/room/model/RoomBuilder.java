@@ -1,6 +1,7 @@
 package room.model;
 
 import clue.model.Clue;
+import objectdecoration.dao.ObjectDecorationDao;
 import objectdecoration.model.ObjectDecoration;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class RoomBuilder {
 
     private final List<Clue> clues = new ArrayList<>();
     private final List<ObjectDecoration> objectDecorations = new ArrayList<>();
+
 
     public RoomBuilder withId(int id) {
         this.id = id;
@@ -50,6 +52,16 @@ public class RoomBuilder {
         }
         return this;
     }
+
+    public RoomBuilder addDecorations(List<ObjectDecoration> decorations) {
+        if (decorations != null) {
+            decorations.stream()
+                    .filter(d -> d != null)
+                    .forEach(this.objectDecorations::add);
+        }
+        return this;
+    }
+
 
     public Room build() {
         Room room = new Room(id, name, price, difficultyLevel);

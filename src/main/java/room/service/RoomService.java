@@ -1,8 +1,11 @@
 package room.service;
 
 
+import objectdecoration.dao.ObjectDecorationDao;
+import objectdecoration.model.ObjectDecoration;
 import room.dao.RoomDao;
 import room.model.Room;
+import room.model.RoomBuilder;
 import validators.RoomValidator;
 
 import java.util.List;
@@ -10,6 +13,12 @@ import java.util.Optional;
 
 public class RoomService {
     private final RoomDao roomDao;
+    private ObjectDecorationDao decorationDao;
+
+    public RoomService(RoomDao roomDao, ObjectDecorationDao objectDecorationDao){
+        this.roomDao = roomDao;
+        this.decorationDao = objectDecorationDao;
+    }
 
     public RoomService(RoomDao roomDao) {
         this.roomDao = roomDao;
@@ -44,5 +53,19 @@ public class RoomService {
 
         return roomDao.delete(id);
 
+    }
+
+    public Room createRoomWithAllDecorations(RoomBuilder builder) {
+        List<ObjectDecoration> decorations = decorationDao.findAll();
+
+        builder.addDecorations(decorations);
+
+        Room room = builder.build();
+
+        RoomValidator.validateRoom(room);
+
+        roomDao.save(room);
+
+        return room;
     }
 }
