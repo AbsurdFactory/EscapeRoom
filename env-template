@@ -1,0 +1,6 @@
+//Please add your own credentials in order to connect to the database
+URL=
+MYSQL_USER=
+MYSQL_PASSWORD=
+MYSQL_ROOT_PASSWORD=
+DB_NAME=
