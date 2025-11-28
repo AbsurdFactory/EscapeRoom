@@ -1,8 +1,5 @@
 package player.model;
 
-
-
-import valueobjects.Age;
 import valueobjects.Email;
 import valueobjects.NickName;
 import valueobjects.Id;
@@ -11,23 +8,21 @@ public class Player implements Subscriber {
     private final Id<Player> id;
     private final NickName nickName;
     private final Email email;
-    private final Age age;
-    private boolean subscribed;
+    private final boolean subscribed;
 
-    private Player(Id<Player> id, NickName nickName, Email email, Age age, boolean subscribed) {
+    private Player(Id<Player> id, NickName nickName, Email email, boolean subscribed) {
         this.id = id;
         this.nickName = nickName;
         this.email = email;
-        this.age = age;
         this.subscribed = subscribed;
     }
 
-    public static Player create(String nickName, String email, int age, boolean subscribed) {
-        return new Player(null, new NickName(nickName), new Email(email), new Age(age), subscribed);
+    public static Player create(String nickName, String email, boolean subscribed) {
+        return new Player(null, new NickName(nickName), new Email(email), subscribed);
     }
 
-    public static Player rehydrate(int id, String nickName, String email, int age, boolean subscribed) {
-        return new Player(new Id(id), new NickName(nickName), new Email(email), new Age(age), subscribed);
+    public static Player rehydrate(int id, String nickName, String email, boolean subscribed) {
+        return new Player(new Id<>(id), new NickName(nickName), new Email(email), subscribed);
     }
 
     public Id<Player> getId() {
@@ -42,10 +37,6 @@ public class Player implements Subscriber {
         return email;
     }
 
-    public Age getAge() {
-        return age;
-    }
-
     public boolean isSubscribed() {
         return subscribed;
     }
@@ -54,7 +45,7 @@ public class Player implements Subscriber {
     public void notification(String message){
         System.out.println("NOTIFICATION to " + nickName + ":" + message);
     }
-
+  
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,7 +59,6 @@ public class Player implements Subscriber {
                 "id=" + (id != null ? id : "N/A") +
                 ", nickName=" + nickName +
                 ", email=" + email +
-                ", age=" + age +
                 '}';
     }
 }
