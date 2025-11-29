@@ -4,17 +4,20 @@ import player.dao.PlayerDao;
 import player.dao.PlayerDaoImpl;
 import player.model.Player;
 import player.service.PlayerService;
+import player.service.SubscriptionResult;
+import room.model.RoomEventPublisher;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class PlayerMenuController extends BaseMenuController {
     private final PlayerService playerService;
-    private final PlayerDao playerDao = new PlayerDaoImpl();
 
     public PlayerMenuController(Scanner scanner) {
         super(scanner);
-        this.playerService = new PlayerService(playerDao);
+        PlayerDao playerDao = new PlayerDaoImpl();
+        RoomEventPublisher publisher = new RoomEventPublisher();
+        this.playerService = new PlayerService(playerDao, publisher);
     }
 
     public void showPlayerMenu() {
@@ -94,5 +97,31 @@ public class PlayerMenuController extends BaseMenuController {
     @Override
     public void showMenu() throws InputReadException {
         showPlayerMenu();
+    }
+
+    public void handleSubscribePlayer() {
+        try {
+            System.out.print("Enter player nickname to subscribe: ");
+            String nickname = ConsoleInputReader.readString(scanner, "Nickname");
+            SubscriptionResult result = playerService.subscribePlayer(nickname);
+            System.out.println((result.isSuccess() ? "Subscribed: " : "Not subscribed: ") + result.getMessage());
+        } catch (InputReadException e) {
+            System.out.println("Input error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error subscribing player: " + e.getMessage());
+        }
+    }
+
+    public void handleNotifyPlayers() {
+        try {
+            System.out.print("Enter message to notify subscribed players: ");
+            String message = ConsoleInputReader.readString(scanner, "Notification message");
+            playerService.notifyPlayers(message);
+            System.out.println("Notifications sent successfully.");
+        } catch (InputReadException e) {
+            System.out.println("Input error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error notifying players: " + e.getMessage());
+        }
     }
 }

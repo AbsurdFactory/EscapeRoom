@@ -1,6 +1,7 @@
 package player.dao;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
@@ -135,6 +136,11 @@ public class PlayerDaoImpl implements PlayerDao {
         } finally {
             dbConnection.closeConnection();
         }
+    }
+
+    @Override
+    public boolean deleteByName(Name name) {
+        return false;
     }
 
     public boolean delete(int id) {

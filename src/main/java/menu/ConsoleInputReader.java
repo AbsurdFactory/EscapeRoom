@@ -114,5 +114,16 @@ public class ConsoleInputReader {
         }
     }
 
+    public static String readString(Scanner scanner, String fieldName) throws InputReadException {
+        try {
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) {
+                throw new InputReadException(fieldName + ": Input cannot be empty.");
+            }
+            return input;
+        } catch (Exception e) {
+            throw new InputReadException(fieldName + ": " + e.getMessage());
+        }
+    }
 
 }

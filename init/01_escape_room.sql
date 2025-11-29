@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS `escape_room`.`player` (
   `id_player` INT NOT NULL AUTO_INCREMENT,
   `nick_name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(120) NOT NULL,
+  `subscribed` BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`id_player`))
 ENGINE = InnoDB;
 

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import player.dao.PlayerDao;
 import player.model.Player;
+import room.model.RoomEventPublisher;
 
 import java.util.Optional;
 import java.util.List;
@@ -18,11 +19,12 @@ public class PlayerServiceTest {
 
     private PlayerDao playerDao;
     private PlayerService playerService;
-
+    private RoomEventPublisher publisher;
     @BeforeEach
     void setUp() {
         playerDao = mock(PlayerDao.class);
-        playerService = new PlayerService(playerDao);
+        publisher = mock(RoomEventPublisher.class);
+        playerService = new PlayerService(playerDao, publisher);
     }
 
     @Test

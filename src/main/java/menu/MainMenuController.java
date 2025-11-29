@@ -152,12 +152,12 @@ public class MainMenuController extends BaseMenuController {
 
     private void handleNotifyPlayers() {
         System.out.println("\n--- Notify players about events ---");
-        System.out.println("This feature is not fully implemented yet.");
+        playerMenuController.handleNotifyPlayers();
     }
 
     private void handleSubscribePlayer() {
         System.out.println("\n--- Subscribe a new player to notifications ---");
-        System.out.println("This feature is not fully implemented yet.");
+        playerMenuController.handleSubscribePlayer();
     }
 
     @Override

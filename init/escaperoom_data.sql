@@ -168,6 +168,7 @@ CREATE TABLE `player` (
   `id_player` int NOT NULL AUTO_INCREMENT,
   `nick_name` varchar(45) NOT NULL,
   `email` varchar(120) NOT NULL,
+  `subscribed` boolean NOT NULL DEFAULT false,
   PRIMARY KEY (`id_player`),
   UNIQUE KEY `id_player_UNIQUE` (`id_player`),
   UNIQUE KEY `nick_name_UNIQUE` (`nick_name`),
@@ -181,7 +182,7 @@ CREATE TABLE `player` (
 
 LOCK TABLES `player` WRITE;
 /*!40000 ALTER TABLE `player` DISABLE KEYS */;
-INSERT INTO `player` VALUES (1,'GhostHunter','ghost@example.com'),(2,'CaptainJack','jack@example.com'),(3,'LabMaster','lab@example.com'),(4,'FairyQueen','fairy@example.com');
+INSERT INTO `player` VALUES (1,'GhostHunter','ghost@example.com', false),(2,'CaptainJack','jack@example.com', false),(3,'LabMaster','lab@example.com', false),(4,'FairyQueen','fairy@example.com', true);
 /*!40000 ALTER TABLE `player` ENABLE KEYS */;
 UNLOCK TABLES;
 
