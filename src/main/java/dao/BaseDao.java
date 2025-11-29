@@ -1,5 +1,6 @@
 package dao;
 
+import commonValueObjects.Id;
 import objectdecoration.model.ObjectDecoration;
 
 import java.util.List;
@@ -9,11 +10,11 @@ public interface BaseDao<T> {
 
     void save(T entity);
 
-    Optional<T> findById(int id);
+    Optional<T> findById(Id id);
 
     List<T> findAll();
 
     boolean update(T entity);
 
-    boolean delete(int id);
+    boolean delete(Id id);
 }
