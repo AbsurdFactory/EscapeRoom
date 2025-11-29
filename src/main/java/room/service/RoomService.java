@@ -2,6 +2,7 @@ package room.service;
 
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import objectdecoration.dao.ObjectDecorationDao;
 import objectdecoration.model.ObjectDecoration;
 import room.dao.RoomDao;
@@ -47,6 +48,10 @@ public class RoomService {
 
         return roomDao.delete(id);
 
+    }
+
+    public boolean deleteRoomByName(Name name) {
+        return roomDao.deleteByName(name);
     }
 
     public Room createRoomWithAllDecorations(RoomBuilder builder) {

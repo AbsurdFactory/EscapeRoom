@@ -26,28 +26,34 @@ public class RoomDaoImpl implements RoomDao {
             """;
 
     private static final String SELECT_BY_ID = """
-        SELECT id_room, name, price, difficulty_level
-        FROM room
-        WHERE id_room = ?
-        """;
+            SELECT id_room, name, price, difficulty_level
+            FROM room
+            WHERE id_room = ?
+            """;
 
     private static final String SELECT_ALL = """
-        SELECT id_room, name, price, difficulty_level
-        FROM room
-        """;
+            SELECT id_room, name, price, difficulty_level
+            FROM room
+            """;
 
     private static final String UPDATE_SQL = """
-        UPDATE room
-        SET name = ?, price = ?, difficulty_level = ?
-        WHERE id_room = ?
-        """;
+            UPDATE room
+            SET name = ?, price = ?, difficulty_level = ?
+            WHERE id_room = ?
+            """;
 
     private static final String DELETE_SQL = """
-        DELETE FROM room
-        WHERE id_room = ?
-        """;
+            DELETE FROM room
+            WHERE id_room = ?
+            """;
+
+    private static final String DELETE_BY_NAME_SQL = """
+            DELETE FROM room
+            WHERE name = ?
+            """;
 
     private final DatabaseConnection dbConnection;
+
     public RoomDaoImpl() {
         try {
             this.dbConnection = MYSQLDatabaseConnection.getInstance();
@@ -147,6 +153,21 @@ public class RoomDaoImpl implements RoomDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Error deleting room with ID: " + id, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    public boolean deleteByName(Name name) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_BY_NAME_SQL)) {
+
+            ps.setString(1, name.toString());
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting room with name: " + name, e);
         } finally {
             dbConnection.closeConnection();
         }
