@@ -2,6 +2,7 @@ package certificate.dao;
 
 import certificate.model.Certificate;
 import certificate.model.CertificateRewardType;
+import commonValueObjects.Id;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
@@ -75,6 +76,28 @@ public class CertificateDaoImpl implements CertificateDao {
     }
 
     @Override
+    public Optional<Certificate> findById(Id id) {
+        dbConnection.openConnection();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID)) {
+
+            ps.setInt(1, id.getValue());
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return Optional.of(mapRow(rs));
+            }
+
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding certificate", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
     public Optional<Certificate> findById(int id) {
         dbConnection.openConnection();
 
@@ -142,6 +165,21 @@ public class CertificateDaoImpl implements CertificateDao {
     }
 
     @Override
+    public boolean delete(Id id) {
+        dbConnection.openConnection();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
+
+            ps.setInt(1, id.getValue());
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting certificate", e);
+        } finally {
+            dbConnection.closeConnection();
+        }    }
+
     public boolean delete(int id) {
         dbConnection.openConnection();
 

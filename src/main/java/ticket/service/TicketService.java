@@ -1,5 +1,6 @@
 package ticket.service;
 
+import commonValueObjects.Id;
 import ticket.dao.TicketDao;
 import exceptions.DataAccessException;
 import ticket.model.Ticket;
@@ -25,7 +26,7 @@ public class TicketService {
         }
     }
 
-    public Optional<Ticket> getTicketById(int id) {
+    public Optional<Ticket> getTicketById(Id id) {
         try {
             return ticketDao.findById(id);
         } catch (Exception e) {
@@ -49,7 +50,7 @@ public class TicketService {
         }
     }
 
-    public boolean deleteTicket(int id) {
+    public boolean deleteTicket(Id id) {
         try {
             return ticketDao.delete(id);
         } catch (Exception e) {

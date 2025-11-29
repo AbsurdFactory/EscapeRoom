@@ -1,5 +1,6 @@
 package objectdecoration.dao;
 
+import commonValueObjects.Id;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import objectdecoration.model.ObjectDecoration;
@@ -69,6 +70,26 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
     }
 
     @Override
+    public Optional<ObjectDecoration> findById(Id id) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID)) {
+
+            ps.setInt(1, id.getValue());
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return Optional.of(mapRow(rs));
+            }
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding decoration with ID: " + id, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
     public Optional<ObjectDecoration> findById(int id) {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();
@@ -131,6 +152,20 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
     }
 
     @Override
+    public boolean delete(Id id) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
+
+            ps.setInt(1, id.getValue());
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting decoration with ID: " + id, e);
+        } finally {
+            dbConnection.closeConnection();
+        }    }
+
     public boolean delete(int id) {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();

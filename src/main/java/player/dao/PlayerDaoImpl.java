@@ -1,5 +1,6 @@
 package player.dao;
 
+import commonValueObjects.Id;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
@@ -72,6 +73,10 @@ public class PlayerDaoImpl implements PlayerDao {
     }
 
     @Override
+    public Optional<Player> findById(Id id) {
+        return querySingle(SELECT_BY_ID, id);
+    }
+
     public Optional<Player> findById(int id) {
         return querySingle(SELECT_BY_ID, id);
     }
@@ -117,6 +122,21 @@ public class PlayerDaoImpl implements PlayerDao {
     }
 
     @Override
+    public boolean delete(Id id) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
+
+            ps.setInt(1, id.getValue());
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting player", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
     public boolean delete(int id) {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();

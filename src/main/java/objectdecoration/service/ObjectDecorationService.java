@@ -1,5 +1,6 @@
 package objectdecoration.service;
 
+import commonValueObjects.Id;
 import exceptions.NotFoundException;
 import objectdecoration.dao.ObjectDecorationDao;
 import objectdecoration.model.ObjectDecoration;
@@ -18,7 +19,7 @@ public class ObjectDecorationService {
         dao.save(object);
     }
 
-    public ObjectDecoration getById(int id) {
+    public ObjectDecoration getById(Id id) {
         return dao.findById(id)
                 .orElseThrow(() -> new NotFoundException("ObjectDecoration not found with id: " + id));
     }
@@ -32,7 +33,7 @@ public class ObjectDecorationService {
         return dao.update(updated);
     }
 
-    public boolean deleteObjectDecoration(int id) {
+    public boolean deleteObjectDecoration(Id id) {
         return dao.delete(id);
     }
 }

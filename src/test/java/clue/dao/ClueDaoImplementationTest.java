@@ -17,9 +17,9 @@ class ClueDaoImplementationTest {
 
     @Test
     void save() {
-        Clue clue1 = new Clue(new Name("pista323"),new ClueText("lalala"),new ClueTheme("lolololo"),new Price(new BigDecimal("30.00")));
+        Clue clue1 = new Clue(new Name("pista3"),new ClueText("lalala"),new ClueTheme("lolololo"),new Price(new BigDecimal("30.00")));
         clueDaoImplementation.save(clue1);
-        Clue clue2 = (clueDaoImplementation.getClueByName(new Name(("pista323"))));
+        Clue clue2 = (clueDaoImplementation.getClueByName(new Name(("pista3"))));
         assertEquals(Clue.class, clue2.getClass());
     }
 

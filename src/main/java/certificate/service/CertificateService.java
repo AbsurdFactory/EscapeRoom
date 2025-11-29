@@ -2,6 +2,7 @@ package certificate.service;
 
 import certificate.dao.CertificateDao;
 import certificate.model.Certificate;
+import commonValueObjects.Id;
 import exceptions.DataAccessException;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class CertificateService {
         }
     }
 
-    public Optional<Certificate> getCertificateById(int id) {
+    public Optional<Certificate> getCertificateById(Id id) {
         try {
             return certificateDao.findById(id);
         } catch (Exception e) {
@@ -47,7 +48,7 @@ public class CertificateService {
         }
     }
 
-    public boolean deleteCertificate(int id) {
+    public boolean deleteCertificate(Id id) {
         try {
             return certificateDao.delete(id);
         } catch (Exception e) {
