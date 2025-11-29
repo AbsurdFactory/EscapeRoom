@@ -1,6 +1,7 @@
 package clue.dao;
 
 import clue.model.*;
+import commonValueObjects.Id;
 import commonValueObjects.Name;
 import commonValueObjects.Price;
 import databaseconnection.DatabaseConnection;
@@ -232,9 +233,10 @@ public class ClueDaoImplementation implements ClueDao {
     }
 
     @Override
-    public Optional<Clue> findById(int id) {
+    public Optional<Clue> findById(Id id) {
         return Optional.empty();
     }
+
 
     @Override
     public boolean update(Clue clue) {
@@ -254,6 +256,11 @@ public class ClueDaoImplementation implements ClueDao {
         } finally {
             dbConnection.closeConnection();
         }
+    }
+
+    @Override
+    public boolean delete(Id id) {
+        return false;
     }
 
     private int getIdClueByClue(Clue clue) {
@@ -330,11 +337,5 @@ public class ClueDaoImplementation implements ClueDao {
         }
 
         return totalUnits;
-    }
-
-
-    @Override
-    public boolean delete(int id) {
-        return false;
     }
 }
