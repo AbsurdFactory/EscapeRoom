@@ -1,7 +1,10 @@
 package menu;
 
+import commonValueObjects.Name;
+import commonValueObjects.Price;
 import room.dao.RoomDao;
 import room.dao.RoomDaoImpl;
+import room.model.DifficultyLevel;
 import room.model.Room;
 import room.model.RoomBuilder;
 import room.service.RoomService;
@@ -47,13 +50,13 @@ public class RoomMenuController extends BaseMenuController {
 
         try {
             System.out.print("Please enter the Room name: ");
-            String name = ConsoleInputReader.readNonEmptyString(scanner, "Room name");
+            Name name = ConsoleInputReader.readName(scanner, "Room name");
 
             System.out.println("Please enter the difficulty level (\"Easy\", \"Medium\", \"Hard\")");
-            String difficulty = ConsoleInputReader.readNonEmptyString(scanner, "difficulty level");
+            DifficultyLevel difficulty = ConsoleInputReader.readDifficultyLevel(scanner, "difficulty level");
 
             System.out.println("Please enter the base price of the Room.");
-            BigDecimal basePrice = ConsoleInputReader.readBigDecimal(scanner, "base price of the Room");
+            Price basePrice = ConsoleInputReader.readPrice(scanner, "base price of the Room");
 
             Room room = new RoomBuilder()
                    .withName(name)
