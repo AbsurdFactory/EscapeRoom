@@ -103,7 +103,7 @@ public class EscapeRoomMenuController extends BaseMenuController {
             Name escapeRoomName = ConsoleInputReader.readName(scanner, "escape room name");
 
             for (EscapeRoom er : escapeRooms) {
-                if (er.getName().equalsIgnoreCase(escapeRoomName.toString())) {
+                if (er.getName().toString().equalsIgnoreCase(escapeRoomName.toString())) {
                     selectedEscapeRoom = er;
                     break;
                 }

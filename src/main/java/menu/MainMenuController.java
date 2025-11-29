@@ -137,8 +137,7 @@ public class MainMenuController extends BaseMenuController {
 
     private void handleCreatePlayer() {
         System.out.println("\n--- Create a new Player ---");
-        // TODO: cuando PlayerMenuController tenga un flujo de menú, llamar aquí.
-        System.out.println("This feature is not fully implemented yet.");
+        playerMenuController.showPlayerMenu();
     }
 
     private void handleGenerateTicket() {
