@@ -116,14 +116,12 @@ public class MainMenuController extends BaseMenuController {
 
     private void handleAddClue() {
         System.out.println("\n--- Add a new Clue ---");
-        // TODO: integrar con ClueMenuController cuando haya un método de menú.
-        System.out.println("This feature is not fully implemented yet.");
+        clueMenuController.showClueMenu();
     }
 
     private void handleAddDecoration() {
         System.out.println("\n--- Add a new Decoration ---");
-        // TODO: integrar con DecorationMenuController cuando haya menú.
-        System.out.println("This feature is not fully implemented yet.");
+        decorationMenuController.showDecorationMenu();
     }
 
     private void handleViewInventory() {
