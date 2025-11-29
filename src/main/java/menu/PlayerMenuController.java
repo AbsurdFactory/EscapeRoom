@@ -99,7 +99,7 @@ public class PlayerMenuController extends BaseMenuController {
         showPlayerMenu();
     }
 
-    private void handleSubscribePlayer() {
+    public void handleSubscribePlayer() {
         try {
             System.out.print("Enter player nickname to subscribe: ");
             String nickname = ConsoleInputReader.readString(scanner, "Nickname");
@@ -112,7 +112,7 @@ public class PlayerMenuController extends BaseMenuController {
         }
     }
 
-    private void handleNotifyPlayers() {
+    public void handleNotifyPlayers() {
         try {
             System.out.print("Enter message to notify subscribed players: ");
             String message = ConsoleInputReader.readString(scanner, "Notification message");
