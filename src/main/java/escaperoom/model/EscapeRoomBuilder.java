@@ -1,5 +1,7 @@
 package escaperoom.model;
 
+import commonValueObjects.Id;
+import commonValueObjects.Name;
 import room.model.Room;
 import room.model.RoomBuilder;
 
@@ -7,17 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EscapeRoomBuilder {
-    private int id;
-    private String name;
+    private Id id;
+    private Name name;
 
     private final List<Room> rooms = new ArrayList<>();
 
-    public EscapeRoomBuilder withId(int id) {
+    public EscapeRoomBuilder withId(Id id) {
         this.id = id;
         return this;
     }
 
-    public EscapeRoomBuilder withName(String name) {
+    public EscapeRoomBuilder withName(Name name) {
         this.name = name;
         return this;
     }

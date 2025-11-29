@@ -1,5 +1,6 @@
 package escaperoom.dao;
 
+import commonValueObjects.Id;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import escaperoom.model.EscapeRoom;
@@ -88,7 +89,7 @@ public class EscapeRoomDaoImpl implements EscapeRoomDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
 
-            ps.setString(1, object.getName());
+            ps.setString(1, object.getName().toString());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -99,6 +100,25 @@ public class EscapeRoomDaoImpl implements EscapeRoomDao {
     }
 
     @Override
+    public Optional<EscapeRoom> findById(Id id) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID)) {
+
+            ps.setInt(1, id.getValue());
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return Optional.of(mapRow(rs));
+            }
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding escape room with ID: " + id, e);
+        } finally {
+            dbConnection.closeConnection();
+        }    }
+
     public Optional<EscapeRoom> findById(int id) {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();
@@ -147,8 +167,8 @@ public class EscapeRoomDaoImpl implements EscapeRoomDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
 
-            ps.setString(1, object.getName());
-            ps.setInt(4, object.getId());
+            ps.setString(1, object.getName().toString());
+            ps.setInt(4, object.getId().getValue());
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
@@ -159,6 +179,21 @@ public class EscapeRoomDaoImpl implements EscapeRoomDao {
     }
 
     @Override
+    public boolean delete(Id id) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
+
+            ps.setInt(1, id.hashCode());
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting escape room with ID: " + id, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
     public boolean delete(int id) {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();
