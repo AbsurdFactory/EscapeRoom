@@ -14,6 +14,10 @@ public class ObjectDecorationService {
         this.dao = dao;
     }
 
+    public void addObjectDecoration(ObjectDecoration objectDecoration){
+        dao.save(objectDecoration);
+    }
+
     public void addObjectDecoration(String name, String material, double price) {
         ObjectDecoration object = ObjectDecoration.create(name, material, price);
         dao.save(object);

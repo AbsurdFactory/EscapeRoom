@@ -12,7 +12,7 @@ public class ObjectDecoration {
     private final Material material;
     private final Price price;
 
-    private ObjectDecoration(Id<ObjectDecoration> id, Name name, Material material, Price price) {
+    public ObjectDecoration(Id<ObjectDecoration> id, Name name, Material material, Price price) {
         this.id = id;
         this.name = name;
         this.material = material;
