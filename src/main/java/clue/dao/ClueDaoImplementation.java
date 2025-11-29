@@ -92,7 +92,8 @@ public class ClueDaoImplementation implements ClueDao {
         return succes;
     }
 
-    public boolean deleteClueByName(Name name) {
+    @Override
+    public boolean deleteByName(Name name) {
         dbConnection.openConnection();
         boolean succes = false;
         try (Connection connection = dbConnection.getConnection();
@@ -262,6 +263,8 @@ public class ClueDaoImplementation implements ClueDao {
     public boolean delete(Id id) {
         return false;
     }
+
+
 
     private int getIdClueByClue(Clue clue) {
         int id_clue = 0;

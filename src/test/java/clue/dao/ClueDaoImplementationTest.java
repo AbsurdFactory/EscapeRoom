@@ -17,9 +17,9 @@ class ClueDaoImplementationTest {
 
     @Test
     void save() {
-        Clue clue1 = new Clue(new Name("pista3"),new ClueText("lalala"),new ClueTheme("lolololo"),new Price(new BigDecimal("30.00")));
+        Clue clue1 = new Clue(new Name("pista4443"),new ClueText("lalala"),new ClueTheme("lolololo"),new Price(new BigDecimal("30.00")));
         clueDaoImplementation.save(clue1);
-        Clue clue2 = (clueDaoImplementation.getClueByName(new Name(("pista3"))));
+        Clue clue2 = (clueDaoImplementation.getClueByName(new Name(("pista4443"))));
         assertEquals(Clue.class, clue2.getClass());
     }
 
@@ -74,7 +74,7 @@ class ClueDaoImplementationTest {
     void deleteClueByName() {
         Clue clue1 = new Clue(new Name("pista322"),new ClueText("lalala"), new ClueTheme("lolololo"),new Price(new BigDecimal("30.0")));
         List<Clue> list1 = clueDaoImplementation.findAll();
-        clueDaoImplementation.deleteClueByName(new Name("pista322"));
+        clueDaoImplementation.deleteByName(new Name("pista322"));
         List<Clue> list2 = clueDaoImplementation.findAll();
 
         assertFalse(list1.containsAll(list2));
