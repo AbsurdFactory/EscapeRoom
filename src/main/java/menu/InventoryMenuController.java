@@ -7,6 +7,10 @@ import clue.service.ClueService;
 import commonValueObjects.Name;
 import exceptions.ValidationException;
 import inventory.InventoryService;
+import objectdecoration.dao.ObjectDecorationDao;
+import objectdecoration.dao.ObjectDecorationDaoImpl;
+import objectdecoration.model.ObjectDecoration;
+import objectdecoration.service.ObjectDecorationService;
 import room.dao.RoomDao;
 import room.dao.RoomDaoImpl;
 import room.model.Room;
@@ -20,12 +24,15 @@ public class InventoryMenuController extends BaseMenuController {
     private final ClueService clueService;
     private final RoomDao roomDao = new RoomDaoImpl();
     private final RoomService roomService;
+    private final ObjectDecorationDao objectDecorationDao = new ObjectDecorationDaoImpl();
+    private final ObjectDecorationService objectDecorationService;
 
     public InventoryMenuController(Scanner scanner) {
         super(scanner);
         this.inventoryService = new InventoryService();
         this.clueService = new ClueService(clueDaoImplementation);
         this.roomService = new RoomService(roomDao);
+        this.objectDecorationService = new ObjectDecorationService(objectDecorationDao);
     }
 
     public void showInventoryMenu() {
@@ -79,9 +86,6 @@ public class InventoryMenuController extends BaseMenuController {
                     break;
                 case 4:
                     System.out.println("\nReturning to the Inventory Menu...");
-                    break;
-                default:
-                    // No debería llegar aquí por la validación de readOption
                     break;
             }
 
@@ -141,35 +145,54 @@ public class InventoryMenuController extends BaseMenuController {
 
 
     private void removeClueFromInventory() {
-        private void removeClueFromInventory() {
-            System.out.println("\n=== Remove Clue From Inventory ===");
+        System.out.println("\n=== Remove Clue From Inventory ===");
 
-            getAllClues();
+        getAllClues();
 
-            try {
-                System.out.println("Please enter the name of the clue you want to remove.");
-                Name clueName = ConsoleInputReader.readName(scanner, "clue name");
+        try {
+            System.out.println("Please enter the name of the clue you want to remove.");
+            Name clueName = ConsoleInputReader.readName(scanner, "clue name");
 
-                boolean removed = clueService.deleteClueByName(clueName);
+            boolean removed = clueService.deleteClueByName(clueName);
 
-                if (removed) {
-                    System.out.println("Clue '" + clueName + "' has been removed from the system.");
-                } else {
-                    System.out.println("No clue found with name: " + clueName);
-                }
-
-            } catch (InputReadException | ValidationException e) {
-                System.out.println("ERROR: " + e.getMessage());
+            if (removed) {
+                System.out.println("Clue '" + clueName + "' has been removed from the system.");
+            } else {
+                System.out.println("No clue found with name: " + clueName);
             }
 
-            System.out.println();
+        } catch (InputReadException | ValidationException e) {
+            System.out.println("ERROR: " + e.getMessage());
         }
+
+        System.out.println();
     }
 
+
     private void removeDecorationFromInventory() {
-        // TODO: integrar con servicio de decoraciones/inventario
-        System.out.println("Removing a Decoration from inventory (not implemented yet).");
+        System.out.println("\n=== Remove Decoration From Inventory ===");
+
+        getAllDecorations();
+
+        try {
+            System.out.println("Please enter the name of decoration you want to remove.");
+            Name decorationName = ConsoleInputReader.readName(scanner, "decoration name");
+
+            boolean removed = objectDecorationService.deleteObjectDecorationByName(decorationName);
+
+            if (removed) {
+                System.out.println("Decoration '" + decorationName + "' has been removed from the system.");
+            } else {
+                System.out.println("No decoration found with name: " + decorationName);
+            }
+
+        } catch (InputReadException | ValidationException e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
+
+        System.out.println();
     }
+
 
     private void getAllRooms() {
         System.out.println("\n=== Rooms in inventory ===");
@@ -210,6 +233,28 @@ public class InventoryMenuController extends BaseMenuController {
 
         } catch (Exception e) {
             System.out.println("ERROR retrieving clues: " + e.getMessage());
+        }
+
+        System.out.println();
+    }
+
+    private void getAllDecorations() {
+        System.out.println("\n=== Decorations in inventory ===");
+
+        try {
+            var decorations = objectDecorationService.getAll();
+
+            if (decorations.isEmpty()) {
+                System.out.println("There are no decorations in the inventory.");
+                return;
+            }
+
+            for (ObjectDecoration decoration : decorations) { // o ObjectDecoration si se llama así
+                System.out.println("Name: " + decoration.getName());
+            }
+
+        } catch (Exception e) {
+            System.out.println("ERROR retrieving decorations: " + e.getMessage());
         }
 
         System.out.println();
