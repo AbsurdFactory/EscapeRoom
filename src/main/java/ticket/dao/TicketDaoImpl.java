@@ -54,9 +54,9 @@ public class TicketDaoImpl implements TicketDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
 
-            ps.setInt(1, ticket.getId());
-            ps.setInt(2, ticket.getRoomId());
-            ps.setInt(3, ticket.getPlayerId());
+            ps.setInt(1, ticket.getId().getValue());
+            ps.setInt(2, ticket.getRoomId().getValue());
+            ps.setInt(3, ticket.getPlayerId().getValue());
             ps.setDate(4, Date.valueOf(ticket.getDate()));
             ps.setTime(5, Time.valueOf(ticket.getTime()));
             ps.setBigDecimal(6, ticket.getPrice());
@@ -142,12 +142,12 @@ public class TicketDaoImpl implements TicketDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
 
-            ps.setInt(1, ticket.getRoomId());
-            ps.setInt(2, ticket.getPlayerId());
+            ps.setInt(1, ticket.getRoomId().getValue());
+            ps.setInt(2, ticket.getPlayerId().getValue());
             ps.setDate(3, Date.valueOf(ticket.getDate()));
             ps.setTime(4, Time.valueOf(ticket.getTime()));
             ps.setBigDecimal(5, ticket.getPrice());
-            ps.setInt(6, ticket.getId());
+            ps.setInt(6, ticket.getId().getValue());
 
             return ps.executeUpdate() > 0;
 
