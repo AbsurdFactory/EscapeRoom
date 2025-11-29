@@ -197,7 +197,7 @@ public class InventoryMenuController extends BaseMenuController {
     private void getAllRooms() {
         System.out.println("\n=== Rooms in inventory ===");
 
-        var rooms = roomService.getAllRooms(); // o como tengas llamado el método
+        var rooms = roomService.getAllRooms();
 
         if (rooms.isEmpty()) {
             System.out.println("There are no rooms in the inventory.");
