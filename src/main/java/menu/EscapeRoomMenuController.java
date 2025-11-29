@@ -1,5 +1,7 @@
 package menu;
 
+import commonValueObjects.Name;
+import commonValueObjects.Price;
 import escaperoom.dao.EscapeRoomDao;
 import escaperoom.dao.EscapeRoomDaoImpl;
 import escaperoom.model.EscapeRoom;
@@ -7,6 +9,7 @@ import escaperoom.model.EscapeRoomBuilder;
 import escaperoom.service.EscapeRoomService;
 import room.dao.RoomDao;
 import room.dao.RoomDaoImpl;
+import room.model.DifficultyLevel;
 import room.model.Room;
 import room.model.RoomBuilder;
 import room.service.RoomService;
@@ -97,10 +100,10 @@ public class EscapeRoomMenuController extends BaseMenuController {
 
         while (selectedEscapeRoom == null) {
             System.out.print("Enter the name of the Escape Room you want to add the Room to: ");
-            String escapeRoomName = ConsoleInputReader.readNonEmptyString(scanner, "escape room name");
+            Name escapeRoomName = ConsoleInputReader.readName(scanner, "escape room name");
 
             for (EscapeRoom er : escapeRooms) {
-                if (er.getName().equalsIgnoreCase(escapeRoomName)) {
+                if (er.getName().equalsIgnoreCase(escapeRoomName.toString())) {
                     selectedEscapeRoom = er;
                     break;
                 }
@@ -114,26 +117,11 @@ public class EscapeRoomMenuController extends BaseMenuController {
         RoomBuilder roomBuilder = new RoomBuilder();
 
         System.out.println("Please enter the name of the Room.");
-        String roomName = ConsoleInputReader.readNonEmptyString(scanner, "room name");
-
-        String difficultyLevel;
-        while (true) {
-            System.out.println("Please enter the difficulty level (\"Easy\", \"Medium\", \"Hard\")");
-            String input = scanner.nextLine().trim();
-
-            if (input.equalsIgnoreCase("Easy") ||
-                    input.equalsIgnoreCase("Medium") ||
-                    input.equalsIgnoreCase("Hard")) {
-
-                difficultyLevel = input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
-                break;
-            } else {
-                System.out.println("Invalid difficulty. Please enter Easy, Medium, or Hard.");
-            }
-        }
-
+        Name roomName = ConsoleInputReader.readName(scanner, "room name");
+        System.out.println("Please enter the difficulty level (\"Easy\", \"Medium\", \"Hard\")");
+        DifficultyLevel difficultyLevel = ConsoleInputReader.readDifficultyLevel(scanner, "difficulty level");
         System.out.println("Please enter the base price of the Room.");
-        BigDecimal price = ConsoleInputReader.readBigDecimal(scanner, "room price");
+        Price price = ConsoleInputReader.readPrice(scanner, "room price");
 
         Room room = roomBuilder
                 .withName(roomName)
