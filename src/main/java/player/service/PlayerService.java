@@ -62,13 +62,12 @@ public class PlayerService {
         return playerDao.delete(id);
     }
 
-    public void subscribePlayer(String nickName) {
+    public SubscriptionResult subscribePlayer(String nickName) {
         Player player = playerDao.findByNickName(nickName)
                 .orElseThrow(() -> new NotFoundException("Player not found: " + nickName));
 
         if (player.isSubscribed()) {
-            System.out.println("Player " + nickName + " is already subscribed.");
-            return;
+            return new SubscriptionResult(false, "Player " + nickName + " is already subscribed.");
         }
 
         Player updated = Player.rehydrate(
@@ -78,10 +77,11 @@ public class PlayerService {
                 true
         );
         playerDao.update(updated);
-
         publisher.subscribe(updated);
-        System.out.println("Player " + nickName + " subscribed successfully!");
+
+        return new SubscriptionResult(true, "Player " + nickName + " subscribed successfully.");
     }
+
     public void notifyPlayers(String message) {
         List<Player> allPlayers = playerDao.findAll();
         allPlayers.stream()
