@@ -42,7 +42,7 @@ public class ClueService {
 
     public boolean deleteClueByName(Name name) {
 
-        return clueDaoImplementation.deleteClueByName(name);
+        return clueDaoImplementation.deleteByName(name);
     }
 
     public boolean deleteClue(Clue clue) {

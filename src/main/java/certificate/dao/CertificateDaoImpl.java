@@ -3,6 +3,7 @@ package certificate.dao;
 import certificate.model.Certificate;
 import certificate.model.CertificateRewardType;
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
@@ -179,6 +180,11 @@ public class CertificateDaoImpl implements CertificateDao {
         } finally {
             dbConnection.closeConnection();
         }    }
+
+    @Override
+    public boolean deleteByName(Name name) {
+        return false;
+    }
 
     public boolean delete(int id) {
         dbConnection.openConnection();

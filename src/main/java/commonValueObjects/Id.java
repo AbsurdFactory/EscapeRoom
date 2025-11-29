@@ -4,15 +4,12 @@ import exceptions.ValidationException;
 
 import java.util.Objects;
 
-public final class Id<T> {
+public record Id<T>(int value) {
 
-    private final int value;
-
-    public Id(int value) {
+    public Id {
         if (value <= 0) {
             throw new ValidationException("Entity ID must be greater than zero");
         }
-        this.value = value;
     }
 
     public int getValue() {

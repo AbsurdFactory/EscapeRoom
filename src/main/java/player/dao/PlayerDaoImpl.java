@@ -37,6 +37,9 @@ public class PlayerDaoImpl implements PlayerDao {
     private static final String DELETE_SQL = """
             DELETE FROM player WHERE id_player = ?
             """;
+    private static final String DELETE_BY_NAME_SQL = """
+            DELETE FROM player WHERE name = ?
+            """;
 
     private static final String SELECT_BY_NICKNAME = """
             SELECT id_player, nick_name, email FROM player WHERE nick_name = ?
@@ -140,7 +143,19 @@ public class PlayerDaoImpl implements PlayerDao {
 
     @Override
     public boolean deleteByName(Name name) {
-        return false;
+
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_BY_NAME_SQL)) {
+
+            ps.setString(1, name.toString());
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting player", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
     }
 
     public boolean delete(int id) {
