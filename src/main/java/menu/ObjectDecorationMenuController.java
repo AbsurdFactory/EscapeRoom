@@ -95,7 +95,7 @@ public class ObjectDecorationMenuController extends BaseMenuController {
     }
 
     @Override
-    public void showMenu() throws InputReadException {
+    public void showMenu() {
         showDecorationMenu();
     }
 }
