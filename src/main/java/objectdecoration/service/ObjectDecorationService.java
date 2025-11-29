@@ -1,6 +1,7 @@
 package objectdecoration.service;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import exceptions.NotFoundException;
 import objectdecoration.dao.ObjectDecorationDao;
 import objectdecoration.model.ObjectDecoration;
@@ -39,5 +40,9 @@ public class ObjectDecorationService {
 
     public boolean deleteObjectDecoration(Id id) {
         return dao.delete(id);
+    }
+
+    public boolean deleteObjectDecorationByName(Name name){
+        return dao.deleteByName(name);
     }
 }

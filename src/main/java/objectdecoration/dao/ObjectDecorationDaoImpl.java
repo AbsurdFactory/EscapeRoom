@@ -1,6 +1,7 @@
 package objectdecoration.dao;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import objectdecoration.model.ObjectDecoration;
@@ -43,6 +44,13 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
         DELETE FROM decoration_object
         WHERE id_decoration_object = ?
         """;
+
+    private static final String DELETE_BY_NAME_SQL = """
+        DELETE FROM decoration_object
+        WHERE name = ?
+        """;
+
+
     private final DatabaseConnection dbConnection;
     public ObjectDecorationDaoImpl() {
         try {
@@ -176,6 +184,21 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Error deleting decoration with ID: " + id, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    public boolean deleteByName(Name name) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_BY_NAME_SQL)) {
+
+            ps.setString(1, name.toString());
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting room with name: " + name, e);
         } finally {
             dbConnection.closeConnection();
         }
