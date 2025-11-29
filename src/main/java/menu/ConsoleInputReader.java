@@ -5,6 +5,7 @@ import clue.model.ClueTheme;
 import commonValueObjects.Name;
 import commonValueObjects.Price;
 import objectdecoration.model.Material;
+import room.model.DifficultyLevel;
 
 import java.math.BigDecimal;
 import java.util.InputMismatchException;
@@ -103,4 +104,15 @@ public class ConsoleInputReader {
             throw new InputReadException(fieldName + ": " + e.getMessage());
         }
     }
+
+    public static DifficultyLevel readDifficultyLevel(Scanner scanner, String fieldName) throws InputReadException {
+        try {
+            String value = scanner.nextLine().trim();
+            return new DifficultyLevel(value);
+        } catch (IllegalArgumentException e) {
+            throw new InputReadException(fieldName + ": " + e.getMessage());
+        }
+    }
+
+
 }
