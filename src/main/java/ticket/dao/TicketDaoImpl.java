@@ -1,5 +1,6 @@
 package ticket.dao;
 
+import commonValueObjects.Id;
 import dao.BaseDao;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
@@ -53,9 +54,9 @@ public class TicketDaoImpl implements TicketDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
 
-            ps.setInt(1, ticket.getId());
-            ps.setInt(2, ticket.getRoomId());
-            ps.setInt(3, ticket.getPlayerId());
+            ps.setInt(1, ticket.getId().getValue());
+            ps.setInt(2, ticket.getRoomId().getValue());
+            ps.setInt(3, ticket.getPlayerId().getValue());
             ps.setDate(4, Date.valueOf(ticket.getDate()));
             ps.setTime(5, Time.valueOf(ticket.getTime()));
             ps.setBigDecimal(6, ticket.getPrice());
@@ -70,6 +71,27 @@ public class TicketDaoImpl implements TicketDao {
     }
 
     @Override
+    public Optional<Ticket> findById(Id id) {
+        dbConnection.openConnection();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID)) {
+
+            ps.setInt(1, id.getValue());
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return Optional.of(mapRow(rs));
+            }
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding ticket", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
     public Optional<Ticket> findById(int id) {
         dbConnection.openConnection();
 
@@ -120,12 +142,12 @@ public class TicketDaoImpl implements TicketDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
 
-            ps.setInt(1, ticket.getRoomId());
-            ps.setInt(2, ticket.getPlayerId());
+            ps.setInt(1, ticket.getRoomId().getValue());
+            ps.setInt(2, ticket.getPlayerId().getValue());
             ps.setDate(3, Date.valueOf(ticket.getDate()));
             ps.setTime(4, Time.valueOf(ticket.getTime()));
             ps.setBigDecimal(5, ticket.getPrice());
-            ps.setInt(6, ticket.getId());
+            ps.setInt(6, ticket.getId().getValue());
 
             return ps.executeUpdate() > 0;
 
@@ -137,6 +159,22 @@ public class TicketDaoImpl implements TicketDao {
     }
 
     @Override
+    public boolean delete(Id id) {
+        dbConnection.openConnection();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
+
+            ps.setInt(1, id.getValue());
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting ticket", e);
+        } finally {
+            dbConnection.closeConnection();
+        }    }
+
+
     public boolean delete(int id) {
         dbConnection.openConnection();
 

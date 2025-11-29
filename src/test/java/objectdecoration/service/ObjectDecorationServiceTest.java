@@ -1,5 +1,6 @@
 package objectdecoration.service;
 
+import commonValueObjects.Id;
 import exceptions.NotFoundException;
 import objectdecoration.dao.ObjectDecorationDao;
 import objectdecoration.model.ObjectDecoration;
@@ -32,18 +33,18 @@ class ObjectDecorationServiceTest {
     @Test
     void shouldFindDecorationById() {
         ObjectDecoration decoration = ObjectDecoration.rehydrate(1, "Candle Holder", "Metal", 120.5);
-        when(dao.findById(1)).thenReturn(Optional.of(decoration));
+        when(dao.findById(new Id<>(1))).thenReturn(Optional.of(decoration));
 
-        ObjectDecoration result = service.getById(1);
+        ObjectDecoration result = service.getById(new Id<>(1));
 
         assertEquals("Candle Holder", result.getName().toString());
-        verify(dao, times(1)).findById(1);
+        verify(dao, times(1)).findById(new Id<>(1));
     }
 
     @Test
     void shouldThrowExceptionWhenDecorationNotFound() {
-        when(dao.findById(999)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> service.getById(999));
+        when(dao.findById(new Id<>(999))).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> service.getById(new Id<>(999)));
     }
 
     @Test
@@ -61,7 +62,7 @@ class ObjectDecorationServiceTest {
     @Test
     void shouldUpdateDecorationSuccessfully() {
         ObjectDecoration existing = ObjectDecoration.rehydrate(1, "Candle Holder", "Metal", 120.5);
-        when(dao.findById(1)).thenReturn(Optional.of(existing));
+        when(dao.findById(new Id<>(1))).thenReturn(Optional.of(existing));
         when(dao.update(any(ObjectDecoration.class))).thenReturn(true);
 
         boolean result = service.updateObjectDecoration(1, "Old Candle Holder", "Metal", 200.0);

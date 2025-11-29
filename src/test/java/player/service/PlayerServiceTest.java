@@ -1,5 +1,6 @@
 package player.service;
 
+import commonValueObjects.Id;
 import exceptions.BusinessException;
 import exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,9 +44,9 @@ public class PlayerServiceTest {
 
     @Test
     void shouldThrowNotFoundWhenPlayerDoesNotExist() {
-        when(playerDao.findById(99)).thenReturn(Optional.empty());
+        when(playerDao.findById(new Id<>(99))).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> playerService.getPlayerById(99));
+        assertThrows(NotFoundException.class, () -> playerService.getPlayerById(new Id<>(99)));
     }
 
     @Test

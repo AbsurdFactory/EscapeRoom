@@ -1,9 +1,13 @@
 package room.model;
 
 import clue.model.Clue;
+import commonValueObjects.Id;
+import commonValueObjects.Name;
+import commonValueObjects.Price;
 import objectdecoration.model.ObjectDecoration;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,10 +21,10 @@ class RoomBuilderTest {
         RoomBuilder builder = new RoomBuilder();
 
         Room room = builder
-                .withId(1)
-                .withName("Sala Misteriosa")
-                .withPrice(25.5)
-                .withDifficultyLevel("MEDIUM")
+                .withId(new Id<>(1))
+                .withName(new Name("Sala Misteriosa"))
+                .withPrice(new Price(new BigDecimal("25.5")))
+                .withDifficultyLevel(new DifficultyLevel("MEDIUM"))
                 .build();
 
         assertNotNull(room);
@@ -37,10 +41,10 @@ class RoomBuilderTest {
         Clue clue = mock(Clue.class);
 
         Room room = builder
-                .withId(1)
-                .withName("Test")
-                .withPrice(10)
-                .withDifficultyLevel("EASY")
+                .withId(new Id(1))
+                .withName(new Name("Test"))
+                .withPrice(new Price(new BigDecimal(10)))
+                .withDifficultyLevel(new DifficultyLevel("EASY"))
                 .addClue(clue)
                 .build();
 
@@ -53,10 +57,10 @@ class RoomBuilderTest {
         RoomBuilder builder = new RoomBuilder();
 
         Room room = builder
-                .withId(1)
-                .withName("Test")
-                .withPrice(10)
-                .withDifficultyLevel("EASY")
+                .withId(new Id(1))
+                .withName(new Name("Test"))
+                .withPrice(new Price(new BigDecimal(10)))
+                .withDifficultyLevel(new DifficultyLevel("EASY"))
                 .addClue(null)
                 .build();
 
@@ -70,10 +74,10 @@ class RoomBuilderTest {
         ObjectDecoration decoration = mock(ObjectDecoration.class);
 
         Room room = builder
-                .withId(1)
-                .withName("Test")
-                .withPrice(10)
-                .withDifficultyLevel("EASY")
+                .withId(new Id(1))
+                .withName(new Name("Test"))
+                .withPrice(new Price(new BigDecimal(10)))
+                .withDifficultyLevel(new DifficultyLevel("EASY"))
                 .addDecoration(decoration)
                 .build();
 
@@ -86,10 +90,10 @@ class RoomBuilderTest {
         RoomBuilder builder = new RoomBuilder();
 
         Room room = builder
-                .withId(1)
-                .withName("Test")
-                .withPrice(10)
-                .withDifficultyLevel("EASY")
+                .withId(new Id(1))
+                .withName(new Name("Test"))
+                .withPrice(new Price(new BigDecimal(10)))
+                .withDifficultyLevel(new DifficultyLevel("EASY"))
                 .addDecoration(null)
                 .build();
 
@@ -104,10 +108,10 @@ class RoomBuilderTest {
         ObjectDecoration d2 = mock(ObjectDecoration.class);
 
         Room room = builder
-                .withId(1)
-                .withName("Test")
-                .withPrice(10)
-                .withDifficultyLevel("EASY")
+                .withId(new Id(1))
+                .withName(new Name("Test"))
+                .withPrice(new Price(new BigDecimal(10)))
+                .withDifficultyLevel(new DifficultyLevel("EASY"))
                 .addDecorations(List.of(d1, d2))
                 .build();
 
@@ -121,10 +125,10 @@ class RoomBuilderTest {
         RoomBuilder builder = new RoomBuilder();
 
         Room room = builder
-                .withId(1)
-                .withName("Test")
-                .withPrice(10)
-                .withDifficultyLevel("EASY")
+                .withId(new Id(1))
+                .withName(new Name("Test"))
+                .withPrice(new Price(new BigDecimal(10)))
+                .withDifficultyLevel(new DifficultyLevel("EASY"))
                 .addDecorations(null)
                 .build();
 
@@ -138,10 +142,10 @@ class RoomBuilderTest {
         ObjectDecoration d1 = mock(ObjectDecoration.class);
 
         Room room = builder
-                .withId(1)
-                .withName("Test")
-                .withPrice(10)
-                .withDifficultyLevel("EASY")
+                .withId(new Id(1))
+                .withName(new Name("Test"))
+                .withPrice(new Price(new BigDecimal(10)))
+                .withDifficultyLevel(new DifficultyLevel("EASY"))
                 .addDecorations(Arrays.asList(d1, null, null))
                 .build();
 
@@ -157,10 +161,10 @@ class RoomBuilderTest {
         ObjectDecoration deco = mock(ObjectDecoration.class);
 
         Room room = builder
-                .withId(1)
-                .withName("Test")
-                .withPrice(10)
-                .withDifficultyLevel("EASY")
+                .withId(new Id(1))
+                .withName(new Name("Test"))
+                .withPrice(new Price(new BigDecimal(10)))
+                .withDifficultyLevel(new DifficultyLevel("EASY"))
                 .addClue(clue)
                 .addDecoration(deco)
                 .build();

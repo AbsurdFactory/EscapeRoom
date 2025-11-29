@@ -1,5 +1,6 @@
 package escaperoom.service;
 
+import commonValueObjects.Id;
 import escaperoom.dao.EscapeRoomDao;
 import escaperoom.model.EscapeRoom;
 
@@ -18,10 +19,7 @@ public class EscapeRoomService {
         escapeRoomDao.save(escapeRoom);
     }
 
-    public Optional<EscapeRoom> getEscapeRoomById(int id) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("ID must be greater than zero.");
-        }
+    public Optional<EscapeRoom> getEscapeRoomById(Id id) {
         return escapeRoomDao.findById(id);
     }
 
@@ -33,10 +31,8 @@ public class EscapeRoomService {
         return escapeRoomDao.update(escapeRoom);
     }
 
-    public boolean deleteEscapeRoom(int id) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("Invalid ID.");
-        }
+    public boolean deleteEscapeRoom(Id id) {
+
         return escapeRoomDao.delete(id);
     }
 }

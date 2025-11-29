@@ -1,5 +1,6 @@
 package player.service;
 
+import commonValueObjects.Id;
 import exceptions.BusinessException;
 import exceptions.NotFoundException;
 import player.dao.PlayerDao;
@@ -28,7 +29,7 @@ public class PlayerService {
         playerDao.save(player);
     }
 
-    public Player getPlayerById(int id) {
+    public Player getPlayerById(Id id) {
         return playerDao.findById(id)
                 .orElseThrow(() -> new NotFoundException("Player not found with ID: " + id));
     }
@@ -47,13 +48,13 @@ public class PlayerService {
         return playerDao.findAll();
     }
 
-    public boolean updatePlayer(int id, String newNickName, String newEmail, boolean subscribed) {
+    public boolean updatePlayer(Id id, String newNickName, String newEmail, boolean subscribed) {
         Player existing = getPlayerById(id);
-        Player updated = Player.rehydrate(id, newNickName, newEmail, subscribed);
+        Player updated = Player.rehydrate(id.getValue(), newNickName, newEmail, subscribed);
         return playerDao.update(updated);
     }
 
-    public boolean deletePlayer(int id) {
+    public boolean deletePlayer(Id id) {
         getPlayerById(id);
         return playerDao.delete(id);
     }
