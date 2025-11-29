@@ -1,5 +1,6 @@
 package menu;
 
+import commonValueObjects.Id;
 import commonValueObjects.Name;
 import commonValueObjects.Price;
 import objectdecoration.dao.ObjectDecorationDao;
@@ -58,7 +59,7 @@ public class ObjectDecorationMenuController extends BaseMenuController {
             Price price = ConsoleInputReader.readPrice(scanner, "decoration price");
 
 
-            ObjectDecoration decoration = new ObjectDecoration(null, name, material, price);
+            ObjectDecoration decoration = new ObjectDecoration(new Id<>(1), name, material, price);
             objectDecorationService.addObjectDecoration(decoration);
 
         } catch (InputReadException e) {
