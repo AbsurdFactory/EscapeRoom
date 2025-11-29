@@ -1,6 +1,7 @@
 package dao;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import objectdecoration.model.ObjectDecoration;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface BaseDao<T> {
     boolean update(T entity);
 
     boolean delete(Id id);
+
+    boolean deleteByName(Name name);
 }
