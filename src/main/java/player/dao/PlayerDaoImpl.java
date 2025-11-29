@@ -1,6 +1,7 @@
 package player.dao;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
@@ -35,6 +36,9 @@ public class PlayerDaoImpl implements PlayerDao {
 
     private static final String DELETE_SQL = """
             DELETE FROM player WHERE id_player = ?
+            """;
+    private static final String DELETE_BY_NAME_SQL = """
+            DELETE FROM player WHERE name = ?
             """;
 
     private static final String SELECT_BY_NICKNAME = """
@@ -128,6 +132,23 @@ public class PlayerDaoImpl implements PlayerDao {
              PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
 
             ps.setInt(1, id.getValue());
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting player", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    @Override
+    public boolean deleteByName(Name name) {
+
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_BY_NAME_SQL)) {
+
+            ps.setString(1, name.toString());
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {

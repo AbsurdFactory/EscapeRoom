@@ -1,6 +1,7 @@
 package ticket.dao;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import dao.BaseDao;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
@@ -173,6 +174,11 @@ public class TicketDaoImpl implements TicketDao {
         } finally {
             dbConnection.closeConnection();
         }    }
+
+    @Override
+    public boolean deleteByName(Name name) {
+        return false;
+    }
 
 
     public boolean delete(int id) {

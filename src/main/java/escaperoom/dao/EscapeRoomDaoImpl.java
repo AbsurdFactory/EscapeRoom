@@ -1,6 +1,7 @@
 package escaperoom.dao;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import escaperoom.model.EscapeRoom;
@@ -48,6 +49,11 @@ public class EscapeRoomDaoImpl implements EscapeRoomDao {
     private static final String DELETE_SQL = """
         DELETE FROM escape
         WHERE id_escape = ?
+        """;
+
+    private static final String DELETE_BY_NAME_SQL = """
+        DELETE FROM escape
+        WHERE name = ?
         """;
 
 
@@ -189,6 +195,22 @@ public class EscapeRoomDaoImpl implements EscapeRoomDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Error deleting escape room with ID: " + id, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    @Override
+    public boolean deleteByName(Name name) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_BY_NAME_SQL)) {
+
+            ps.setString(1, name.toString());
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting escape room with name: " + name.toString(), e);
         } finally {
             dbConnection.closeConnection();
         }
