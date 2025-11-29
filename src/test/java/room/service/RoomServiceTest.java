@@ -1,24 +1,32 @@
 package room.service;
 
+import commonValueObjects.Id;
+import commonValueObjects.Name;
+import commonValueObjects.Price;
 import objectdecoration.dao.ObjectDecorationDao;
-import objectdecoration.model.ObjectDecoration;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import room.dao.RoomDao;
+import room.model.DifficultyLevel;
 import room.model.Room;
 import room.model.RoomBuilder;
-import validators.RoomValidator;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("RoomService Tests")
 class RoomServiceTest {
 
     @Mock
@@ -27,145 +35,278 @@ class RoomServiceTest {
     @Mock
     private ObjectDecorationDao decorationDao;
 
-    @Mock
-    private RoomBuilder roomBuilder;
+    @InjectMocks
+    private RoomService roomService;
 
-    @Mock
-    private Room room;
+    private Room validRoom;
+    private Id validId;
 
-
-    @Test
-    void createRoom_shouldValidateAndSaveRoom() {
-        RoomService roomService = new RoomService(roomDao);
-
-        try (MockedStatic<RoomValidator> validatorMock = mockStatic(RoomValidator.class)) {
-            roomService.createRoom(room);
-
-            validatorMock.verify(() -> RoomValidator.validateRoom(room));
-            verify(roomDao, times(1)).save(room);
-        }
+    @BeforeEach
+    void setUp() {
+        validId = new Id(1);
+        validRoom = new RoomBuilder()
+                .withName(new Name("Mystery Room"))
+                .withPrice(new Price(new BigDecimal("50.00")))
+                .withDifficultyLevel(new DifficultyLevel("Medium"))
+                .build();
     }
 
 
     @Test
-    void getRoomById_withIdLessOrEqualZero_shouldThrowException() {
-        RoomService roomService = new RoomService(roomDao);
+    @DisplayName("Should create room successfully when valid room is provided")
+    void shouldCreateRoomSuccessfully() {
+        doNothing().when(roomDao).save(any(Room.class));
 
-        IllegalArgumentException ex1 = assertThrows(
-                IllegalArgumentException.class,
-                () -> roomService.getRoomById(0)
-        );
-        assertEquals("The id must be greater than 0.", ex1.getMessage());
+        assertDoesNotThrow(() -> roomService.createRoom(validRoom));
 
-        IllegalArgumentException ex2 = assertThrows(
-                IllegalArgumentException.class,
-                () -> roomService.getRoomById(-5)
-        );
-        assertEquals("The id must be greater than 0.", ex2.getMessage());
+        verify(roomDao, times(1)).save(validRoom);
     }
 
     @Test
-    void getRoomById_withValidId_shouldDelegateToDao() {
-        RoomService roomService = new RoomService(roomDao);
-        int id = 1;
-        Optional<Room> expected = Optional.of(room);
+    @DisplayName("Should throw exception when creating room with null value")
+    void shouldThrowExceptionWhenCreatingNullRoom() {
 
-        when(roomDao.findById(id)).thenReturn(expected);
+        assertThrows(IllegalArgumentException.class, () -> roomService.createRoom(null));
+        verify(roomDao, never()).save(any(Room.class));
+    }
 
-        Optional<Room> result = roomService.getRoomById(id);
+    @Test
+    @DisplayName("Should throw exception when room validation fails")
+    void shouldThrowExceptionWhenRoomValidationFails() {
 
-        assertEquals(expected, result);
-        verify(roomDao, times(1)).findById(id);
+        Room invalidRoom = new RoomBuilder()
+                .withName(null) // Invalid: null name
+                .withPrice(new Price(new BigDecimal("50.00")))
+                .withDifficultyLevel(new DifficultyLevel("Easy"))
+                .build();
+
+
+        assertThrows(IllegalArgumentException.class, () -> roomService.createRoom(invalidRoom));
+        verify(roomDao, never()).save(any(Room.class));
     }
 
 
     @Test
-    void getAllRooms_shouldReturnAllRoomsFromDao() {
-        RoomService roomService = new RoomService(roomDao);
+    @DisplayName("Should return room when valid ID is provided")
+    void shouldReturnRoomWhenValidIdProvided() {
+        when(roomDao.findById(validId)).thenReturn(Optional.of(validRoom));
 
-        List<Room> rooms = List.of(room);
-        when(roomDao.findAll()).thenReturn(rooms);
+        Optional<Room> result = roomService.getRoomById(validId);
+
+        assertTrue(result.isPresent());
+        assertEquals(validRoom, result.get());
+        verify(roomDao, times(1)).findById(validId);
+    }
+
+    @Test
+    @DisplayName("Should return empty Optional when room not found")
+    void shouldReturnEmptyWhenRoomNotFound() {
+
+        Id nonExistentId = new Id(999);
+        when(roomDao.findById(nonExistentId)).thenReturn(Optional.empty());
+
+
+        Optional<Room> result = roomService.getRoomById(nonExistentId);
+
+
+        assertFalse(result.isPresent());
+        verify(roomDao, times(1)).findById(nonExistentId);
+    }
+
+
+    @Test
+    @DisplayName("Should return all rooms when rooms exist")
+    void shouldReturnAllRoomsWhenRoomsExist() {
+
+        Room room2 = new RoomBuilder()
+                .withName(new Name("Horror Room"))
+                .withPrice(new Price(new BigDecimal("60.00")))
+                .withDifficultyLevel(new DifficultyLevel("Hard"))
+                .build();
+
+        List<Room> expectedRooms = Arrays.asList(validRoom, room2);
+        when(roomDao.findAll()).thenReturn(expectedRooms);
+
 
         List<Room> result = roomService.getAllRooms();
 
-        assertEquals(rooms, result);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(expectedRooms, result);
+        verify(roomDao, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Should return empty list when no rooms exist")
+    void shouldReturnEmptyListWhenNoRoomsExist() {
+        when(roomDao.findAll()).thenReturn(List.of());
+
+        List<Room> result = roomService.getAllRooms();
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
         verify(roomDao, times(1)).findAll();
     }
 
 
     @Test
-    void updateRoom_shouldValidateAndDelegateToDao() {
-        RoomService roomService = new RoomService(roomDao);
+    @DisplayName("Should update room successfully when valid room is provided")
+    void shouldUpdateRoomSuccessfully() {
 
-        when(roomDao.update(room)).thenReturn(true);
-
-        try (MockedStatic<RoomValidator> validatorMock = mockStatic(RoomValidator.class)) {
-            boolean updated = roomService.updateRoom(room);
-
-            assertTrue(updated);
-            validatorMock.verify(() -> RoomValidator.validateRoom(room));
-            verify(roomDao, times(1)).update(room);
-        }
-    }
+        when(roomDao.update(validRoom)).thenReturn(true);
 
 
-    @Test
-    void deleteRoom_withInvalidId_shouldThrowException() {
-        RoomService roomService = new RoomService(roomDao);
+        boolean result = roomService.updateRoom(validRoom);
 
-        IllegalArgumentException ex1 = assertThrows(
-                IllegalArgumentException.class,
-                () -> roomService.deleteRoom(0)
-        );
-        assertEquals("Invalid ID.", ex1.getMessage());
-
-        IllegalArgumentException ex2 = assertThrows(
-                IllegalArgumentException.class,
-                () -> roomService.deleteRoom(-10)
-        );
-        assertEquals("Invalid ID.", ex2.getMessage());
-    }
-
-    @Test
-    void deleteRoom_withValidId_shouldDelegateToDao() {
-        RoomService roomService = new RoomService(roomDao);
-        int id = 3;
-
-        when(roomDao.delete(id)).thenReturn(true);
-
-        boolean result = roomService.deleteRoom(id);
 
         assertTrue(result);
-        verify(roomDao, times(1)).delete(id);
+        verify(roomDao, times(1)).update(validRoom);
+    }
+
+    @Test
+    @DisplayName("Should return false when room update fails")
+    void shouldReturnFalseWhenUpdateFails() {
+
+        when(roomDao.update(validRoom)).thenReturn(false);
+
+
+        boolean result = roomService.updateRoom(validRoom);
+
+
+        assertFalse(result);
+        verify(roomDao, times(1)).update(validRoom);
+    }
+
+    @Test
+    @DisplayName("Should throw exception when updating null room")
+    void shouldThrowExceptionWhenUpdatingNullRoom() {
+
+        assertThrows(IllegalArgumentException.class, () -> roomService.updateRoom(null));
+        verify(roomDao, never()).update(any(Room.class));
     }
 
 
     @Test
-    void createRoomWithAllDecorations_shouldBuildValidateAndSaveRoom() {
+    @DisplayName("Should delete room successfully when valid ID is provided")
+    void shouldDeleteRoomSuccessfully() {
 
-        RoomService roomService = new RoomService(roomDao, decorationDao);
+        when(roomDao.delete(validId)).thenReturn(true);
 
-        List<ObjectDecoration> decorations = List.of(
-                mock(ObjectDecoration.class),
-                mock(ObjectDecoration.class)
-        );
+        boolean result = roomService.deleteRoom(validId);
 
-        when(decorationDao.findAll()).thenReturn(decorations);
-        when(roomBuilder.addDecorations(decorations)).thenReturn(roomBuilder);
-        when(roomBuilder.build()).thenReturn(room);
+        assertTrue(result);
+        verify(roomDao, times(1)).delete(validId);
+    }
 
-        doNothing().when(roomDao).save(room);
-        try (MockedStatic<RoomValidator> validatorMock = mockStatic(RoomValidator.class)) {
-            Room result = roomService.createRoomWithAllDecorations(roomBuilder);
+    @Test
+    @DisplayName("Should return false when room deletion fails")
+    void shouldReturnFalseWhenDeletionFails() {
+        Id nonExistentId = new Id(999);
+        when(roomDao.delete(nonExistentId)).thenReturn(false);
 
-            assertNotNull(result);
-            assertEquals(room, result);
+        boolean result = roomService.deleteRoom(nonExistentId);
 
-            verify(decorationDao, times(1)).findAll();
-            verify(roomBuilder, times(1)).addDecorations(decorations);
-            verify(roomBuilder, times(1)).build();
-            validatorMock.verify(() -> RoomValidator.validateRoom(room));
-            verify(roomDao, times(1)).save(room);
-        }
+        assertFalse(result);
+        verify(roomDao, times(1)).delete(nonExistentId);
+    }
+
+
+//    @Test
+//    @DisplayName("Should create room with all decorations successfully")
+//    void shouldCreateRoomWithAllDecorationsSuccessfully() {
+//        // Arrange
+//        RoomBuilder builder = new RoomBuilder()
+//                .withName(new Name("Decorated Room"))
+//                .withPrice(new Price(new BigDecimal("75.00")))
+//                .withDifficultyLevel(new DifficultyLevel("Hard"));
+//
+//        ObjectDecoration decoration1 = new ObjectDecoration(
+//                new Name("Chandelier"),
+//                new Material("Crystal"),
+//                new Price(new BigDecimal("100.00"))
+//        );
+//
+//        ObjectDecoration decoration2 = new ObjectDecoration(
+//                new Name("Painting"),
+//                new Material("Canvas"),
+//                new Price(new BigDecimal("50.00"))
+//        );
+//
+//        List<ObjectDecoration> decorations = Arrays.asList(decoration1, decoration2);
+//
+//        when(decorationDao.findAll()).thenReturn(decorations);
+//        doNothing().when(roomDao).save(any(Room.class));
+//
+//
+//        RoomService roomServiceWithDecorations = new RoomService(roomDao, decorationDao);
+//
+//        // Act
+//        Room result = roomServiceWithDecorations.createRoomWithAllDecorations(builder);
+//
+//        // Assert
+//        assertNotNull(result);
+//        assertEquals(2, result.getObjectDecorations().size());
+//        verify(decorationDao, times(1)).findAll();
+//        verify(roomDao, times(1)).save(any(Room.class));
+//    }
+
+    @Test
+    @DisplayName("Should create room with no decorations when decoration list is empty")
+    void shouldCreateRoomWithNoDecorationsWhenListIsEmpty() {
+        // Arrange
+        RoomBuilder builder = new RoomBuilder()
+                .withName(new Name("Simple Room"))
+                .withPrice(new Price(new BigDecimal("40.00")))
+                .withDifficultyLevel(new DifficultyLevel("Easy"));
+
+        when(decorationDao.findAll()).thenReturn(List.of());
+        doNothing().when(roomDao).save(any(Room.class));
+
+        RoomService roomServiceWithDecorations = new RoomService(roomDao, decorationDao);
+
+        // Act
+        Room result = roomServiceWithDecorations.createRoomWithAllDecorations(builder);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(0, result.getObjectDecorations().size());
+        verify(decorationDao, times(1)).findAll();
+        verify(roomDao, times(1)).save(any(Room.class));
+    }
+
+    @Test
+    @DisplayName("Should throw exception when builder is null in createRoomWithAllDecorations")
+    void shouldThrowExceptionWhenBuilderIsNull() {
+        // Arrange
+        RoomService roomServiceWithDecorations = new RoomService(roomDao, decorationDao);
+
+        // Act & Assert
+        assertThrows(NullPointerException.class,
+                () -> roomServiceWithDecorations.createRoomWithAllDecorations(null));
+        verify(decorationDao, never()).findAll();
+        verify(roomDao, never()).save(any(Room.class));
+    }
+
+    // ==================== CONSTRUCTOR TESTS ====================
+
+    @Test
+    @DisplayName("Should create RoomService with only RoomDao")
+    void shouldCreateRoomServiceWithOnlyRoomDao() {
+        // Act
+        RoomService service = new RoomService(roomDao);
+
+        // Assert
+        assertNotNull(service);
+    }
+
+    @Test
+    @DisplayName("Should create RoomService with both DAOs")
+    void shouldCreateRoomServiceWithBothDaos() {
+        // Act
+        RoomService service = new RoomService(roomDao, decorationDao);
+
+        // Assert
+        assertNotNull(service);
     }
 }

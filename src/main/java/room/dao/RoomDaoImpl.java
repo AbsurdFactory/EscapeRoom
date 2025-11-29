@@ -1,8 +1,12 @@
 package room.dao;
 
+import commonValueObjects.Id;
+import commonValueObjects.Name;
+import commonValueObjects.Price;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
+import room.model.DifficultyLevel;
 import room.model.Room;
 
 import java.io.IOException;
@@ -58,9 +62,9 @@ public class RoomDaoImpl implements RoomDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
 
-            ps.setString(1, object.getName());
-            ps.setDouble(2, object.getPrice());
-            ps.setString(3, object.getDifficultyLevel());
+            ps.setString(1, object.getName().toString());
+            ps.setBigDecimal(2, object.getPrice().toBigDecimal());
+            ps.setString(3, object.getDifficultyLevel().toString());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -71,12 +75,12 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public Optional<Room> findById(int id) {
+    public Optional<Room> findById(Id id) {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID)) {
 
-            ps.setInt(1, id);
+            ps.setInt(1, id.getValue());
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -119,10 +123,10 @@ public class RoomDaoImpl implements RoomDao {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE_SQL)) {
 
-            ps.setString(1, object.getName());
-            ps.setDouble(2, object.getPrice());
-            ps.setString(3, object.getDifficultyLevel());
-            ps.setInt(4, object.getId());
+            ps.setString(1, object.getName().toString());
+            ps.setBigDecimal(2, object.getPrice().toBigDecimal());
+            ps.setString(3, object.getDifficultyLevel().toString());
+            ps.setInt(4, object.getId().getValue());
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
@@ -133,12 +137,12 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(Id id) {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(DELETE_SQL)) {
 
-            ps.setInt(1, id);
+            ps.setInt(1, id.getValue());
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
@@ -149,12 +153,15 @@ public class RoomDaoImpl implements RoomDao {
     }
 
     private Room mapRow(ResultSet rs) throws SQLException {
-        return new Room(
-                rs.getInt("id_decoration_object"),
-                rs.getString("name"),
-                rs.getDouble("price"),
-                rs.getString("difficulty_level")
-        );
+        try {
+            return new Room(
+                    new Name(rs.getString("name")),
+                    new Price(rs.getBigDecimal("price")),
+                    new DifficultyLevel(rs.getString("difficulty_level"))
+            );
+        } catch (IllegalArgumentException e) {
+            throw new SQLException("Error mapping room data: " + e.getMessage(), e);
+        }
     }
 
 

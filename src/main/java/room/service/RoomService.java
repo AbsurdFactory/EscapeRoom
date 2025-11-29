@@ -1,6 +1,7 @@
 package room.service;
 
 
+import commonValueObjects.Id;
 import objectdecoration.dao.ObjectDecorationDao;
 import objectdecoration.model.ObjectDecoration;
 import room.dao.RoomDao;
@@ -29,11 +30,7 @@ public class RoomService {
         roomDao.save(room);
     }
 
-    public Optional<Room> getRoomById(int id) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("The id must be greater than 0.");
-        }
-
+    public Optional<Room> getRoomById(Id id) {
         return roomDao.findById(id);
     }
 
@@ -46,10 +43,7 @@ public class RoomService {
         return roomDao.update(room);
     }
 
-    public boolean deleteRoom(int id) {
-        if (id <= 0) {
-            throw new IllegalArgumentException("Invalid ID.");
-        }
+    public boolean deleteRoom(Id id) {
 
         return roomDao.delete(id);
 
