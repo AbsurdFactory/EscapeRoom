@@ -3,7 +3,13 @@ package menu;
 import clue.dao.ClueDao;
 import clue.dao.ClueDaoImplementation;
 import clue.service.ClueService;
+import commonValueObjects.Name;
+import exceptions.ValidationException;
 import inventory.InventoryService;
+import room.dao.RoomDao;
+import room.dao.RoomDaoImpl;
+import room.model.Room;
+import room.service.RoomService;
 
 import java.util.Scanner;
 
@@ -11,14 +17,17 @@ public class InventoryMenuController extends BaseMenuController {
     private final InventoryService inventoryService;
     private final ClueDaoImplementation clueDaoImplementation = new ClueDaoImplementation();
     private final ClueService clueService;
+    private final RoomDao roomDao = new RoomDaoImpl();
+    private final RoomService roomService;
 
     public InventoryMenuController(Scanner scanner) {
         super(scanner);
         this.inventoryService = new InventoryService();
         this.clueService = new ClueService(clueDaoImplementation);
+        this.roomService = new RoomService(roomDao);
     }
 
-        public void showInventoryMenu() {
+    public void showInventoryMenu() {
         int subOption;
 
         do {
@@ -105,11 +114,30 @@ public class InventoryMenuController extends BaseMenuController {
     }
 
     private void removeRoomFromInventory() {
-        // TODO: pedir datos necesarios (id, nombre, etc.) y llamar al servicio
-        System.out.println("Removing a Room from inventory (not implemented yet).");
-        // int roomId = askRoomId();
-        // inventoryService.removeRoomFromInventory(roomId);
+        System.out.println("\n=== Remove Room From Inventory ===");
+
+        printAllRooms();
+
+        try {
+            System.out.println("Please enter the name of the room.");
+            String roomNameRaw = ConsoleInputReader.readNonEmptyString(scanner, "room name");
+            Name roomName = new Name(roomNameRaw);
+
+            boolean removed = roomService.deleteRoomByName(roomName);
+
+            if (removed) {
+                System.out.println("Room '" + roomName + "' has been removed from the system.");
+            } else {
+                System.out.println("No room found with name: " + roomName);
+            }
+
+        } catch (InputReadException | ValidationException e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
+
+        System.out.println();
     }
+
 
     private void removeClueFromInventory() {
         // TODO: integrar con ClueService/inventoryService para eliminar una pista
@@ -121,9 +149,32 @@ public class InventoryMenuController extends BaseMenuController {
         System.out.println("Removing a Decoration from inventory (not implemented yet).");
     }
 
+    private void printAllRooms() {
+        System.out.println("\n=== Rooms in inventory ===");
+
+        var rooms = roomService.getAllRooms(); // o como tengas llamado el método
+
+        if (rooms.isEmpty()) {
+            System.out.println("There are no rooms in the inventory.");
+            return;
+        }
+
+        for (Room room : rooms) {
+            System.out.println(
+                    "Name: " + room.getName() +
+                            " | Price: " + room.getPrice().toBigDecimal() +
+                            " | Difficulty: " + room.getDifficultyLevel()
+            );
+        }
+
+        System.out.println();
+
+    }
 
     @Override
     public void showMenu() throws InputReadException {
         showRemoveFromInventoryMenu();
     }
+
+
 }
