@@ -131,7 +131,7 @@ public class MainMenuController extends BaseMenuController {
 
     private void handleRemoveFromInventory() {
         System.out.println("\n--- Remove from Inventory ---");
-        //TODO: decidir si llamar al mismo menú o a uno específico
+        inventoryMenuController.showRemoveFromInventoryMenu();
 
     }
 
