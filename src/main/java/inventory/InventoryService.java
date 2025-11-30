@@ -9,6 +9,9 @@ import objectdecoration.model.ObjectDecoration;
 import objectdecoration.service.ObjectDecorationService;
 import room.dao.RoomDaoImpl;
 import room.service.RoomService;
+import ticket.dao.TicketDaoImpl;
+import ticket.model.Ticket;
+import ticket.service.TicketService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -76,4 +79,20 @@ public class InventoryService {
         return total;
     }
 
+    public BigDecimal calculateTotalIncome(){
+        BigDecimal totalIncome =  BigDecimal.ZERO;
+
+        TicketService inventoryService = new TicketService(new TicketDaoImpl());
+        List <Ticket> ticketList = inventoryService.getAllTickets();
+        ticketList.forEach(ticket -> ticket.getPrice());
+
+
+        totalIncome = ticketList.stream()
+                .filter(Objects::nonNull)
+                .map(Ticket::getPrice)
+                .map(Price::toBigDecimal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return totalIncome;
+    }
 }
