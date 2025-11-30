@@ -3,6 +3,7 @@ package objectdecoration.service;
 import commonValueObjects.Id;
 import exceptions.NotFoundException;
 import objectdecoration.dao.ObjectDecorationDao;
+import objectdecoration.dao.ObjectDecorationDaoImpl;
 import objectdecoration.model.ObjectDecoration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,12 +16,12 @@ import static org.mockito.Mockito.*;
 
 class ObjectDecorationServiceTest {
 
-    private ObjectDecorationDao dao;
+    private ObjectDecorationDaoImpl dao;
     private ObjectDecorationService service;
 
     @BeforeEach
     void setUp() {
-        dao = mock(ObjectDecorationDao.class);
+        dao = mock(ObjectDecorationDaoImpl.class);
         service = new ObjectDecorationService(dao);
     }
 

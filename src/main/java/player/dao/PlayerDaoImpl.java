@@ -49,6 +49,12 @@ public class PlayerDaoImpl implements PlayerDao {
             SELECT id_player, nick_name, email FROM player WHERE email = ?
             """;
 
+    private static final String SELECT_ID_BY_NAME_SQL = """
+        SELECT id_player
+        FROM player
+        WHERE nick_name = ?
+        """;
+
     private final DatabaseConnection dbConnection;
 
     public PlayerDaoImpl() {
@@ -207,6 +213,28 @@ public class PlayerDaoImpl implements PlayerDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Query error: " + sql, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    public Optional<Integer> getIdByName(String name) {
+        dbConnection.openConnection();
+
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID_BY_NAME_SQL)) {
+
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return Optional.of(resultSet.getInt("id_player"));
+            }
+
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding Player ID by name: " + name, e);
         } finally {
             dbConnection.closeConnection();
         }

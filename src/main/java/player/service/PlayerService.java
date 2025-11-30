@@ -1,17 +1,19 @@
 package player.service;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import exceptions.BusinessException;
 import exceptions.NotFoundException;
 import player.dao.PlayerDao;
+import player.dao.PlayerDaoImpl;
 import player.model.Player;
 
 import java.util.List;
 
 public class PlayerService {
-    private final PlayerDao playerDao;
+    private final PlayerDaoImpl playerDao;
 
-    public PlayerService(PlayerDao playerDao) {
+    public PlayerService(PlayerDaoImpl playerDao) {
         this.playerDao = playerDao;
     }
 
@@ -58,4 +60,11 @@ public class PlayerService {
         getPlayerById(id);
         return playerDao.delete(id);
     }
+
+    public Id getIdByName(Name name) {
+        return playerDao.getIdByName(name.toString())
+                .map(Id::new)
+                .orElseThrow(() -> new NotFoundException("Player not found with name: " + name));
+    }
 }
+

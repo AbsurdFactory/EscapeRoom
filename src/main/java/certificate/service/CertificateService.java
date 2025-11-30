@@ -1,6 +1,6 @@
 package certificate.service;
 
-import certificate.dao.CertificateDao;
+import certificate.dao.CertificateDaoImpl;
 import certificate.model.Certificate;
 import commonValueObjects.Id;
 import exceptions.DataAccessException;
@@ -10,15 +10,15 @@ import java.util.Optional;
 
 public class CertificateService {
 
-    private final CertificateDao certificateDao;
+    private final CertificateDaoImpl certificateDaoImpl;
 
-    public CertificateService(CertificateDao certificateDao) {
-        this.certificateDao = certificateDao;
+    public CertificateService(CertificateDaoImpl certificateDaoImpl) {
+        this.certificateDaoImpl = certificateDaoImpl;
     }
 
     public void createCertificate(Certificate certificate) {
         try {
-            certificateDao.save(certificate);
+            certificateDaoImpl.save(certificate);
         } catch (Exception e) {
             throw new DataAccessException("Error saving certificate", e);
         }
@@ -26,7 +26,7 @@ public class CertificateService {
 
     public Optional<Certificate> getCertificateById(Id id) {
         try {
-            return certificateDao.findById(id);
+            return certificateDaoImpl.findById(id);
         } catch (Exception e) {
             throw new DataAccessException("Error retrieving certificate", e);
         }
@@ -34,7 +34,7 @@ public class CertificateService {
 
     public List<Certificate> getAllCertificates() {
         try {
-            return certificateDao.findAll();
+            return certificateDaoImpl.findAll();
         } catch (Exception e) {
             throw new DataAccessException("Error retrieving certificates", e);
         }
@@ -42,7 +42,7 @@ public class CertificateService {
 
     public boolean updateCertificate(Certificate certificate) {
         try {
-            return certificateDao.update(certificate);
+            return certificateDaoImpl.update(certificate);
         } catch (Exception e) {
             throw new DataAccessException("Error updating certificate", e);
         }
@@ -50,7 +50,7 @@ public class CertificateService {
 
     public boolean deleteCertificate(Id id) {
         try {
-            return certificateDao.delete(id);
+            return certificateDaoImpl.delete(id);
         } catch (Exception e) {
             throw new DataAccessException("Error deleting certificate", e);
         }

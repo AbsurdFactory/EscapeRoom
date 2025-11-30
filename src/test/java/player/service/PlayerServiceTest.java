@@ -6,6 +6,7 @@ import exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import player.dao.PlayerDao;
+import player.dao.PlayerDaoImpl;
 import player.model.Player;
 
 import java.util.Optional;
@@ -16,12 +17,12 @@ import static org.mockito.Mockito.*;
 
 public class PlayerServiceTest {
 
-    private PlayerDao playerDao;
+    private PlayerDaoImpl playerDao;
     private PlayerService playerService;
 
     @BeforeEach
     void setUp() {
-        playerDao = mock(PlayerDao.class);
+        playerDao = mock(PlayerDaoImpl.class);
         playerService = new PlayerService(playerDao);
     }
 
