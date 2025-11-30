@@ -57,6 +57,12 @@ public class Ticket {
         this.localDateTime = Objects.requireNonNull(localDateTime, "Time cannot be null.");
     }
 
+    public Ticket(Name playerName, Name roomName, BigDecimal price) {
+        this.playerName = playerName;
+        this.roomName = roomName;
+        this.price = new Price(price);
+    }
+
     public LocalDateTime getLocalDateTime() {
         return localDateTime;
     }
