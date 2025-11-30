@@ -3,6 +3,7 @@ package room.service;
 
 import commonValueObjects.Id;
 import commonValueObjects.Name;
+import exceptions.NotFoundException;
 import objectdecoration.dao.ObjectDecorationDao;
 import objectdecoration.dao.ObjectDecorationDaoImpl;
 import objectdecoration.model.ObjectDecoration;
@@ -68,5 +69,11 @@ public class RoomService {
         roomDao.save(room);
 
         return room;
+    }
+
+    public Id getIdByName(Name name) {
+        return roomDao.getIdByName(name.toString())
+                .map(Id::new)
+                .orElseThrow(() -> new NotFoundException("Room not found with name: " + name));
     }
 }

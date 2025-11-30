@@ -52,6 +52,12 @@ public class RoomDaoImpl implements RoomDao {
             WHERE name = ?
             """;
 
+    private static final String SELECT_ID_BY_NAME_SQL = """
+        SELECT id_room
+        FROM room
+        WHERE name = ?
+        """;
+
     private final DatabaseConnection dbConnection;
 
     public RoomDaoImpl() {
@@ -173,6 +179,8 @@ public class RoomDaoImpl implements RoomDao {
         }
     }
 
+
+
     private Room mapRow(ResultSet rs) throws SQLException {
         try {
             return new Room(
@@ -185,5 +193,25 @@ public class RoomDaoImpl implements RoomDao {
         }
     }
 
+    public Optional<Integer> getIdByName(String name) {
+        dbConnection.openConnection();
 
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID_BY_NAME_SQL)) {
+
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return Optional.of(resultSet.getInt("id_room"));
+            }
+
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding Room ID by name: " + name, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
 }
