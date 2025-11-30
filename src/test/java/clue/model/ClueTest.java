@@ -1,5 +1,7 @@
 package clue.model;
 
+import commonValueObjects.Name;
+import commonValueObjects.Price;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +18,16 @@ class ClueTest {
         assertTrue(clue1 instanceof Clue);
 
     }
+
+    @Test
+    @DisplayName("Creating a new Clue by Strings and double")
+    void testIfCanCreateAClueWithValueObjects(){
+        Clue clue1 = new Clue(new Name("name1"),new ClueText("text1"),new ClueTheme("theme1"),new Price(new BigDecimal(10.1)));
+
+        assertTrue(clue1 instanceof Clue);
+
+    }
+
     @Test
     void getName() {
         Clue clue2 = new Clue("name2","test2","theme2",new BigDecimal(10.1));
