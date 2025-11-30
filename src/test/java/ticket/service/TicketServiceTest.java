@@ -15,26 +15,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TicketServiceTest {
     LocalDateTime localDateTime = LocalDateTime.now();
-
+    TicketDaoImpl ticketDaoImp = new TicketDaoImpl();
+    TicketService ticketService = new TicketService(ticketDaoImp);
     @Test
     void createTicket() {
         Ticket ticket1 = new Ticket(new Name("player1"), new Name("room1"),localDateTime, new BigDecimal(100));
-
-        TicketDaoImpl ticketDaoImp = new TicketDaoImpl();
-        TicketService ticketService = new TicketService(ticketDaoImp);
         ticketService.createTicket(ticket1);
-        assertEquals(new Name("player1"), ticket1.getPlayerName());
 
+        assertEquals(new Name("player1"), ticket1.getPlayerName());
     }
 
     @Test
     void getTicketById() {
-        TicketDaoImpl ticketDaoImp = new TicketDaoImpl();
-        TicketService ticketService = new TicketService(ticketDaoImp);
-     //   Ticket ticket1 = new Ticket(new Name("player1"), new Name("room1"),localDateTime, new BigDecimal(100));
-
         Ticket ticket2 = ticketService.getTicketById(new Id<>(5));
-
         assertTrue( ticket2.getId().getValue() > 0);
     }
 
