@@ -60,27 +60,6 @@ public class TicketDaoImpl implements TicketDao {
         }
     }
 
-  /*  @Override
-    public void save(Ticket ticket) {
-        dbConnection.openConnection();
-        try (Connection conn = dbConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
-
-            ps.setInt(1, ticket.getId().getValue());
-            ps.setInt(2, ticket.getRoomId().getValue());
-            ps.setInt(3, ticket.getPlayerId().getValue());
-            ps.setDate(4, Date.valueOf(ticket.getDate()));
-            ps.setTime(5, Time.valueOf(ticket.getTime()));
-            ps.setBigDecimal(6, ticket.getPrice());
-
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new DataAccessException("Error inserting Ticket", e);
-        } finally {
-            dbConnection.closeConnection();
-        }
-    }*/
 
     @Override
     public void save(Ticket ticket) {
