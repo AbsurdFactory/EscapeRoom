@@ -6,6 +6,10 @@ import commonValueObjects.Price;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
+import player.dao.PlayerDaoImpl;
+import player.service.PlayerService;
+import room.dao.RoomDaoImpl;
+import room.service.RoomService;
 import ticket.model.Ticket;
 
 import java.io.IOException;
@@ -66,9 +70,13 @@ public class TicketDaoImpl implements TicketDao {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement preparedStatement = conn.prepareStatement(INSERT_TICKET_SQL)) {
+            PlayerDaoImpl playerDao = new PlayerDaoImpl();
+            PlayerService playerService = new PlayerService(playerDao);
+            Id idByNamePlayer = playerService.getIdByName(ticket.getPlayerName());
 
-            Id idByNameRoom = new Id<>(1);
-            Id idByNamePlayer = new Id<>(1);
+            RoomDaoImpl roomDao = new RoomDaoImpl();
+            RoomService roomService = new RoomService(roomDao);
+            Id idByNameRoom = roomService.getIdByName(ticket.getRoomName());
 
             preparedStatement.setInt(1, idByNamePlayer.getValue());
             preparedStatement.setInt(2, idByNameRoom.getValue());
