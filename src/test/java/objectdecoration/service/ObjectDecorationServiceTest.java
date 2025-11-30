@@ -1,6 +1,7 @@
 package objectdecoration.service;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import exceptions.NotFoundException;
 import objectdecoration.dao.ObjectDecorationDao;
 import objectdecoration.dao.ObjectDecorationDaoImpl;
@@ -70,6 +71,37 @@ class ObjectDecorationServiceTest {
 
         assertTrue(result);
         verify(dao, times(1)).update(any(ObjectDecoration.class));
+    }
+
+    @Test
+    void shouldDeleteDecorationByIdSuccessfully() {
+        Id<Integer> id = new Id<>(1);
+        when(dao.delete(id)).thenReturn(true);
+
+        boolean result = service.deleteObjectDecoration(id);
+
+        assertTrue(result);
+        verify(dao, times(1)).delete(id);
+    }
+
+    @Test
+    void shouldDeleteDecorationByNameSuccessfully() {
+        Name name = new Name("Candle Holder");
+        when(dao.deleteByName(name)).thenReturn(true);
+
+        boolean result = service.deleteObjectDecorationByName(name);
+
+        assertTrue(result);
+        verify(dao, times(1)).deleteByName(name);
+    }
+    @Test
+    void shouldAddDecorationUsingObjectParameter() {
+        ObjectDecoration decoration =
+                ObjectDecoration.rehydrate(1, "Lantern", "Wood", 55.0);
+
+        service.addObjectDecoration(decoration);
+
+        verify(dao, times(1)).save(decoration);
     }
 }
 
