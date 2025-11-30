@@ -46,4 +46,5 @@ public class ObjectDecorationService {
     public boolean deleteObjectDecorationByName(Name name){
         return dao.deleteByName(name);
     }
+
 }
