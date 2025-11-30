@@ -1,6 +1,7 @@
 package player.service;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import exceptions.BusinessException;
 import exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,4 +60,31 @@ public class PlayerServiceTest {
         assertEquals(1, players.size());
         verify(playerDao, times(1)).findAll();
     }
+
+
+@Test
+void getIdByName_shouldReturnId_whenPlayerExists() {
+    Name name = new Name("PlayerOne");
+    int expectedId = 42;
+
+    when(playerDao.getIdByName(name.toString()))
+            .thenReturn(Optional.of(expectedId));
+
+    Id result = playerService.getIdByName(name);
+
+    assertEquals(new Id(expectedId), result);
+    verify(playerDao, times(1)).getIdByName(name.toString());
+}
+
+@Test
+void getIdByName_shouldThrowNotFound_whenPlayerDoesNotExist() {
+    Name name = new Name("Unknown");
+
+    when(playerDao.getIdByName(name.toString()))
+            .thenReturn(Optional.empty());
+
+    assertThrows(NotFoundException.class, () -> playerService.getIdByName(name));
+    verify(playerDao, times(1)).getIdByName(name.toString());
+}
+
 }
