@@ -1,34 +1,31 @@
 package ticket.service;
 
 import commonValueObjects.Id;
-import ticket.dao.TicketDao;
 import exceptions.DataAccessException;
+import ticket.dao.TicketDaoImpl;
 import ticket.model.Ticket;
 
 import java.util.List;
-import java.util.Optional;
 
 public class TicketService {
+    private final TicketDaoImpl ticketDaoImp;
 
-    private final TicketDao ticketDao;
-
-
-    public TicketService(TicketDao ticketDao) {
-        this.ticketDao = ticketDao;
+    public TicketService(TicketDaoImpl ticketDao) {
+        this.ticketDaoImp = ticketDao;
 
     }
 
     public void createTicket(Ticket ticket) {
         try {
-            ticketDao.save(ticket);
+            ticketDaoImp.save(ticket);
         } catch (Exception e) {
             throw new DataAccessException("Error saving ticket", e);
         }
     }
 
-    public Optional<Ticket> getTicketById(Id id) {
+    public Ticket getTicketById(Id id) {
         try {
-            return ticketDao.findById(id);
+            return ticketDaoImp.findTicketById(id);
         } catch (Exception e) {
             throw new DataAccessException("Error retrieving ticket by ID", e);
         }
@@ -36,7 +33,7 @@ public class TicketService {
 
     public List<Ticket> getAllTickets() {
         try {
-            return ticketDao.findAll();
+            return ticketDaoImp.findAll();
         } catch (Exception e) {
             throw new DataAccessException("Error retrieving all tickets", e);
         }
@@ -44,7 +41,7 @@ public class TicketService {
 
     public boolean updateTicket(Ticket ticket) {
         try {
-            return ticketDao.update(ticket);
+            return ticketDaoImp.update(ticket);
         } catch (Exception e) {
             throw new DataAccessException("Error updating ticket", e);
         }
@@ -52,7 +49,7 @@ public class TicketService {
 
     public boolean deleteTicket(Id id) {
         try {
-            return ticketDao.delete(id);
+            return ticketDaoImp.delete(id);
         } catch (Exception e) {
             throw new DataAccessException("Error deleting ticket", e);
         }
