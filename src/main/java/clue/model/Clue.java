@@ -2,6 +2,7 @@ package clue.model;
 
 import commonValueObjects.Name;
 import commonValueObjects.Price;
+import exceptions.ValidationException;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -13,22 +14,24 @@ public class Clue {
     private Price price;
 
     public Clue(Name name) {
-        this.name = Objects.requireNonNull(name, "The name must be informed");
+        this.name = name;
     }
 
     public Clue(Name name, ClueText text, ClueTheme theme, Price price) {
-
-        this.name = Objects.requireNonNull(name, "The name must be informed");
-        this.text = Objects.requireNonNull(text, "The action must be indicated");
-        this.theme = Objects.requireNonNull(theme, "The theme must be indicated");
+        this.name = name;
+        this.text = text;
+        this.theme = theme;
         this.price = price;
     }
 
     public Clue(String name, String text, String theme, BigDecimal price) {
 
-        this.name = new Name(name);
-        this.text = new ClueText(text);
-        this.theme = new ClueTheme(theme);
+        if (price.compareTo(BigDecimal.ZERO) < 0){
+            throw new ValidationException("The price can't be negative");
+        }
+        this.name = new Name(Objects.requireNonNull(name, "The name must be informed"));
+        this.text = new ClueText(Objects.requireNonNull(text, "The action must be indicated"));
+        this.theme = new ClueTheme(Objects.requireNonNull(theme, "The theme must be indicated"));
         this.price = new Price(price);
     }
 
