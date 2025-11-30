@@ -5,10 +5,7 @@ import commonValueObjects.Name;
 import commonValueObjects.Price;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.LocalDate;
 import java.util.Objects;
 
 public class Ticket {
@@ -20,22 +17,10 @@ public class Ticket {
     private Name playerName;
     private Name roomName;
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
-    }
-
-    public Name getPlayerName() {
-        return playerName;
-    }
-
-    public Name getRoomName() {
-        return roomName;
-    }
-
     public Ticket() {
     }
 
-    public Ticket(Id id, Id roomId, Id playerId,LocalDateTime localDateTime, Price price) {
+    public Ticket(Id id, Id roomId, Id playerId, LocalDateTime localDateTime, Price price) {
 
         this.id = id;
         this.roomId = roomId;
@@ -44,7 +29,7 @@ public class Ticket {
         this.localDateTime = Objects.requireNonNull(localDateTime, "Time cannot be null.");
     }
 
-    public Ticket(int id, int roomId, int playerId,LocalDateTime localDateTime, BigDecimal price) {
+    public Ticket(int id, int roomId, int playerId, LocalDateTime localDateTime, BigDecimal price) {
         if (id <= 0) {
             throw new IllegalArgumentException("Ticket id must be greater than 0.");
         }
@@ -59,17 +44,29 @@ public class Ticket {
         }
 
         this.id = new Id<>(id);
-        this.roomId =  new Id<>(roomId);
-        this.playerId =  new Id<>(playerId);
+        this.roomId = new Id<>(roomId);
+        this.playerId = new Id<>(playerId);
         this.price = new Price(price);
         this.localDateTime = Objects.requireNonNull(localDateTime, "Time cannot be null.");
     }
 
-    public Ticket(Name  playerName, Name roomName, LocalDateTime localDateTime, BigDecimal price) {
+    public Ticket(Name playerName, Name roomName, LocalDateTime localDateTime, BigDecimal price) {
         this.playerName = playerName;
         this.roomName = roomName;
         this.price = new Price(price);
         this.localDateTime = Objects.requireNonNull(localDateTime, "Time cannot be null.");
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public Name getPlayerName() {
+        return playerName;
+    }
+
+    public Name getRoomName() {
+        return roomName;
     }
 
     public Id getId() {

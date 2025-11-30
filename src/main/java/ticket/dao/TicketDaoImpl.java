@@ -37,7 +37,7 @@ public class TicketDaoImpl implements TicketDao {
             """;
 
     private static final String SELECT_ALL = """
-            SELECT id_ticket, room_id_room; player_id_player, date_time, price
+            SELECT id_ticket, room_id_room, player_id_player, date_time, price
             FROM ticket
             """;
     private static final String UPDATE_SQL = """
@@ -203,8 +203,8 @@ public class TicketDaoImpl implements TicketDao {
             ps.setInt(1, ticket.getRoomId().getValue());
             ps.setInt(2, ticket.getPlayerId().getValue());
             ps.setTimestamp(3, Timestamp.valueOf(ticket.getDateTime()));
-            ps.setBigDecimal(5, ticket.getPrice().toBigDecimal());
-            ps.setInt(6, ticket.getId().getValue());
+            ps.setBigDecimal(4, ticket.getPrice().toBigDecimal());
+            ps.setInt(5, ticket.getId().getValue());
 
             return ps.executeUpdate() > 0;
 

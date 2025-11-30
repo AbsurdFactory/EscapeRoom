@@ -1,13 +1,11 @@
 package ticket.service;
 
 import commonValueObjects.Id;
-
 import exceptions.DataAccessException;
 import ticket.dao.TicketDaoImpl;
 import ticket.model.Ticket;
 
 import java.util.List;
-import java.util.Optional;
 
 public class TicketService {
     private final TicketDaoImpl ticketDaoImp;
