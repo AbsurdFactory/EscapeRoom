@@ -4,14 +4,15 @@ import commonValueObjects.Id;
 import exceptions.BusinessException;
 import exceptions.NotFoundException;
 import player.dao.PlayerDao;
+import player.dao.PlayerDaoImpl;
 import player.model.Player;
 
 import java.util.List;
 
 public class PlayerService {
-    private final PlayerDao playerDao;
+    private final PlayerDaoImpl playerDao;
 
-    public PlayerService(PlayerDao playerDao) {
+    public PlayerService(PlayerDaoImpl playerDao) {
         this.playerDao = playerDao;
     }
 

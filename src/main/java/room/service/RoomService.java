@@ -4,8 +4,10 @@ package room.service;
 import commonValueObjects.Id;
 import commonValueObjects.Name;
 import objectdecoration.dao.ObjectDecorationDao;
+import objectdecoration.dao.ObjectDecorationDaoImpl;
 import objectdecoration.model.ObjectDecoration;
 import room.dao.RoomDao;
+import room.dao.RoomDaoImpl;
 import room.model.Room;
 import room.model.RoomBuilder;
 import validators.RoomValidator;
@@ -14,15 +16,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class RoomService {
-    private final RoomDao roomDao;
-    private ObjectDecorationDao decorationDao;
+    private final RoomDaoImpl roomDao;
+    private ObjectDecorationDaoImpl decorationDao;
 
-    public RoomService(RoomDao roomDao, ObjectDecorationDao objectDecorationDao){
+    public RoomService(RoomDaoImpl roomDao, ObjectDecorationDaoImpl objectDecorationDao){
         this.roomDao = roomDao;
         this.decorationDao = objectDecorationDao;
     }
 
-    public RoomService(RoomDao roomDao) {
+    public RoomService(RoomDaoImpl roomDao) {
         this.roomDao = roomDao;
     }
 
