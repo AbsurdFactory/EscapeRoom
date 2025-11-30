@@ -20,10 +20,10 @@ class TicketServiceTest {
 
     @Test
     void createTicket() {
-        Ticket ticket1 = new Ticket(new Name("player1"), new Name("room1"), localDateTime, new BigDecimal(100));
+        Ticket ticket1 = new Ticket(new Name("john"), new Name("room1"), localDateTime, new BigDecimal(100));
         ticketService.createTicket(ticket1);
 
-        assertEquals(new Name("player1"), ticket1.getPlayerName());
+        assertEquals(new Name("john"), ticket1.getPlayerName());
     }
 
     @Test
