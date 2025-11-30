@@ -65,12 +65,13 @@ public class EscapeRoomMenuController extends BaseMenuController {
 
         try {
             System.out.print("Enter the Escape Room name: ");
-            String name = ConsoleInputReader.readNonEmptyString(scanner, "Escape Room name");
+            Name name = ConsoleInputReader.readName(scanner, "Escape Room name");
 
-            EscapeRoomBuilder builder = new EscapeRoomBuilder()
-                    .withName(name);
+            EscapeRoomBuilder builder = new EscapeRoomBuilder();
 
-            EscapeRoom escapeRoom = builder.build();
+            EscapeRoom escapeRoom = builder
+                    .withName(name)
+                    .build();
             escapeRoomService.createEscapeRoom(escapeRoom);
 
             System.out.println("\nEscape Room created successfully!");
@@ -82,37 +83,9 @@ public class EscapeRoomMenuController extends BaseMenuController {
         }
     }
 
-    //TODO: quitar validaciones
     private void addRoomToEscapeRoom() throws InputReadException {
         System.out.println("\n--- Add Room to Escape Room ---");
-        List<EscapeRoom> escapeRooms = escapeRoomService.getAllEscapeRooms();
-
-        if (escapeRooms == null || escapeRooms.isEmpty()) {
-            System.out.println("There are no Escape Rooms created yet. Please create one first.");
-        }
-
-        System.out.println("\nAvailable Escape Rooms:");
-        for (EscapeRoom er : escapeRooms) {
-            System.out.println(" - " + er.getName());
-        }
-
-        EscapeRoom selectedEscapeRoom = null;
-
-        while (selectedEscapeRoom == null) {
-            System.out.print("Enter the name of the Escape Room you want to add the Room to: ");
-            Name escapeRoomName = ConsoleInputReader.readName(scanner, "escape room name");
-
-            for (EscapeRoom er : escapeRooms) {
-                if (er.getName().toString().equalsIgnoreCase(escapeRoomName.toString())) {
-                    selectedEscapeRoom = er;
-                    break;
-                }
-            }
-
-            if (selectedEscapeRoom == null) {
-                System.out.println("No Escape Room found with name '" + escapeRoomName + "'. Please try again.\n");
-            }
-        }
+        EscapeRoom selectedEscapeRoom = findByName();
 
         RoomBuilder roomBuilder = new RoomBuilder();
 
@@ -133,37 +106,64 @@ public class EscapeRoomMenuController extends BaseMenuController {
 
         selectedEscapeRoom.addRoom(room);
 
-        System.out.println("\nThe room was successfully created and added to Escape Room '"
-                + selectedEscapeRoom.getName() + "'.");
+        System.out.println("\nThe room was successfully created and added to Escape Room '" + selectedEscapeRoom.getName() + "'.");
 
     }
 
 
-    private void showEscapeRoomDetails() {
+    private void showEscapeRoomDetails() throws InputReadException {
         System.out.println("\n--- Show Escape Room Details ---");
+        EscapeRoom escapeRoom = findByName();
 
-        try {
-            System.out.print("Enter the Escape Room ID: ");
-            int id = ConsoleInputReader.readInt(scanner);
-
-            escapeRoomService.getEscapeRoomById(id).ifPresentOrElse(
-                    escapeRoom -> {
-                        System.out.println("\n=== ESCAPE ROOM DETAILS ===");
-                        System.out.println("Name: " + escapeRoom.getName());
-                        System.out.println("Rooms: " + escapeRoom.getRooms().size());
-                        System.out.println("=============================");
-                    },
-                    () -> System.out.println("No Escape Room found with ID: " + id)
-            );
-
-        } catch (InputReadException e) {
-            System.out.println("\nERROR: " + e.getMessage());
+        if (escapeRoom == null) {
+            return;
         }
-    }
 
+        System.out.println("""
+                
+                === ESCAPE ROOM DETAILS ===
+                Name: %s
+                Rooms: %d
+                =============================
+                """.formatted(escapeRoom.getName(), escapeRoom.getRooms().size()));
+
+    }
 
     @Override
     public void showMenu() throws InputReadException {
         showEscapeRoomMenu();
+    }
+
+    private EscapeRoom findByName() throws InputReadException {
+        List<EscapeRoom> escapeRooms = escapeRoomService.getAllEscapeRooms();
+
+        if (escapeRooms == null || escapeRooms.isEmpty()) {
+            System.out.println("There are no Escape Rooms created yet. Please create one first.");
+        }
+
+        System.out.println("\nAvailable Escape Rooms:");
+        for (EscapeRoom er : escapeRooms) {
+            System.out.println(" - " + er.getName());
+        }
+
+        EscapeRoom selectedEscapeRoom = null;
+
+        while (selectedEscapeRoom == null) {
+            System.out.print("Enter the name of the Escape Room: ");
+            Name escapeRoomName = ConsoleInputReader.readName(scanner, "escape room name");
+
+            for (EscapeRoom er : escapeRooms) {
+                if (er.getName().toString().equalsIgnoreCase(escapeRoomName.toString())) {
+                    selectedEscapeRoom = er;
+                    break;
+                }
+            }
+
+            if (selectedEscapeRoom == null) {
+                System.out.println("No Escape Room found with name '" + escapeRoomName + "'. Please try again.\n");
+            }
+
+        }
+        return selectedEscapeRoom;
     }
 }
