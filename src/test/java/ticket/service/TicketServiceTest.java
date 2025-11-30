@@ -3,6 +3,7 @@ package ticket.service;
 import commonValueObjects.Id;
 import commonValueObjects.Name;
 import commonValueObjects.Price;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ticket.dao.TicketDaoImpl;
 import ticket.model.Ticket;
@@ -24,6 +25,14 @@ class TicketServiceTest {
         ticketService.createTicket(ticket1);
 
         assertEquals(new Name("john"), ticket1.getPlayerName());
+    }
+    @Test
+    @DisplayName("Ticket with minimum values")
+    void createMinimumValuesTicket() {
+        Ticket ticket1 = new Ticket(new Name("pepon"), new Name("room2"), new BigDecimal(100));
+        ticketService.createTicketMinimumValues(ticket1);
+
+        assertEquals(new Name("pepon"), ticket1.getPlayerName());
     }
 
     @Test

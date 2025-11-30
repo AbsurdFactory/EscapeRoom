@@ -7,6 +7,7 @@ import clue.model.ClueTheme;
 import commonValueObjects.Name;
 import commonValueObjects.Price;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -355,5 +356,19 @@ class ClueServiceTest {
         assertTrue(result1);
         assertTrue(result2);
         verify(clueDaoImplementation, times(2)).getClueByName(name);
+    }
+
+    ClueDaoImplementation clueDao = new ClueDaoImplementation();
+    ClueService clueService2 = new ClueService(clueDao);
+
+    @Test
+    @DisplayName("Validate if a Clue exist by passing the ClueName")
+    void testValidateExistClueInDataBase() {
+        assertFalse((clueService2.validateExistClueInDataBase(new Name("patata"))));
+
+        List <Clue> clueList =  clueService2.getAllClues();
+
+        assertTrue(clueService2.validateExistClueInDataBase( clueList.getFirst().getName()));
+
     }
 }

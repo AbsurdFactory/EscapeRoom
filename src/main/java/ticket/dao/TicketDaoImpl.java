@@ -28,6 +28,12 @@ public class TicketDaoImpl implements TicketDao {
             INSERT INTO ticket (player_id_player, room_id_room, date_time, price, room_price)
             VALUES (?, ?, ?, ?,?);
             """;
+
+    private static final String INSERT_TICKET_MINIMUM_VALUES_SQL = """
+            INSERT INTO ticket (player_id_player, room_id_room, price, room_price)
+            VALUES (?, ?, ?, ?);
+            """;
+
     private static final String SELECT_BY_ID = """
             SELECT id_ticket,room_id_room, player_id_player, date_time, price
             FROM ticket
@@ -93,6 +99,31 @@ public class TicketDaoImpl implements TicketDao {
         }
     }
 
+    public void saveTicketMinimumValues(Ticket ticket) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_TICKET_MINIMUM_VALUES_SQL)) {
+            PlayerDaoImpl playerDao = new PlayerDaoImpl();
+            PlayerService playerService = new PlayerService(playerDao);
+            Id idByNamePlayer = playerService.getIdByName(ticket.getPlayerName());
+
+            RoomDaoImpl roomDao = new RoomDaoImpl();
+            RoomService roomService = new RoomService(roomDao);
+            Id idByNameRoom = roomService.getIdByName(ticket.getRoomName());
+
+            preparedStatement.setInt(1, idByNamePlayer.getValue());
+            preparedStatement.setInt(2, idByNameRoom.getValue());
+            preparedStatement.setBigDecimal(3, ticket.getPrice().toBigDecimal());
+            preparedStatement.setBigDecimal(4, ticket.getPrice().toBigDecimal());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error inserting Ticket", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
     @Override
     public Optional<Ticket> findById(Id id) {
         dbConnection.openConnection();

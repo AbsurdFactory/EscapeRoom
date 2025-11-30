@@ -15,9 +15,18 @@ public class TicketService {
 
     }
 
+
     public void createTicket(Ticket ticket) {
         try {
             ticketDaoImp.save(ticket);
+        } catch (Exception e) {
+            throw new DataAccessException("Error saving ticket", e);
+        }
+    }
+
+    public void createTicketMinimumValues(Ticket ticket) {
+        try {
+            ticketDaoImp.saveTicketMinimumValues(ticket);
         } catch (Exception e) {
             throw new DataAccessException("Error saving ticket", e);
         }
