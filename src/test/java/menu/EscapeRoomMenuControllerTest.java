@@ -32,32 +32,24 @@ class EscapeRoomMenuControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Capture console output
+
         outputStream = new ByteArrayOutputStream();
         originalOut = System.out;
         System.setOut(new PrintStream(outputStream));
 
-        // Initialize DAOs and services
         escapeRoomDao = new EscapeRoomDaoImpl();
         roomDao = new RoomDaoImpl();
         escapeRoomService = new EscapeRoomService(escapeRoomDao);
         roomService = new RoomService(roomDao);
+
+        cleanTestData();
     }
 
     @AfterEach
     void tearDown() {
-        // Restore console output
         System.setOut(originalOut);
 
-        // Clean up test data
-        try {
-            escapeRoomDao.deleteByName(new Name("Test Escape Room"));
-            escapeRoomDao.deleteByName(new Name("Another Escape Room"));
-            roomDao.deleteByName(new Name("Test Room"));
-            roomDao.deleteByName(new Name("Mystery Room"));
-        } catch (Exception e) {
-            // Ignore cleanup errors
-        }
+        cleanTestData();
     }
 
     @Test
@@ -74,17 +66,14 @@ class EscapeRoomMenuControllerTest {
     @Order(2)
     @DisplayName("Should create a new escape room successfully")
     void testCreateEscapeRoom() throws InputReadException {
-        // Simulate user input: escape room name, then option 4 to exit
         String input = "Test Escape Room\n4\n";
         Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         controller = new EscapeRoomMenuController(scanner);
 
-        // Manually trigger the create method
         escapeRoomService.createEscapeRoom(
                 new EscapeRoom(new Name("Test Escape Room"))
         );
 
-        // Verify the escape room was created
         var escapeRooms = escapeRoomService.getAllEscapeRooms();
         assertTrue(escapeRooms.stream()
                 .anyMatch(er -> er.getName().toString().equals("Test Escape Room")));
@@ -133,13 +122,11 @@ class EscapeRoomMenuControllerTest {
     @Order(5)
     @DisplayName("Should handle empty escape room list")
     void testEmptyEscapeRoomList() {
-        // Delete all escape rooms
         var allRooms = escapeRoomService.getAllEscapeRooms();
         for (EscapeRoom er : allRooms) {
             try {
                 escapeRoomDao.deleteByName(new Name(er.getName().toString()));
             } catch (Exception e) {
-                // Continue
             }
         }
 
@@ -153,11 +140,9 @@ class EscapeRoomMenuControllerTest {
     @Order(6)
     @DisplayName("Should create multiple rooms with different difficulty levels")
     void testCreateMultipleRoomsWithDifferentDifficulties() {
-        // Create escape room
         EscapeRoom escapeRoom = new EscapeRoom(new Name("Test Escape Room"));
         escapeRoomService.createEscapeRoom(escapeRoom);
 
-        // Create rooms with different difficulties
         Room easyRoom = new Room(
                 new Name("Easy Room"),
                 new Price(new BigDecimal("30.00")),
@@ -209,7 +194,6 @@ class EscapeRoomMenuControllerTest {
     @Order(9)
     @DisplayName("Should verify escape room details display")
     void testEscapeRoomDetails() {
-        // Create escape room with rooms
         EscapeRoom escapeRoom = new EscapeRoom(new Name("Test Escape Room"));
         escapeRoomService.createEscapeRoom(escapeRoom);
 
@@ -239,12 +223,116 @@ class EscapeRoomMenuControllerTest {
     @Order(10)
     @DisplayName("Should handle menu navigation input")
     void testMenuNavigation() {
-        // Simulate selecting option 4 (exit)
         String input = "4\n";
         Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         controller = new EscapeRoomMenuController(scanner);
 
         assertNotNull(controller);
-        // Controller created successfully and can handle input
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("Should add room to escape room from menu and persist relation")
+    void testAddRoomToEscapeRoomFromMenu_persistsRelation() throws InputReadException {
+        escapeRoomService.createEscapeRoom(new EscapeRoom(new Name("Menu Base Escape")));
+
+        var escapeRooms = escapeRoomService.getEscapeRoomsByName("Menu Base Escape");
+        assertFalse(escapeRooms.isEmpty(), "Base escape room should exist in DB");
+        EscapeRoom persistedEscapeRoom = escapeRooms.get(0);
+
+
+        String input = String.join(System.lineSeparator(),
+                "2",
+                "Menu Base Escape",
+                "Menu Room 1",
+                "Easy",
+                "10,50",
+                "4"
+        ) + System.lineSeparator();
+
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
+        controller = new EscapeRoomMenuController(scanner);
+
+        controller.showEscapeRoomMenu();
+
+
+        var roomIdOpt = roomDao.getIdByName("Menu Room 1");
+        assertTrue(roomIdOpt.isPresent(), "Room 'Menu Room 1' should exist in DB");
+        int roomId = roomIdOpt.get();
+
+
+        var roomIdsForEscape = escapeRoomService.getRoomIdsForEscapeRoom(persistedEscapeRoom);
+        assertTrue(roomIdsForEscape.contains(roomId),
+                "escape_has_room should contain relation between 'Menu Base Escape' and 'Menu Room 1'");
+
+
+        String consoleOutput = outputStream.toString();
+        assertTrue(consoleOutput.contains("was successfully created and linked to Escape Room"),
+                "Console output should confirm that the Room was created and linked.");
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("Should show escape room details using persisted rooms count")
+    void testShowEscapeRoomDetails_usesPersistedRelation() throws InputReadException {
+
+        escapeRoomService.createEscapeRoom(new EscapeRoom(new Name("Details Escape Menu")));
+        var escapeRooms = escapeRoomService.getEscapeRoomsByName("Details Escape Menu");
+        assertFalse(escapeRooms.isEmpty(), "Details escape room should exist in DB");
+        EscapeRoom persistedEscapeRoom = escapeRooms.get(0);
+
+        Room room = new Room(
+                new Name("Details Menu Room"),
+                new Price(new BigDecimal("15.00")),
+                new DifficultyLevel("Easy")
+        );
+        roomService.createRoom(room);
+
+        var roomIdOpt = roomDao.getIdByName("Details Menu Room");
+        assertTrue(roomIdOpt.isPresent(), "Room 'Details Menu Room' should exist in DB");
+        int roomId = roomIdOpt.get();
+
+
+        escapeRoomService.addRoomToEscapeRoom(persistedEscapeRoom, roomId);
+
+
+        String input = String.join(System.lineSeparator(),
+                "3",
+                "Details Escape Menu",
+                "4"
+        ) + System.lineSeparator();
+
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
+        controller = new EscapeRoomMenuController(scanner);
+
+        controller.showEscapeRoomMenu();
+
+
+        String consoleOutput = outputStream.toString();
+        assertTrue(consoleOutput.contains("Details Escape Menu"),
+                "Console output should contain the Escape Room name.");
+        assertTrue(consoleOutput.contains("Rooms: 1"),
+                "Console output should show 'Rooms: 1' in the details view.");
+    }
+
+    private void cleanTestData() {
+        try {
+            escapeRoomDao.deleteByName(new Name("Test Escape Room"));
+            escapeRoomDao.deleteByName(new Name("Another Escape Room"));
+            escapeRoomDao.deleteByName(new Name("Menu Base Escape"));
+            escapeRoomDao.deleteByName(new Name("Details Escape Menu"));
+            escapeRoomDao.deleteByName(new Name("Mystery Room Escape"));
+
+            roomDao.deleteByName(new Name("Test Room"));
+            roomDao.deleteByName(new Name("Mystery Room"));
+            roomDao.deleteByName(new Name("Easy Room"));
+            roomDao.deleteByName(new Name("Hard Room"));
+            roomDao.deleteByName(new Name("Room 1"));
+            roomDao.deleteByName(new Name("Room 2"));
+            roomDao.deleteByName(new Name("Menu Room 1"));
+            roomDao.deleteByName(new Name("Details Menu Room"));
+        } catch (Exception ignored) {
+
+        }
     }
 }

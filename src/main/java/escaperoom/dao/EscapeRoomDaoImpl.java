@@ -56,6 +56,22 @@ public class EscapeRoomDaoImpl implements EscapeRoomDao {
         WHERE name = ?
         """;
 
+    private static final String INSERT_ROOM_RELATION = """
+    INSERT INTO escape_has_room (escape_id_escape, room_id_room)
+    VALUES (?, ?)
+    """;
+
+    private static final String DELETE_ROOM_RELATION = """
+    DELETE FROM escape_has_room
+    WHERE escape_id_escape = ? AND room_id_room = ?
+    """;
+
+    private static final String SELECT_ROOM_IDS_BY_ESCAPE = """
+    SELECT room_id_room
+    FROM escape_has_room
+    WHERE escape_id_escape = ?
+    """;
+
 
     private final DatabaseConnection dbConnection;
     public EscapeRoomDaoImpl() {
@@ -236,6 +252,61 @@ public class EscapeRoomDaoImpl implements EscapeRoomDao {
                 rs.getInt("id_escape"),
                 rs.getString("name")
         );
+    }
+
+    public void addRoomRelation(int escapeId, int roomId) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(INSERT_ROOM_RELATION)) {
+
+            ps.setInt(1, escapeId);
+            ps.setInt(2, roomId);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error inserting into escape_has_room", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    public boolean removeRoomRelation(int escapeId, int roomId) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_ROOM_RELATION)) {
+
+            ps.setInt(1, escapeId);
+            ps.setInt(2, roomId);
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error deleting from escape_has_room", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    public List<Integer> findRoomIdsByEscapeId(int escapeId) {
+        dbConnection.openConnection();
+        List<Integer> ids = new ArrayList<>();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_ROOM_IDS_BY_ESCAPE)) {
+
+            ps.setInt(1, escapeId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ids.add(rs.getInt("room_id_room"));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error querying escape_has_room", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+
+        return ids;
     }
 
 }

@@ -26,7 +26,7 @@ import java.util.Optional;
 public class RoomDaoImpl implements RoomDao {
 
     private static final String INSERT_SQL = """
-            INSERT INTO room (name, price, difficultyLevel)
+            INSERT INTO room (name, price, difficulty_level)
             VALUES (?, ?, ?)
             """;
 
@@ -101,6 +101,26 @@ public class RoomDaoImpl implements RoomDao {
     FROM decoration_object d
     INNER JOIN room_has_decoration_object rhd ON d.id_decoration_object = rhd.decoration_object_id_decoration_object
     WHERE rhd.room_id_room = ?
+    """;
+
+    private static final String INSERT_ROOM_CLUE_RELATION = """
+    INSERT INTO room_has_clues (clue_id_clue, room_id_room)
+    VALUES (?, ?)
+    """;
+
+    private static final String DELETE_ROOM_CLUE_RELATION = """
+    DELETE FROM room_has_clues
+    WHERE clue_id_clue = ? AND room_id_room = ?
+    """;
+
+    private static final String INSERT_ROOM_DECORATION_RELATION = """
+    INSERT INTO room_has_decoration_object (room_id_room, decoration_object_id_decoration_object)
+    VALUES (?, ?)
+    """;
+
+    private static final String DELETE_ROOM_DECORATION_RELATION = """
+    DELETE FROM room_has_decoration_object
+    WHERE room_id_room = ? AND decoration_object_id_decoration_object = ?
     """;
 
     private final DatabaseConnection dbConnection;
@@ -419,6 +439,71 @@ public class RoomDaoImpl implements RoomDao {
             );
         } catch (IllegalArgumentException e) {
             throw new SQLException("Error mapping decoration data: " + e.getMessage(), e);
+        }
+    }
+
+    public void addClueToRoom(int clueId, int roomId) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(INSERT_ROOM_CLUE_RELATION)) {
+
+            ps.setInt(1, clueId);
+            ps.setInt(2, roomId);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error inserting relation clue-room", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    public boolean removeClueFromRoom(int clueId, int roomId) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_ROOM_CLUE_RELATION)) {
+
+            ps.setInt(1, clueId);
+            ps.setInt(2, roomId);
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting relation clue-room", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+    public void addDecorationToRoom(int roomId, int decorationId) {
+        dbConnection.openConnection();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(INSERT_ROOM_DECORATION_RELATION)) {
+
+            ps.setInt(1, roomId);
+            ps.setInt(2, decorationId);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error inserting decoration-room relation", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    public boolean removeDecorationFromRoom(int roomId, int decorationId) {
+        dbConnection.openConnection();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_ROOM_DECORATION_RELATION)) {
+
+            ps.setInt(1, roomId);
+            ps.setInt(2, decorationId);
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting decoration-room relation", e);
+        } finally {
+            dbConnection.closeConnection();
         }
     }
 }

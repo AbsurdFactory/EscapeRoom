@@ -103,10 +103,23 @@ public class EscapeRoomMenuController extends BaseMenuController {
 
         roomService.createRoom(room);
 
+        var roomIdOpt = roomDao.getIdByName(roomName.toString());
+
+        if (roomIdOpt.isEmpty()) {
+            System.out.println("\nERROR: The Room was created, but its ID could not be retrieved from the database.");
+            return;
+        }
+
+        int roomId = roomIdOpt.get();
+
+        escapeRoomService.addRoomToEscapeRoom(selectedEscapeRoom, roomId);
+
         selectedEscapeRoom.addRoom(room);
 
-        System.out.println("\nThe room was successfully created and added to Escape Room '" + selectedEscapeRoom.getName() + "'.");
-
+        System.out.println("""
+            
+            The Room '%s' was successfully created and linked to Escape Room '%s'.
+            """.formatted(roomName, selectedEscapeRoom.getName()));
     }
 
 
@@ -118,14 +131,15 @@ public class EscapeRoomMenuController extends BaseMenuController {
             return;
         }
 
-        System.out.println("""
-                
-                === ESCAPE ROOM DETAILS ===
-                Name: %s
-                Rooms: %d
-                =============================
-                """.formatted(escapeRoom.getName(), escapeRoom.getRooms().size()));
+        int roomsCount = escapeRoomService.getRoomIdsForEscapeRoom(escapeRoom).size();
 
+        System.out.println("""
+            
+            === ESCAPE ROOM DETAILS ===
+            Name: %s
+            Rooms: %d
+            =============================
+            """.formatted(escapeRoom.getName(), roomsCount));
     }
 
     @Override

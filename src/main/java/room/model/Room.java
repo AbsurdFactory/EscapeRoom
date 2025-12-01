@@ -17,23 +17,46 @@ public class Room {
     private DifficultyLevel difficultyLevel;
     private List<Clue> clues = new ArrayList<>();
     private List<ObjectDecoration> objectDecorations = new ArrayList<>();
-    private RoomEventPublisher publisher;
-    public Room(){};
+    private RoomEventPublisher publisher = new RoomEventPublisher();
 
-    public Room (Name name, Price price, DifficultyLevel difficultyLevel){
+    public Room() {
+    }
+
+    ;
+
+    public Room(Name name, Price price, DifficultyLevel difficultyLevel) {
         this.name = name;
         this.price = price;
         this.difficultyLevel = difficultyLevel;
     }
+
     public Room(Id id, Name name, Price price, DifficultyLevel difficultyLevel) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.difficultyLevel = difficultyLevel;
-        this.publisher = publisher;
-        publisher.notifyRoomCreated(this);
+        this.publisher = (publisher != null)
+                ? publisher
+                : new RoomEventPublisher();
 
+        this.publisher.notifyRoomCreated(this);
     }
+
+    public Room(int id, Name name, Price price, DifficultyLevel difficultyLevel) {
+        this.id = new Id(id);
+        this.name = name;
+        this.price = price;
+        this.difficultyLevel = difficultyLevel;
+
+        if (publisher != null) {
+            publisher.notifyRoomCreated(this);
+        }
+    }
+    public static Room rehydrate(int id, Name name, Price price, DifficultyLevel difficultyLevel) {
+        return new Room(id, name, price, difficultyLevel);
+    }
+
+
 
     public Id getId() {
         return id;
@@ -51,16 +74,16 @@ public class Room {
         return difficultyLevel;
     }
 
-    public List<Clue> getClues(){
+    public List<Clue> getClues() {
         return Collections.unmodifiableList(clues);
     }
 
-    public List<ObjectDecoration> getObjectDecorations(){
+    public List<ObjectDecoration> getObjectDecorations() {
         return Collections.unmodifiableList(objectDecorations);
     }
 
-    public void addClues(Clue clue){
-        if(clue == null){
+    public void addClues(Clue clue) {
+        if (clue == null) {
             throw new IllegalArgumentException("The clue cannot be empty");
         }
         clues.add(clue);
@@ -69,8 +92,8 @@ public class Room {
 
     }
 
-    public void addDecorations(ObjectDecoration objectDecoration){
-        if(objectDecoration == null){
+    public void addDecorations(ObjectDecoration objectDecoration) {
+        if (objectDecoration == null) {
             throw new IllegalArgumentException("The decoration cannot be null.");
         }
         objectDecorations.add(objectDecoration);
