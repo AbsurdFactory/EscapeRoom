@@ -285,22 +285,22 @@ public class ClueDaoImplementation implements ClueDao {
         return id_clue;
     }
 
-    private int getIdClueByName(String name) {
-        int id_clue;
+    public Id getIdClueByName(Name name) {
+        Id idClue;
         dbConnection.openConnection();
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID_CLUE_BY_NAME_SQL)) {
-            preparedStatement.setString(1, name);
+            preparedStatement.setString(1, name.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            id_clue = resultSet.getInt("id_clue");
+            idClue = new Id<>(resultSet.getInt("id_clue"));
 
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         } finally {
             dbConnection.closeConnection();
         }
-        return id_clue;
+        return idClue;
     }
 
 

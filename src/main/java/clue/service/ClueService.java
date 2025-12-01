@@ -2,6 +2,7 @@ package clue.service;
 
 import clue.dao.ClueDaoImplementation;
 import clue.model.*;
+import commonValueObjects.Id;
 import commonValueObjects.Name;
 import commonValueObjects.Price;
 
@@ -47,5 +48,9 @@ public class ClueService {
 
     public boolean deleteClue(Clue clue) {
         return clueDaoImplementation.deleteClue(clue);
+    }
+
+    public Id getIdClueByName(Name name){
+        return getIdClueByName(name);
     }
 }
