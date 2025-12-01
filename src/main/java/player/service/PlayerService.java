@@ -91,7 +91,7 @@ public class PlayerService {
                 .forEach(publisher::subscribe);
 
         publisher.notifySubscribers(message);
-        }
+    }
 
         public Id getIdByName (Name name){
             return playerDao.getIdByName(name.toString())
