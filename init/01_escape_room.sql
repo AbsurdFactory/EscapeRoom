@@ -54,7 +54,7 @@ CREATE UNIQUE INDEX `name_UNIQUE` ON `escape_room`.`clue` (`name` ASC) VISIBLE;
 CREATE TABLE IF NOT EXISTS `escape_room`.`decoration_object` (
   `id_decoration_object` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `description` VARCHAR(250) NOT NULL,
+  `description` VARCHAR(250) NULL,
   `material` VARCHAR(45) NULL,
   `price` DECIMAL NULL,
   PRIMARY KEY (`id_decoration_object`))
