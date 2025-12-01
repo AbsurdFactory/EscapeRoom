@@ -47,4 +47,7 @@ public class ObjectDecorationService {
         return dao.deleteByName(name);
     }
 
+    public Id getIdObjectByName(Name name){
+        return dao.getIdClueByName(name);
+    }
 }
