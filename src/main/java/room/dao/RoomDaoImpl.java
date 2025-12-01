@@ -26,7 +26,7 @@ import java.util.Optional;
 public class RoomDaoImpl implements RoomDao {
 
     private static final String INSERT_SQL = """
-            INSERT INTO room (name, price, difficultyLevel)
+            INSERT INTO room (name, price, difficulty_level)
             VALUES (?, ?, ?)
             """;
 
@@ -101,6 +101,12 @@ public class RoomDaoImpl implements RoomDao {
     FROM decoration_object d
     INNER JOIN room_has_decoration_object rhd ON d.id_decoration_object = rhd.decoration_object_id_decoration_object
     WHERE rhd.room_id_room = ?
+    """;
+
+    private static final String SELECT_NAME_BY_ID = """
+    SELECT name
+    FROM room
+    WHERE id_room = ?
     """;
 
     private final DatabaseConnection dbConnection;
@@ -419,6 +425,28 @@ public class RoomDaoImpl implements RoomDao {
             );
         } catch (IllegalArgumentException e) {
             throw new SQLException("Error mapping decoration data: " + e.getMessage(), e);
+        }
+    }
+
+    public Optional<Name> getNameById(Id id) {
+        dbConnection.openConnection();
+
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_NAME_BY_ID)) {
+
+            preparedStatement.setInt(1, id.getValue());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return Optional.of(new Name(resultSet.getString("name")));
+            }
+
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding Room name by ID: " + id, e);
+        } finally {
+            dbConnection.closeConnection();
         }
     }
 }
