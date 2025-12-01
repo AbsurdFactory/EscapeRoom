@@ -2,8 +2,12 @@ package escaperoom.model;
 
 import commonValueObjects.Id;
 import commonValueObjects.Name;
+import commonValueObjects.Price;
+import objectdecoration.model.Material;
+import objectdecoration.model.ObjectDecoration;
 import room.model.Room;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +35,10 @@ public class EscapeRoom {
         this.id = new Id<>(id);
         this.name = new Name(name);
         this.rooms = new ArrayList<>();
+    }
+
+    public static EscapeRoom rehydrate(int id, String name) {
+        return new EscapeRoom(new Id<>(id), new Name(name));
     }
 
 
