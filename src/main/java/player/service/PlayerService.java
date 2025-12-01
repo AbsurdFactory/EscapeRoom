@@ -13,10 +13,11 @@ import java.util.List;
 
 public class PlayerService {
     private final PlayerDaoImpl playerDao;
+    private final RoomEventPublisher publisher;
 
     public PlayerService(PlayerDaoImpl playerDao) {
         this.playerDao = playerDao;
-        this.publisher = publisher;
+        this.publisher = new RoomEventPublisher();
     }
 
     public void createPlayer(String nickName, String email, boolean subscribed) {
@@ -90,10 +91,12 @@ public class PlayerService {
                 .forEach(publisher::subscribe);
 
         publisher.notifySubscribers(message);
-    public Id getIdByName(Name name) {
-        return playerDao.getIdByName(name.toString())
-                .map(Id::new)
-                .orElseThrow(() -> new NotFoundException("Player not found with name: " + name));
+        }
+
+        public Id getIdByName (Name name){
+            return playerDao.getIdByName(name.toString())
+                    .map(Id::new)
+                    .orElseThrow(() -> new NotFoundException("Player not found with name: " + name));
+        }
     }
-}
 
