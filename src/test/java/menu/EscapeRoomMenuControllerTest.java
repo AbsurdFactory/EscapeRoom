@@ -110,10 +110,8 @@ class EscapeRoomMenuControllerTest {
         );
         roomService.createRoom(room);
 
-        // Add room to escape room (in-memory)
         escapeRoom.addRoom(room);
 
-        // Verify
         assertEquals(1, escapeRoom.getRooms().size());
         assertTrue(escapeRoom.getRooms().contains(room));
     }
@@ -214,7 +212,7 @@ class EscapeRoomMenuControllerTest {
         escapeRoom.addRoom(room1);
         escapeRoom.addRoom(room2);
 
-        // Verify details
+
         assertEquals("Test Escape Room", escapeRoom.getName().toString());
         assertEquals(2, escapeRoom.getRooms().size());
     }

@@ -49,6 +49,10 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
         DELETE FROM decoration_object
         WHERE name = ?
         """;
+    private static final String SELECT_ID_OBJECT_BY_NAME_SQL = """                    
+        SELECT id_decoration_object FROM decoration_object
+        WHERE name = ?
+        """;
 
 
     private final DatabaseConnection dbConnection;
@@ -211,5 +215,23 @@ public class ObjectDecorationDaoImpl implements ObjectDecorationDao {
                 rs.getString("material"),
                 rs.getDouble("price")
         );
+    }
+
+    public Id getIdClueByName(Name name) {
+        Id idClue;
+        dbConnection.openConnection();
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID_OBJECT_BY_NAME_SQL)) {
+            preparedStatement.setString(1, name.toString());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            idClue = new Id<>(resultSet.getInt("id_decoration_object"));
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            dbConnection.closeConnection();
+        }
+        return idClue;
     }
 }

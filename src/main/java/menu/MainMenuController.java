@@ -10,6 +10,8 @@ public class MainMenuController extends BaseMenuController {
     private final ClueMenuController clueMenuController;
     private final ObjectDecorationMenuController decorationMenuController;
     private final PlayerMenuController playerMenuController;
+    private final TicketMenuControler ticketMenuController;
+
 
     public MainMenuController() {
         this(new Scanner(System.in));
@@ -23,6 +25,7 @@ public class MainMenuController extends BaseMenuController {
         this.clueMenuController = new ClueMenuController(scanner);
         this.decorationMenuController = new ObjectDecorationMenuController(scanner);
         this.playerMenuController = new PlayerMenuController(scanner);
+        this.ticketMenuController = new TicketMenuControler(scanner);
     }
 
       public void start() {
@@ -142,7 +145,7 @@ public class MainMenuController extends BaseMenuController {
 
     private void handleGenerateTicket() {
         System.out.println("\n--- Generate ticket for a Player ---");
-        System.out.println("This feature is not fully implemented yet.");
+        ticketMenuController.showTicketMenu();
     }
 
     private void handleCalculateTotalIncome() {

@@ -26,7 +26,7 @@ public class Clue {
 
     public Clue(String name, String text, String theme, BigDecimal price) {
 
-        if (price.compareTo(BigDecimal.ZERO) < 0){
+        if (price.compareTo(BigDecimal.ZERO) < 0) {
             throw new ValidationException("The price can't be negative");
         }
         this.name = new Name(Objects.requireNonNull(name, "The name must be informed"));

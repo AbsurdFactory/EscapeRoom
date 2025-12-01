@@ -169,4 +169,9 @@ public class RoomService {
 
         return roomDao.removeDecorationFromRoom(roomId, decorationId);
     }
+
+    public Name getNameById(Id id) {
+        return roomDao.getNameById(id)
+                .orElseThrow(() -> new NotFoundException("Room not found with id: " + id));
+    }
 }

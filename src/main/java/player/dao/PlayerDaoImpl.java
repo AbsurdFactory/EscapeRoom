@@ -55,6 +55,12 @@ public class PlayerDaoImpl implements PlayerDao {
         WHERE nick_name = ?
         """;
 
+    private static final String SELECT_NAME_BY_ID_SQL = """
+        SELECT nick_name
+        FROM player
+        WHERE id_player = ?
+        """;
+
     private final DatabaseConnection dbConnection;
 
     public PlayerDaoImpl() {
@@ -187,6 +193,27 @@ public class PlayerDaoImpl implements PlayerDao {
     @Override
     public Optional<Player> findByNickName(String nickName) {
         return querySingle(SELECT_BY_NICKNAME, nickName);
+    }
+
+    public Name findNameById(Id id){
+        dbConnection.openConnection();
+        Name name = null;
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_NAME_BY_ID_SQL)) {
+
+            preparedStatement.setInt(1, id.getValue());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                name= new Name(resultSet.getString("nick_name"));
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding Player Nickname by id: " + id, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+        return name;
     }
 
     private Player mapRow(ResultSet rs) throws SQLException {

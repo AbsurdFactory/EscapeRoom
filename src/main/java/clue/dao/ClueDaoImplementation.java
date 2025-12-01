@@ -1,6 +1,8 @@
 package clue.dao;
 
-import clue.model.*;
+import clue.model.Clue;
+import clue.model.ClueText;
+import clue.model.ClueTheme;
 import commonValueObjects.Id;
 import commonValueObjects.Name;
 import commonValueObjects.Price;
@@ -112,22 +114,6 @@ public class ClueDaoImplementation implements ClueDao {
     }
 
 
-    public void deleteClueById(int id) {
-        dbConnection.openConnection();
-        try (Connection connection = dbConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CLUE_BY_ID_SQL)) {
-
-            preparedStatement.setInt(1, id);
-
-            preparedStatement.execute();
-
-        } catch (SQLException e) {
-            throw new DataAccessException("Error deleting Clue", e);
-        } finally {
-            dbConnection.closeConnection();
-        }
-    }
-
     public Clue getClueByName(Name name) {
         Clue clue1 = null;
         dbConnection.openConnection();
@@ -202,16 +188,6 @@ public class ClueDaoImplementation implements ClueDao {
         }
     }
 
-    private int getClueId(ResultSet resultSet) {
-        int id_clue;
-        try {
-            id_clue = resultSet.getInt("id_clue");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return id_clue;
-    }
-
 
     @Override
     public void save(Clue clue) {
@@ -261,46 +237,37 @@ public class ClueDaoImplementation implements ClueDao {
 
     @Override
     public boolean delete(Id id) {
-        return false;
-    }
-
-
-
-    private int getIdClueByClue(Clue clue) {
-        int id_clue = 0;
         dbConnection.openConnection();
         try (Connection connection = dbConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID_CLUE_BY_NAME_SQL)) {
-            preparedStatement.setString(1, clue.getName().toString());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CLUE_BY_ID_SQL)) {
 
-                id_clue = resultSet.getInt("id_clue");
-            }
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            preparedStatement.setInt(1, id.getValue());
+
+            return preparedStatement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error deleting Clue", e);
         } finally {
             dbConnection.closeConnection();
         }
-        return id_clue;
     }
 
-    private int getIdClueByName(String name) {
-        int id_clue;
+    public Id getIdClueByName(Name name) {
+        Id idClue;
         dbConnection.openConnection();
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ID_CLUE_BY_NAME_SQL)) {
-            preparedStatement.setString(1, name);
+            preparedStatement.setString(1, name.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            id_clue = resultSet.getInt("id_clue");
+            idClue = new Id<>(resultSet.getInt("id_clue"));
 
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         } finally {
             dbConnection.closeConnection();
         }
-        return id_clue;
+        return idClue;
     }
 
 
@@ -330,7 +297,7 @@ public class ClueDaoImplementation implements ClueDao {
         try (Connection connection = dbConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_TOTAL_CLUE_UNITS)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 totalUnits = resultSet.getInt("totalClues");
             }
         } catch (SQLException ex) {

@@ -103,6 +103,12 @@ public class RoomDaoImpl implements RoomDao {
     WHERE rhd.room_id_room = ?
     """;
 
+    private static final String SELECT_NAME_BY_ID = """
+    SELECT name
+    FROM room
+    WHERE id_room = ?
+    """;
+
     private static final String INSERT_ROOM_CLUE_RELATION = """
     INSERT INTO room_has_clues (clue_id_clue, room_id_room)
     VALUES (?, ?)
@@ -502,6 +508,28 @@ public class RoomDaoImpl implements RoomDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Error deleting decoration-room relation", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    public Optional<Name> getNameById(Id id) {
+        dbConnection.openConnection();
+
+        try (Connection connection = dbConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_NAME_BY_ID)) {
+
+            preparedStatement.setInt(1, id.getValue());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return Optional.of(new Name(resultSet.getString("name")));
+            }
+
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding Room name by ID: " + id, e);
         } finally {
             dbConnection.closeConnection();
         }

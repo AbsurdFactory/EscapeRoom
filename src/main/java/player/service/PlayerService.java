@@ -93,10 +93,15 @@ public class PlayerService {
         publisher.notifySubscribers(message);
     }
 
-        public Id getIdByName (Name name){
-            return playerDao.getIdByName(name.toString())
-                    .map(Id::new)
-                    .orElseThrow(() -> new NotFoundException("Player not found with name: " + name));
-        }
+    public Id getIdByName (Name name){
+        return playerDao.getIdByName(name.toString())
+                .map(Id::new)
+                .orElseThrow(() -> new NotFoundException("Player not found with name: " + name));
     }
+
+
+    public Name findNameById(Id playerId) {
+        return playerDao.findNameById(playerId);
+    }
+}
 
