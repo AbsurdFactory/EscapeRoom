@@ -1,9 +1,9 @@
 package menu;
 
-
 import commonValueObjects.Id;
 import commonValueObjects.Name;
 import commonValueObjects.Price;
+import player.dao.PlayerDaoImpl;
 import room.dao.RoomDaoImpl;
 import room.service.RoomService;
 import ticket.dao.TicketDaoImpl;
@@ -16,17 +16,12 @@ import java.util.Scanner;
 import static java.lang.System.out;
 
 public class TicketMenuControler extends BaseMenuController {
-        private final TicketService ticketService;
-        private final TicketDaoImpl ticketDaoImplementation = new TicketDaoImpl();
+    private final TicketService ticketService;
+    private final TicketDaoImpl ticketDaoImplementation = new TicketDaoImpl();
 
     public TicketMenuControler(Scanner scanner) {
-            super(scanner);
-            this.ticketService = new TicketService(ticketDaoImplementation);
-        }
-
-    public static void main(String[] args) {
-        TicketMenuControler ticketMenuControler = new TicketMenuControler(new Scanner(System.in));
-        ticketMenuControler.showTicketMenu();
+        super(scanner);
+        this.ticketService = new TicketService(ticketDaoImplementation);
     }
 
     public void showTicketMenu() {
@@ -55,7 +50,7 @@ public class TicketMenuControler extends BaseMenuController {
         out.println("\n--- Create new Ticket ---");
 
         try {
-       out.println("Please enter the nickname of the player.");
+            out.println("Please enter the nickname of the player.");
             Name playerNickname = ConsoleInputReader.readName(scanner, "player nickname");
             out.println("Please enter the name of the room.");
             Name roomName = ConsoleInputReader.readName(scanner, "room name");
@@ -66,7 +61,7 @@ public class TicketMenuControler extends BaseMenuController {
             Id roomId = roomService.getIdByName(roomName);
             Price price = roomService.getTotalRoomPrice(roomId);
 
-            Ticket ticket = new Ticket(playerNickname, roomName,price.toBigDecimal());
+            Ticket ticket = new Ticket(playerNickname, roomName, price.toBigDecimal());
             ticketService.createTicketMinimumValues(ticket);
 
 
@@ -93,12 +88,13 @@ public class TicketMenuControler extends BaseMenuController {
                 RoomDaoImpl roomDao = new RoomDaoImpl();
                 RoomService roomService = new RoomService(roomDao);
 
-                roomName = roomService.getNameById(ticket.getId());
 
-                out.println("Player nickname: " + ticket.getId());
+                PlayerDaoImpl playerDao = new PlayerDaoImpl();
+                Name playerName = playerDao.findNameById(ticket.getPlayerId());
+                out.println("Player nickname: " + playerName);
                 out.println("Room: " + ticket.getRoomId());
                 out.println("Date: " + ticket.getLocalDateTime());
-                out.println("Price: " + ticket.getPrice());
+                out.println("Price: " + ticket.getPrice().toBigDecimal() + "€");
             }
             out.println("------------------------------");
 
