@@ -13,7 +13,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./init/01_escape_room.sql:/docker-entrypoint-initdb.d/escaperoom_data.sql
+      - ./init/01_escape_room.sql:/docker-entrypoint-initdb.d/escape_room_db.sql
       - db_data:/var/lib/mysql
     command: --default-authentication-plugin=mysql_native_password
     healthcheck:

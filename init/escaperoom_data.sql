@@ -16,6 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+
+-- -----------------------------------------------------
+-- Schema escape_room
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS escape_room DEFAULT CHARACTER SET utf8 ;
+USE `escape_room` ;
+
+
+-- -----------------------------------------------------
+-- Table `escape_room`.`room`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `escape_room`.`room` (
+  `id_room` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `price` DECIMAL NOT NULL DEFAULT 0.0,
+  `difficulty_level` VARCHAR(45) NULL,
+  PRIMARY KEY (`id_room`, `price`))
+ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `idroom_UNIQUE` ON `escape_room`.`room` (`id_room` ASC) VISIBLE;
+
+CREATE UNIQUE INDEX `name_UNIQUE` ON `escape_room`.`room` (`name` ASC) VISIBLE;
+
+
 -- Table structure for table `certificate`
 --
 
