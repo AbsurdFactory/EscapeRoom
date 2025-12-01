@@ -7,14 +7,17 @@ import exceptions.NotFoundException;
 import player.dao.PlayerDao;
 import player.dao.PlayerDaoImpl;
 import player.model.Player;
+import room.model.RoomEventPublisher;
 
 import java.util.List;
 
 public class PlayerService {
     private final PlayerDaoImpl playerDao;
+    private final RoomEventPublisher publisher;
 
     public PlayerService(PlayerDaoImpl playerDao) {
         this.playerDao = playerDao;
+        this.publisher = new RoomEventPublisher();
     }
 
     public void createPlayer(String nickName, String email, boolean subscribed) {
@@ -31,7 +34,7 @@ public class PlayerService {
         playerDao.save(player);
     }
 
-    public Player getPlayerById(Id id) {
+    public Player getPlayerById(Id<Player> id) {
         return playerDao.findById(id)
                 .orElseThrow(() -> new NotFoundException("Player not found with ID: " + id));
     }
@@ -50,20 +53,50 @@ public class PlayerService {
         return playerDao.findAll();
     }
 
-    public boolean updatePlayer(Id id, String newNickName, String newEmail, boolean subscribed) {
+    public boolean updatePlayer(Id<Player> id, String newNickName, String newEmail, boolean subscribed) {
         Player existing = getPlayerById(id);
         Player updated = Player.rehydrate(id.getValue(), newNickName, newEmail, subscribed);
         return playerDao.update(updated);
     }
 
-    public boolean deletePlayer(Id id) {
+    public boolean deletePlayer(Id<Player> id) {
         getPlayerById(id);
         return playerDao.delete(id);
     }
 
-    public Id getIdByName(Name name) {
-        return playerDao.getIdByName(name.toString())
-                .map(Id::new)
-                .orElseThrow(() -> new NotFoundException("Player not found with name: " + name));
+    public SubscriptionResult subscribePlayer(String nickName) {
+        Player player = playerDao.findByNickName(nickName)
+                .orElseThrow(() -> new NotFoundException("Player not found: " + nickName));
+
+        if (player.isSubscribed()) {
+            return new SubscriptionResult(false, "Player " + nickName + " is already subscribed.");
+        }
+
+        Player updated = Player.rehydrate(
+                player.getId().getValue(),
+                player.getNickName().getValue(),
+                player.getEmail().getValue(),
+                true
+        );
+        playerDao.update(updated);
+        publisher.subscribe(updated);
+
+        return new SubscriptionResult(true, "Player " + nickName + " subscribed successfully.");
     }
-}
+
+    public void notifyPlayers(String message) {
+        List<Player> allPlayers = playerDao.findAll();
+        allPlayers.stream()
+                .filter(Player::isSubscribed)
+                .forEach(publisher::subscribe);
+
+        publisher.notifySubscribers(message);
+    }
+
+        public Id getIdByName (Name name){
+            return playerDao.getIdByName(name.toString())
+                    .map(Id::new)
+                    .orElseThrow(() -> new NotFoundException("Player not found with name: " + name));
+        }
+    }
+

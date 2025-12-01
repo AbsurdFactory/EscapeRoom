@@ -22,9 +22,9 @@ public class InventoryMenuController extends BaseMenuController {
     private final InventoryService inventoryService;
     private final ClueDaoImplementation clueDaoImplementation = new ClueDaoImplementation();
     private final ClueService clueService;
-    private final RoomDao roomDao = new RoomDaoImpl();
+    private final RoomDaoImpl roomDao = new RoomDaoImpl();
     private final RoomService roomService;
-    private final ObjectDecorationDao objectDecorationDao = new ObjectDecorationDaoImpl();
+    private final ObjectDecorationDaoImpl objectDecorationDao = new ObjectDecorationDaoImpl();
     private final ObjectDecorationService objectDecorationService;
 
     public InventoryMenuController(Scanner scanner) {

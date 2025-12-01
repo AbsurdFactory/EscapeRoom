@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 public class ObjectDecorationMenuController extends BaseMenuController {
     private final ObjectDecorationService objectDecorationService;
-    private final ObjectDecorationDao objectDecorationDao = new ObjectDecorationDaoImpl();
+    private final ObjectDecorationDaoImpl objectDecorationDao = new ObjectDecorationDaoImpl();
 
 
     public ObjectDecorationMenuController(Scanner scanner) {

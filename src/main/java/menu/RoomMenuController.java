@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class RoomMenuController extends BaseMenuController {
     private final RoomService roomService;
-    private final RoomDao roomDao = new RoomDaoImpl();
+    private final RoomDaoImpl roomDao = new RoomDaoImpl();
 
     public RoomMenuController(Scanner scanner) {
         super(scanner);
