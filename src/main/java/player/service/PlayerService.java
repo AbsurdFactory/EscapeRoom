@@ -1,19 +1,20 @@
 package player.service;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import exceptions.BusinessException;
 import exceptions.NotFoundException;
 import player.dao.PlayerDao;
+import player.dao.PlayerDaoImpl;
 import player.model.Player;
 import room.model.RoomEventPublisher;
 
 import java.util.List;
 
 public class PlayerService {
-    private final PlayerDao playerDao;
-    private final RoomEventPublisher publisher;
+    private final PlayerDaoImpl playerDao;
 
-    public PlayerService(PlayerDao playerDao, RoomEventPublisher publisher) {
+    public PlayerService(PlayerDaoImpl playerDao) {
         this.playerDao = playerDao;
         this.publisher = publisher;
     }
@@ -89,5 +90,10 @@ public class PlayerService {
                 .forEach(publisher::subscribe);
 
         publisher.notifySubscribers(message);
+    public Id getIdByName(Name name) {
+        return playerDao.getIdByName(name.toString())
+                .map(Id::new)
+                .orElseThrow(() -> new NotFoundException("Player not found with name: " + name));
     }
 }
+

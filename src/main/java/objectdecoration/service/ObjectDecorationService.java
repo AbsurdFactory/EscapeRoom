@@ -4,14 +4,15 @@ import commonValueObjects.Id;
 import commonValueObjects.Name;
 import exceptions.NotFoundException;
 import objectdecoration.dao.ObjectDecorationDao;
+import objectdecoration.dao.ObjectDecorationDaoImpl;
 import objectdecoration.model.ObjectDecoration;
 
 import java.util.List;
 
 public class ObjectDecorationService {
-    private final ObjectDecorationDao dao;
+    private final ObjectDecorationDaoImpl dao;
 
-    public ObjectDecorationService(ObjectDecorationDao dao) {
+    public ObjectDecorationService(ObjectDecorationDaoImpl dao) {
         this.dao = dao;
     }
 
@@ -45,4 +46,5 @@ public class ObjectDecorationService {
     public boolean deleteObjectDecorationByName(Name name){
         return dao.deleteByName(name);
     }
+
 }
