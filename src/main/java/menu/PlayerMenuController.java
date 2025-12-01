@@ -15,9 +15,9 @@ public class PlayerMenuController extends BaseMenuController {
 
     public PlayerMenuController(Scanner scanner) {
         super(scanner);
-        PlayerDao playerDao = new PlayerDaoImpl();
+        PlayerDaoImpl playerDao = new PlayerDaoImpl();
         RoomEventPublisher publisher = new RoomEventPublisher();
-        this.playerService = new PlayerService(playerDao, publisher);
+        this.playerService = new PlayerService(playerDao);
     }
 
     public void showPlayerMenu() {

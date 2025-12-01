@@ -1,6 +1,7 @@
 package player.service;
 
 import commonValueObjects.Id;
+import commonValueObjects.Name;
 import exceptions.BusinessException;
 import exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import player.dao.PlayerDao;
 import player.dao.PlayerDaoImpl;
 import player.model.Player;
+import room.model.RoomEventPublisher;
 
 import java.util.Optional;
 import java.util.List;
@@ -19,7 +21,7 @@ public class PlayerServiceTest {
 
     private PlayerDaoImpl playerDao;
     private PlayerService playerService;
-
+    private RoomEventPublisher publisher;
     @BeforeEach
     void setUp() {
         playerDao = mock(PlayerDaoImpl.class);
