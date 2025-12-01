@@ -51,6 +51,6 @@ public class ClueService {
     }
 
     public Id getIdClueByName(Name name){
-        return getIdClueByName(name);
+        return clueDaoImplementation.getIdClueByName(name);
     }
 }
