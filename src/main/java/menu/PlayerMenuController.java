@@ -1,6 +1,5 @@
 package menu;
 
-import player.dao.PlayerDao;
 import player.dao.PlayerDaoImpl;
 import player.model.Player;
 import player.service.PlayerService;

@@ -19,7 +19,7 @@ USE `escape_room` ;
 CREATE TABLE IF NOT EXISTS `escape_room`.`room` (
   `id_room` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `price` DECIMAL NOT NULL DEFAULT 0.0,
+  `price` DECIMAL(10,2) NOT NULL DEFAULT 0.0,
   `difficulty_level` VARCHAR(45) NULL,
   PRIMARY KEY (`id_room`, `price`))
 ENGINE = InnoDB;
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `escape_room`.`clue` (
   `name` VARCHAR(45) NOT NULL,
   `text` TEXT(250) NOT NULL,
   `theme` VARCHAR(45) NOT NULL,
-  `price` DECIMAL NULL,
+  `price` DECIMAL(10,2) NULL,
   PRIMARY KEY (`id_clue`))
 ENGINE = InnoDB;
 
@@ -54,9 +54,9 @@ CREATE UNIQUE INDEX `name_UNIQUE` ON `escape_room`.`clue` (`name` ASC) VISIBLE;
 CREATE TABLE IF NOT EXISTS `escape_room`.`decoration_object` (
   `id_decoration_object` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `description` VARCHAR(250) NOT NULL,
+  `description` VARCHAR(250) NULL,
   `material` VARCHAR(45) NULL,
-  `price` DECIMAL NULL,
+  `price` DECIMAL(10,2) NULL,
   PRIMARY KEY (`id_decoration_object`))
 ENGINE = InnoDB;
 
@@ -202,6 +202,7 @@ CREATE INDEX `fk_room_has_decoration_object_room1_idx` ON `escape_room`.`room_ha
 
 CREATE TABLE IF NOT EXISTS `escape_room`.`escape` (
   `id_escape` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`id_escape`))
 ENGINE = InnoDB;
 
