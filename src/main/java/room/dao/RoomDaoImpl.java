@@ -1,15 +1,20 @@
 package room.dao;
 
+import clue.model.Clue;
+import clue.model.ClueText;
+import clue.model.ClueTheme;
 import commonValueObjects.Id;
 import commonValueObjects.Name;
 import commonValueObjects.Price;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
+import objectdecoration.model.ObjectDecoration;
 import room.model.DifficultyLevel;
 import room.model.Room;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,6 +62,46 @@ public class RoomDaoImpl implements RoomDao {
         FROM room
         WHERE name = ?
         """;
+
+    private static final String SELECT_CLUES_BY_ROOM_ID = """
+    SELECT c.id_clue, c.name, c.text, c.theme, c.price
+    FROM clue c
+    INNER JOIN room_has_clues rhc ON c.id_clue = rhc.clue_id_clue
+    WHERE rhc.room_id_room = ?
+    """;
+
+    private static final String SELECT_DECORATIONS_BY_ROOM_ID = """
+    SELECT d.id_decoration_object, d.name, d.description, d.material, d.price
+    FROM decoration_object d
+    INNER JOIN room_has_decoration_object rhd ON d.id_decoration_object = rhd.decoration_object_id_decoration_object
+    WHERE rhd.room_id_room = ?
+    """;
+
+    private static final String COUNT_CLUES_BY_ROOM_ID = """
+    SELECT COUNT(*) as total
+    FROM room_has_clues
+    WHERE room_id_room = ?
+    """;
+
+    private static final String COUNT_DECORATIONS_BY_ROOM_ID = """
+    SELECT COUNT(*) as total
+    FROM room_has_decoration_object
+    WHERE room_id_room = ?
+    """;
+
+    private static final String SUM_CLUES_PRICE_BY_ROOM_ID = """
+    SELECT COALESCE(SUM(c.price), 0) as total
+    FROM clue c
+    INNER JOIN room_has_clues rhc ON c.id_clue = rhc.clue_id_clue
+    WHERE rhc.room_id_room = ?
+    """;
+
+    private static final String SUM_DECORATIONS_PRICE_BY_ROOM_ID = """
+    SELECT COALESCE(SUM(d.price), 0) as total
+    FROM decoration_object d
+    INNER JOIN room_has_decoration_object rhd ON d.id_decoration_object = rhd.decoration_object_id_decoration_object
+    WHERE rhd.room_id_room = ?
+    """;
 
     private final DatabaseConnection dbConnection;
 
@@ -212,6 +257,168 @@ public class RoomDaoImpl implements RoomDao {
             throw new DataAccessException("Error finding Room ID by name: " + name, e);
         } finally {
             dbConnection.closeConnection();
+        }
+    }
+
+    public List<Clue> getCluesByRoomId(Id roomId) {
+        dbConnection.openConnection();
+        List<Clue> clues = new ArrayList<>();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_CLUES_BY_ROOM_ID)) {
+
+            ps.setInt(1, roomId.getValue());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    clues.add(mapClueRow(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error getting clues for room ID: " + roomId, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+
+        return clues;
+    }
+
+    public List<ObjectDecoration> getDecorationsByRoomId(Id roomId) {
+        dbConnection.openConnection();
+        List<ObjectDecoration> decorations = new ArrayList<>();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_DECORATIONS_BY_ROOM_ID)) {
+
+            ps.setInt(1, roomId.getValue());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    decorations.add(mapDecorationRow(rs));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error getting decorations for room ID: " + roomId, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+
+        return decorations;
+    }
+
+    public int countCluesByRoomId(Id roomId) {
+        dbConnection.openConnection();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(COUNT_CLUES_BY_ROOM_ID)) {
+
+            ps.setInt(1, roomId.getValue());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total");
+                }
+                return 0;
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error counting clues for room ID: " + roomId, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    public int countDecorationsByRoomId(Id roomId) {
+        dbConnection.openConnection();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(COUNT_DECORATIONS_BY_ROOM_ID)) {
+
+            ps.setInt(1, roomId.getValue());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total");
+                }
+                return 0;
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error counting decorations for room ID: " + roomId, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    public Price sumCluesPriceByRoomId(Id roomId) {
+        dbConnection.openConnection();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SUM_CLUES_PRICE_BY_ROOM_ID)) {
+
+            ps.setInt(1, roomId.getValue());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Price(rs.getBigDecimal("total"));
+                }
+                return new Price(BigDecimal.ZERO);
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error summing clues price for room ID: " + roomId, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    public Price sumDecorationsPriceByRoomId(Id roomId) {
+        dbConnection.openConnection();
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SUM_DECORATIONS_PRICE_BY_ROOM_ID)) {
+
+            ps.setInt(1, roomId.getValue());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Price(rs.getBigDecimal("total"));
+                }
+                return new Price(BigDecimal.ZERO);
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error summing decorations price for room ID: " + roomId, e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
+
+    private Clue mapClueRow(ResultSet rs) throws SQLException {
+        try {
+            return new Clue(
+                    new Name(rs.getString("name")),
+                    new ClueText(rs.getString("text")),
+                    new ClueTheme(rs.getString("theme")),
+                    new Price(rs.getBigDecimal("price"))
+            );
+        } catch (IllegalArgumentException e) {
+            throw new SQLException("Error mapping clue data: " + e.getMessage(), e);
+        }
+    }
+
+    private ObjectDecoration mapDecorationRow(ResultSet rs) throws SQLException {
+        try {
+            return ObjectDecoration.rehydrate(
+                    rs.getInt("id_decoration_object"),
+                    rs.getString("name"),
+                    rs.getString("material"),
+                    rs.getDouble("price")
+            );
+        } catch (IllegalArgumentException e) {
+            throw new SQLException("Error mapping decoration data: " + e.getMessage(), e);
         }
     }
 }
