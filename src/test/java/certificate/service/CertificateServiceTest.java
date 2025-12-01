@@ -1,5 +1,5 @@
-package certificate.service;
 
+package certificate.service;
 import certificate.dao.CertificateDao;
 import certificate.model.Certificate;
 import certificate.model.CertificateRewardType;
@@ -32,7 +32,7 @@ class CertificateServiceTest {
 
     @BeforeEach
     void setup() {
-        sampleCertificate = new Certificate(CertificateRewardType.BRONZE_BADGE, 1, 1);
+        sampleCertificate = new Certificate(CertificateRewardType.BRONZE_BADGE, new Id (1), new Id (1));
     }
 
     @Test
