@@ -126,4 +126,9 @@ public class RoomService {
 
         return new RoomStatistics(room, clueCount, decorationCount, cluesPrice, decorationsPrice, totalPrice);
     }
+
+    public Name getNameById(Id id) {
+        return roomDao.getNameById(id)
+                .orElseThrow(() -> new NotFoundException("Room not found with id: " + id));
+    }
 }
