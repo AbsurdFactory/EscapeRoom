@@ -102,4 +102,14 @@ public class MenuPrinter {
         System.out.println(" 3. Back");
         System.out.println("====================================");
     }
+
+    public static void displayTicketMenu() {
+        System.out.println("\n====================================");
+        System.out.println("           TICKET MENU");
+        System.out.println("====================================");
+        System.out.println(" 1. Create Ticket");
+        System.out.println(" 2. List Ticket");
+        System.out.println(" 3. Back");
+        System.out.println("====================================");
+    }
 }
