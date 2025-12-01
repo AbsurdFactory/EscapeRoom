@@ -17,23 +17,16 @@ public class EscapeRoom {
     private Name name;
     private List<Room> rooms;
 
-    public EscapeRoom(Id id, Name name) {
-        this.id = id;
+
+    public EscapeRoom(Name name){
         this.name = name;
         this.rooms = new ArrayList<>();
     }
 
-    public EscapeRoom(int id, String name){
-        if(id <= 0) {
-            throw new IllegalArgumentException("The id must be greater than zero.");
-        }
+    public EscapeRoom(Id<EscapeRoom> id, Name name){
 
-        if(name.isBlank() || name.isEmpty()){
-            throw new IllegalArgumentException("The name cannot be empty or blank.");
-        }
-
-        this.id = new Id<>(id);
-        this.name = new Name(name);
+        this.id = id;
+        this.name = name;
         this.rooms = new ArrayList<>();
     }
 
