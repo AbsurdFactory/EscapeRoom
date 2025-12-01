@@ -40,7 +40,7 @@ INSERT INTO room_has_clues VALUES
 INSERT INTO room_has_decoration_object VALUES
 (1,1),(2,2),(3,3),(4,4);
 
-INSERT INTO escape VALUES (1),(2),(3);
+--INSERT INTO escape VALUES (1),(2),(3);
 
 INSERT INTO escape_has_room VALUES
 (1,1),(1,2),(2,3),(3,4);
