@@ -22,8 +22,8 @@ public class EscapeRoomMenuController extends BaseMenuController {
 
     private final EscapeRoomService escapeRoomService;
     private final RoomService roomService;
-    private final EscapeRoomDao escapeRoomDao = new EscapeRoomDaoImpl();
-    private final RoomDao roomDao = new RoomDaoImpl();
+    private final EscapeRoomDaoImpl escapeRoomDao = new EscapeRoomDaoImpl();
+    private final RoomDaoImpl roomDao = new RoomDaoImpl();
 
     public EscapeRoomMenuController(Scanner scanner) {
         super(scanner);
