@@ -132,8 +132,8 @@ CREATE TABLE IF NOT EXISTS `escape_room`.`ticket` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ticket_room1`
-    FOREIGN KEY (`room_id_room` , `room_price`)
-    REFERENCES `escape_room`.`room` (`id_room` , `price`)
+    FOREIGN KEY (`room_id_room`)
+    REFERENCES `escape_room`.`room` (`id_room`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
