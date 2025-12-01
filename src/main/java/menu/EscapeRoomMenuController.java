@@ -2,19 +2,15 @@ package menu;
 
 import commonValueObjects.Name;
 import commonValueObjects.Price;
-import escaperoom.dao.EscapeRoomDao;
 import escaperoom.dao.EscapeRoomDaoImpl;
 import escaperoom.model.EscapeRoom;
 import escaperoom.model.EscapeRoomBuilder;
 import escaperoom.service.EscapeRoomService;
-import room.dao.RoomDao;
 import room.dao.RoomDaoImpl;
 import room.model.DifficultyLevel;
 import room.model.Room;
 import room.model.RoomBuilder;
 import room.service.RoomService;
-
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
@@ -86,6 +82,9 @@ public class EscapeRoomMenuController extends BaseMenuController {
     private void addRoomToEscapeRoom() throws InputReadException {
         System.out.println("\n--- Add Room to Escape Room ---");
         EscapeRoom selectedEscapeRoom = findByName();
+        if (selectedEscapeRoom == null) {
+            return;
+        }
 
         RoomBuilder roomBuilder = new RoomBuilder();
 
@@ -139,6 +138,7 @@ public class EscapeRoomMenuController extends BaseMenuController {
 
         if (escapeRooms == null || escapeRooms.isEmpty()) {
             System.out.println("There are no Escape Rooms created yet. Please create one first.");
+            return null;
         }
 
         System.out.println("\nAvailable Escape Rooms:");
@@ -162,8 +162,8 @@ public class EscapeRoomMenuController extends BaseMenuController {
             if (selectedEscapeRoom == null) {
                 System.out.println("No Escape Room found with name '" + escapeRoomName + "'. Please try again.\n");
             }
-
         }
+
         return selectedEscapeRoom;
     }
 }
