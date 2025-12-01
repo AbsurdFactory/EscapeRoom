@@ -232,7 +232,7 @@ public class EscapeRoomDaoImpl implements EscapeRoomDao {
     }
 
     private EscapeRoom mapRow(ResultSet rs) throws SQLException {
-        return new EscapeRoom(
+        return EscapeRoom.rehydrate(
                 rs.getInt("id_escape"),
                 rs.getString("name")
         );
