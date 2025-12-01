@@ -108,35 +108,43 @@ public class MenuPrinterNew {
         System.out.println(menu);
     }
 
-    public void displayMainMenu() {
+    public static void displayMainMenu() {
         print(MAIN_MENU);
     }
 
-    public void displayShowInventorySubmenu() {
+    public static void displayShowInventorySubmenu() {
         print(INVENTORY_MENU);
     }
 
-    public void displayRemoveFromInventorySubmenu() {
+    public static void displayRemoveFromInventorySubmenu() {
         print(REMOVE_INVENTORY_MENU);
     }
 
-    public void displayEscapeRoomCreationMenu() {
+    public static void displayEscapeRoomCreationMenu() {
         print(ESCAPE_ROOM_MENU);
     }
 
-    public void displayRoomMenu() {
-        print(ROOM_MENU);
-    }
-
-    public void displayClueMenu() {
+    public static void displayClueMenu() {
         print(CLUE_MENU);
     }
 
-    public void displayDecorationMenu() {
+    public static void displayDecorationMenu() {
         print(DECORATION_MENU);
     }
 
-    public void displayPlayerMenu() {
+    public static void displayPlayerMenu() {
         print(PLAYER_MENU);
+    }
+
+    public static void displayRoomMenu() {
+        System.out.println("\n--- Room Menu ---");
+        System.out.println("1. Create Room");
+        System.out.println("2. Show Room Details");
+        System.out.println("3. List All Rooms");
+        System.out.println("4. Add Clue to Room");
+        System.out.println("5. Remove Clue from Room");
+        System.out.println("6. Add Decoration to Room");
+        System.out.println("7. Remove Decoration from Room");
+        System.out.println("8. Return to Main Menu");
     }
 }

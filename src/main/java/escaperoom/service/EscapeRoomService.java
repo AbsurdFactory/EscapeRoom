@@ -41,5 +41,29 @@ public class EscapeRoomService {
         return escapeRoomDaoImpl.delete(id);
     }
 
+    public void addRoomToEscapeRoom(EscapeRoom escapeRoom, int roomId) {
+        if (escapeRoom.getId() == null) {
+            throw new IllegalArgumentException("EscapeRoom must be saved before adding rooms.");
+        }
+
+        escapeRoomDaoImpl.addRoomRelation(escapeRoom.getId().getValue(), roomId);
+    }
+
+    public boolean removeRoomFromEscapeRoom(EscapeRoom escapeRoom, int roomId) {
+        if (escapeRoom.getId() == null) {
+            throw new IllegalArgumentException("EscapeRoom must be saved before removing rooms.");
+        }
+
+        return escapeRoomDaoImpl.removeRoomRelation(escapeRoom.getId().getValue(), roomId);
+    }
+
+    public List<Integer> getRoomIdsForEscapeRoom(EscapeRoom escapeRoom) {
+        if (escapeRoom.getId() == null) {
+            throw new IllegalArgumentException("EscapeRoom must be saved before retrieving rooms.");
+        }
+
+        return escapeRoomDaoImpl.findRoomIdsByEscapeId(escapeRoom.getId().getValue());
+    }
+
 
 }

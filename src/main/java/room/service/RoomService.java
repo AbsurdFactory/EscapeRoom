@@ -1,6 +1,8 @@
 package room.service;
 
 
+import clue.dao.ClueDaoImplementation;
+import clue.service.ClueService;
 import commonValueObjects.Id;
 import commonValueObjects.Name;
 import commonValueObjects.Price;
@@ -8,6 +10,7 @@ import exceptions.NotFoundException;
 import objectdecoration.dao.ObjectDecorationDao;
 import objectdecoration.dao.ObjectDecorationDaoImpl;
 import objectdecoration.model.ObjectDecoration;
+import objectdecoration.service.ObjectDecorationService;
 import room.dao.RoomDao;
 import room.dao.RoomDaoImpl;
 import room.model.Room;
@@ -21,10 +24,17 @@ import java.util.Optional;
 public class RoomService {
     private final RoomDaoImpl roomDao;
     private ObjectDecorationDaoImpl decorationDao;
+    private ClueDaoImplementation clueDao;
+    private ObjectDecorationService objectDecorationService;
+    private ClueService clueService;
 
-    public RoomService(RoomDaoImpl roomDao, ObjectDecorationDaoImpl objectDecorationDao){
+    public RoomService(RoomDaoImpl roomDao, ObjectDecorationDaoImpl objectDecorationDao) {
         this.roomDao = roomDao;
         this.decorationDao = objectDecorationDao;
+        this.clueDao = new ClueDaoImplementation();
+        this.objectDecorationService = new ObjectDecorationService(decorationDao);
+        this.clueService = new ClueService(clueDao);
+
     }
 
     public RoomService(RoomDaoImpl roomDao) {
@@ -125,6 +135,60 @@ public class RoomService {
         Price totalPrice = getTotalRoomPrice(roomId);
 
         return new RoomStatistics(room, clueCount, decorationCount, cluesPrice, decorationsPrice, totalPrice);
+    }
+
+    public void addClueToRoomByName(Name roomName, Name clueName) {
+
+        int roomId = roomDao.getIdByName(roomName.toString())
+                .orElseThrow(() -> new NotFoundException("Room not found: " + roomName));
+
+        Id clueIdObj = clueService.getIdClueByName(clueName);
+        if (clueIdObj == null) {
+            throw new NotFoundException("Clue not found: " + clueName);
+        }
+
+        roomDao.addClueToRoom(roomId, clueIdObj.getValue());
+    }
+
+    public boolean removeClueFromRoomByName(Name roomName, Name clueName) {
+
+        int roomId = roomDao.getIdByName(roomName.toString())
+                .orElseThrow(() -> new NotFoundException("Room not found: " + roomName));
+
+        Id clueIdObj = clueService.getIdClueByName(clueName);
+        if (clueIdObj == null) {
+            throw new NotFoundException("Clue not found: " + clueName);
+        }
+
+        int clueId = clueIdObj.getValue();
+
+        return roomDao.removeClueFromRoom(roomId, clueId);
+    }
+
+    public void addDecorationToRoomByName(Name roomName, Name decorationName) {
+
+        int roomId = roomDao.getIdByName(roomName.toString())
+                .orElseThrow(() -> new NotFoundException("Room not found: " + roomName));
+
+        Id decoIdObj = objectDecorationService.getIdObjectByName(decorationName);
+        if (decoIdObj == null) {
+            throw new NotFoundException("Decoration not found: " + decorationName);
+        }
+
+        roomDao.addDecorationToRoom(roomId, decoIdObj.getValue());
+    }
+
+    public boolean removeDecorationFromRoomByName(Name roomName, Name decorationName) {
+
+        int roomId = roomDao.getIdByName(roomName.toString())
+                .orElseThrow(() -> new NotFoundException("Room not found: " + roomName));
+
+        Id decoIdObj = objectDecorationService.getIdObjectByName(decorationName);
+        if (decoIdObj == null) {
+            throw new NotFoundException("Decoration not found: " + decorationName);
+        }
+
+        return roomDao.removeDecorationFromRoom(roomId, decoIdObj.getValue());
     }
 
     public Name getNameById(Id id) {

@@ -112,7 +112,7 @@ public class MainMenuController extends BaseMenuController {
         escapeRoomMenuController.showEscapeRoomMenu();
     }
 
-    private void handleAddRoom() {
+    private void handleAddRoom() throws InputReadException {
         System.out.println("\n--- Add a new Room ---");
         roomMenuController.showRoomMenu();
     }
