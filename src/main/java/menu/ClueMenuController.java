@@ -21,7 +21,7 @@ public class ClueMenuController extends BaseMenuController {
         this.clueService = new ClueService(clueDaoImplementation);
     }
 
-    public void showClueMenu() {
+    public void showClueMenu() throws InputReadException {
         int option;
 
         do {
@@ -99,7 +99,7 @@ public class ClueMenuController extends BaseMenuController {
 
 
     @Override
-    public void showMenu() {
+    public void showMenu() throws InputReadException {
         showClueMenu();
     }
 }

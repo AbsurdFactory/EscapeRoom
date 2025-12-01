@@ -117,33 +117,33 @@ public class MainMenuController extends BaseMenuController {
         roomMenuController.showRoomMenu();
     }
 
-    private void handleAddClue() {
+    private void handleAddClue() throws InputReadException {
         System.out.println("\n--- Add a new Clue ---");
         clueMenuController.showClueMenu();
     }
 
-    private void handleAddDecoration() {
+    private void handleAddDecoration() throws InputReadException {
         System.out.println("\n--- Add a new Decoration ---");
         decorationMenuController.showDecorationMenu();
     }
 
-    private void handleViewInventory() {
+    private void handleViewInventory() throws InputReadException {
         System.out.println("\n--- View Inventory ---");
         inventoryMenuController.showInventoryMenu();
     }
 
-    private void handleRemoveFromInventory() {
+    private void handleRemoveFromInventory() throws InputReadException {
         System.out.println("\n--- Remove from Inventory ---");
         inventoryMenuController.showRemoveFromInventoryMenu();
 
     }
 
-    private void handleCreatePlayer() {
+    private void handleCreatePlayer() throws InputReadException {
         System.out.println("\n--- Create a new Player ---");
         playerMenuController.showPlayerMenu();
     }
 
-    private void handleGenerateTicket() {
+    private void handleGenerateTicket() throws InputReadException {
         System.out.println("\n--- Generate ticket for a Player ---");
         ticketMenuController.showTicketMenu();
     }

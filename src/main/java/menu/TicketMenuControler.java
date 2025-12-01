@@ -25,7 +25,7 @@ public class TicketMenuControler extends BaseMenuController {
         this.ticketService = new TicketService(ticketDaoImplementation);
     }
 
-    public void showTicketMenu() {
+    public void showTicketMenu() throws InputReadException {
         int option;
 
         do {
@@ -107,7 +107,7 @@ public class TicketMenuControler extends BaseMenuController {
 
 
     @Override
-    public void showMenu() {
+    public void showMenu() throws InputReadException {
         showTicketMenu();
     }
 

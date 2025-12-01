@@ -22,7 +22,7 @@ public class ObjectDecorationMenuController extends BaseMenuController {
         this.objectDecorationService = new ObjectDecorationService(objectDecorationDao);
     }
 
-    public void showDecorationMenu() {
+    public void showDecorationMenu() throws InputReadException {
         int option;
 
         do {
@@ -95,7 +95,7 @@ public class ObjectDecorationMenuController extends BaseMenuController {
     }
 
     @Override
-    public void showMenu() {
+    public void showMenu() throws InputReadException {
         showDecorationMenu();
     }
 }

@@ -35,7 +35,7 @@ public class InventoryMenuController extends BaseMenuController {
         this.objectDecorationService = new ObjectDecorationService(objectDecorationDao);
     }
 
-    public void showInventoryMenu() {
+    public void showInventoryMenu() throws InputReadException {
         int subOption;
 
         do {
@@ -67,7 +67,7 @@ public class InventoryMenuController extends BaseMenuController {
     }
 
 
-    public void showRemoveFromInventoryMenu() {
+    public void showRemoveFromInventoryMenu() throws InputReadException {
         int subOption;
 
         do {

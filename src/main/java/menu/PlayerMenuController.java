@@ -19,7 +19,7 @@ public class PlayerMenuController extends BaseMenuController {
         this.playerService = new PlayerService(playerDao);
     }
 
-    public void showPlayerMenu() {
+    public void showPlayerMenu() throws InputReadException {
         int option;
 
         do {
