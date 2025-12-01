@@ -66,9 +66,12 @@ public class RoomMenuController extends BaseMenuController {
         System.out.println("\n--- Create a new Room ---");
 
         try {
+            System.out.println("Please enter the name of the room.");
             Name name = ConsoleInputReader.readName(scanner, "room name");
+            System.out.println("Please enter the difficulty level.");
             DifficultyLevel difficultyLevel =
                     ConsoleInputReader.readDifficultyLevel(scanner, "difficulty level");
+            System.out.println("Please enter the price of the room.");
             Price price = ConsoleInputReader.readPrice(scanner, "room price");
 
             Room room = new RoomBuilder()
@@ -128,6 +131,7 @@ public class RoomMenuController extends BaseMenuController {
         Room room = findRoomByName();
         if (room == null) return;
 
+        System.out.println("Please enter the name of the clue.");
         Name clueName = ConsoleInputReader.readName(scanner, "clue name");
 
         try {
@@ -144,6 +148,7 @@ public class RoomMenuController extends BaseMenuController {
         Room room = findRoomByName();
         if (room == null) return;
 
+        System.out.println("Please enter the name of the clue.");
         Name clueName = ConsoleInputReader.readName(scanner, "clue name");
 
         try {
@@ -160,6 +165,7 @@ public class RoomMenuController extends BaseMenuController {
         Room room = findRoomByName();
         if (room == null) return;
 
+        System.out.println("Please enter the name of the decoration.");
         Name decorationName = ConsoleInputReader.readName(scanner, "decoration name");
 
         try {
@@ -176,6 +182,7 @@ public class RoomMenuController extends BaseMenuController {
         Room room = findRoomByName();
         if (room == null) return;
 
+        System.out.println("Please enter the name of the decoration.");
         Name decorationName = ConsoleInputReader.readName(scanner, "decoration name");
 
         try {
@@ -204,6 +211,7 @@ public class RoomMenuController extends BaseMenuController {
         Room selectedRoom = null;
 
         while (selectedRoom == null) {
+            System.out.println("Please enter the room name.");
             Name roomName = ConsoleInputReader.readName(scanner, "room name");
 
             for (Room r : rooms) {
