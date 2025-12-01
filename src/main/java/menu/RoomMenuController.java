@@ -38,7 +38,7 @@ public class RoomMenuController extends BaseMenuController {
         }
     }
 
-    private void showRoomMenu() throws InputReadException {
+    public void showRoomMenu() throws InputReadException {
         int option;
 
         do {
