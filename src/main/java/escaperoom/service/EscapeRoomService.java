@@ -28,6 +28,10 @@
             return escapeRoomDaoImpl.findAll();
         }
 
+        public List<EscapeRoom> getEscapeRoomsByName(String name) {
+            return escapeRoomDaoImpl.findByName(name);
+        }
+
         public boolean updateEscapeRoom(EscapeRoom escapeRoom) {
             return escapeRoomDaoImpl.update(escapeRoom);
         }
