@@ -6,8 +6,8 @@ import exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import player.dao.PlayerDao;
+import player.dao.PlayerDaoImpl;
 import player.model.Player;
-import room.model.RoomEventPublisher;
 
 import java.util.Optional;
 import java.util.List;
@@ -17,14 +17,13 @@ import static org.mockito.Mockito.*;
 
 public class PlayerServiceTest {
 
-    private PlayerDao playerDao;
+    private PlayerDaoImpl playerDao;
     private PlayerService playerService;
-    private RoomEventPublisher publisher;
+
     @BeforeEach
     void setUp() {
-        playerDao = mock(PlayerDao.class);
-        publisher = mock(RoomEventPublisher.class);
-        playerService = new PlayerService(playerDao, publisher);
+        playerDao = mock(PlayerDaoImpl.class);
+        playerService = new PlayerService(playerDao);
     }
 
     @Test
@@ -60,4 +59,31 @@ public class PlayerServiceTest {
         assertEquals(1, players.size());
         verify(playerDao, times(1)).findAll();
     }
+
+
+@Test
+void getIdByName_shouldReturnId_whenPlayerExists() {
+    Name name = new Name("PlayerOne");
+    int expectedId = 42;
+
+    when(playerDao.getIdByName(name.toString()))
+            .thenReturn(Optional.of(expectedId));
+
+    Id result = playerService.getIdByName(name);
+
+    assertEquals(new Id(expectedId), result);
+    verify(playerDao, times(1)).getIdByName(name.toString());
+}
+
+@Test
+void getIdByName_shouldThrowNotFound_whenPlayerDoesNotExist() {
+    Name name = new Name("Unknown");
+
+    when(playerDao.getIdByName(name.toString()))
+            .thenReturn(Optional.empty());
+
+    assertThrows(NotFoundException.class, () -> playerService.getIdByName(name));
+    verify(playerDao, times(1)).getIdByName(name.toString());
+}
+
 }

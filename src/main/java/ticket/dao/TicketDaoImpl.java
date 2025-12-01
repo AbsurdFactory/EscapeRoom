@@ -2,10 +2,14 @@ package ticket.dao;
 
 import commonValueObjects.Id;
 import commonValueObjects.Name;
-import dao.BaseDao;
+import commonValueObjects.Price;
 import databaseconnection.DatabaseConnection;
 import databaseconnection.MYSQLDatabaseConnection;
 import exceptions.DataAccessException;
+import player.dao.PlayerDaoImpl;
+import player.service.PlayerService;
+import room.dao.RoomDaoImpl;
+import room.service.RoomService;
 import ticket.model.Ticket;
 
 import java.io.IOException;
@@ -17,21 +21,38 @@ import java.util.Optional;
 
 public class TicketDaoImpl implements TicketDao {
     private static final String INSERT_SQL = """
-            INSERT INTO ticket (id_ticket, room_id_room, player_id_player, date, time, price)
+            INSERT INTO ticket (id_ticket, room_id_room, player_id_player, date_time, price)
             VALUES (?,?, ?, ?, ?, ?);
             """;
+    private static final String INSERT_TICKET_SQL = """
+            INSERT INTO ticket (player_id_player, room_id_room, date_time, price, room_price)
+            VALUES (?, ?, ?, ?,?);
+            """;
+
+    private static final String INSERT_TICKET_MINIMUM_VALUES_SQL = """
+            INSERT INTO ticket (player_id_player, room_id_room, price, room_price)
+            VALUES (?, ?, ?, ?);
+            """;
+
     private static final String SELECT_BY_ID = """
-            SELECT id_ticket,room_id_room, player_id_player, date, time, price
+            SELECT id_ticket,room_id_room, player_id_player, date_time, price
             FROM ticket
             WHERE id_ticket = ?
             """;
+
+    private static final String SELECT_TICKET_BY_ID = """
+            SELECT id_ticket,room_id_room, player_id_player, date_time, price
+            FROM ticket
+            WHERE id_ticket = ?
+            """;
+
     private static final String SELECT_ALL = """
-            SELECT id_ticket, room_id_room; player_id_player, date, time, price
+            SELECT id_ticket, room_id_room, player_id_player, date_time, price
             FROM ticket
             """;
     private static final String UPDATE_SQL = """
             UPDATE ticket
-            SET room_id_room = ?, player_id_player = ?, date = ?, time = ?, price = ?
+            SET room_id_room = ?, player_id_player = ?, date_time = ?, price = ?
             WHERE id_ticket=?
             """;
     private static final String DELETE_SQL = """
@@ -49,20 +70,27 @@ public class TicketDaoImpl implements TicketDao {
         }
     }
 
+
     @Override
     public void save(Ticket ticket) {
         dbConnection.openConnection();
         try (Connection conn = dbConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(INSERT_SQL)) {
+             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_TICKET_SQL)) {
+            PlayerDaoImpl playerDao = new PlayerDaoImpl();
+            PlayerService playerService = new PlayerService(playerDao);
+            Id idByNamePlayer = playerService.getIdByName(ticket.getPlayerName());
 
-            ps.setInt(1, ticket.getId().getValue());
-            ps.setInt(2, ticket.getRoomId().getValue());
-            ps.setInt(3, ticket.getPlayerId().getValue());
-            ps.setDate(4, Date.valueOf(ticket.getDate()));
-            ps.setTime(5, Time.valueOf(ticket.getTime()));
-            ps.setBigDecimal(6, ticket.getPrice());
+            RoomDaoImpl roomDao = new RoomDaoImpl();
+            RoomService roomService = new RoomService(roomDao);
+            Id idByNameRoom = roomService.getIdByName(ticket.getRoomName());
 
-            ps.executeUpdate();
+            preparedStatement.setInt(1, idByNamePlayer.getValue());
+            preparedStatement.setInt(2, idByNameRoom.getValue());
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(ticket.getDateTime()));
+            preparedStatement.setBigDecimal(4, ticket.getPrice().toBigDecimal());
+            preparedStatement.setBigDecimal(5, ticket.getPrice().toBigDecimal());
+
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             throw new DataAccessException("Error inserting Ticket", e);
@@ -71,6 +99,31 @@ public class TicketDaoImpl implements TicketDao {
         }
     }
 
+    public void saveTicketMinimumValues(Ticket ticket) {
+        dbConnection.openConnection();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_TICKET_MINIMUM_VALUES_SQL)) {
+            PlayerDaoImpl playerDao = new PlayerDaoImpl();
+            PlayerService playerService = new PlayerService(playerDao);
+            Id idByNamePlayer = playerService.getIdByName(ticket.getPlayerName());
+
+            RoomDaoImpl roomDao = new RoomDaoImpl();
+            RoomService roomService = new RoomService(roomDao);
+            Id idByNameRoom = roomService.getIdByName(ticket.getRoomName());
+
+            preparedStatement.setInt(1, idByNamePlayer.getValue());
+            preparedStatement.setInt(2, idByNameRoom.getValue());
+            preparedStatement.setBigDecimal(3, ticket.getPrice().toBigDecimal());
+            preparedStatement.setBigDecimal(4, ticket.getPrice().toBigDecimal());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error inserting Ticket", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+    }
     @Override
     public Optional<Ticket> findById(Id id) {
         dbConnection.openConnection();
@@ -91,6 +144,28 @@ public class TicketDaoImpl implements TicketDao {
         } finally {
             dbConnection.closeConnection();
         }
+    }
+
+    public Ticket findTicketById(Id id) {
+        dbConnection.openConnection();
+
+        Ticket ticket = new Ticket();
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(SELECT_BY_ID)) {
+
+            ps.setInt(1, id.getValue());
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                ticket = mapRow(rs);
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding ticket", e);
+        } finally {
+            dbConnection.closeConnection();
+        }
+        return ticket;
     }
 
     public Optional<Ticket> findById(int id) {
@@ -145,10 +220,9 @@ public class TicketDaoImpl implements TicketDao {
 
             ps.setInt(1, ticket.getRoomId().getValue());
             ps.setInt(2, ticket.getPlayerId().getValue());
-            ps.setDate(3, Date.valueOf(ticket.getDate()));
-            ps.setTime(4, Time.valueOf(ticket.getTime()));
-            ps.setBigDecimal(5, ticket.getPrice());
-            ps.setInt(6, ticket.getId().getValue());
+            ps.setTimestamp(3, Timestamp.valueOf(ticket.getDateTime()));
+            ps.setBigDecimal(4, ticket.getPrice().toBigDecimal());
+            ps.setInt(5, ticket.getId().getValue());
 
             return ps.executeUpdate() > 0;
 
@@ -173,7 +247,8 @@ public class TicketDaoImpl implements TicketDao {
             throw new DataAccessException("Error deleting ticket", e);
         } finally {
             dbConnection.closeConnection();
-        }    }
+        }
+    }
 
     @Override
     public boolean deleteByName(Name name) {
@@ -198,15 +273,16 @@ public class TicketDaoImpl implements TicketDao {
     }
 
     private Ticket mapRow(ResultSet rs) throws SQLException {
-        Ticket ticket = new Ticket();
-        rs.getInt("id_ticket");
-        rs.getString("id_room");
-        rs.getString("id_player");
-        rs.getDate("date").toLocalDate();
-        rs.getTime("time").toLocalTime();
-        rs.getDouble("price");
-        return ticket;
+
+        return new Ticket(
+                new Id(rs.getInt("id_ticket")),
+                new Id(rs.getInt("room_id_room")),
+                new Id(rs.getInt("player_id_player")),
+                rs.getTimestamp("date_time").toLocalDateTime(),
+                new Price(rs.getBigDecimal("price"))
+        );
     }
+
 
 }
 

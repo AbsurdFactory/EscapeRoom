@@ -57,4 +57,8 @@ class InventoryServiceTest {
     }
 
 
+    @Test
+    void calculateTotalIncome() {
+        assertTrue(inventoryService.calculateTotalIncome().compareTo(BigDecimal.ZERO) > 0);
+    }
 }
