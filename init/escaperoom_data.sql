@@ -86,7 +86,7 @@ DROP TABLE IF EXISTS `decoration_object`;
 CREATE TABLE `decoration_object` (
   `id_decoration_object` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
-  `description` varchar(250) NOT NULL,
+  `description` varchar(250) NULL,
   `material` varchar(45) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`id_decoration_object`),
