@@ -32,12 +32,10 @@ class EscapeRoomMenuControllerTest {
 
     @BeforeEach
     void setUp() {
-        // Capture console output
         outputStream = new ByteArrayOutputStream();
         originalOut = System.out;
         System.setOut(new PrintStream(outputStream));
 
-        // Initialize DAOs and services
         escapeRoomDao = new EscapeRoomDaoImpl();
         roomDao = new RoomDaoImpl();
         escapeRoomService = new EscapeRoomService(escapeRoomDao);
@@ -46,17 +44,14 @@ class EscapeRoomMenuControllerTest {
 
     @AfterEach
     void tearDown() {
-        // Restore console output
         System.setOut(originalOut);
 
-        // Clean up test data
         try {
             escapeRoomDao.deleteByName(new Name("Test Escape Room"));
             escapeRoomDao.deleteByName(new Name("Another Escape Room"));
             roomDao.deleteByName(new Name("Test Room"));
             roomDao.deleteByName(new Name("Mystery Room"));
         } catch (Exception e) {
-            // Ignore cleanup errors
         }
     }
 
@@ -74,17 +69,14 @@ class EscapeRoomMenuControllerTest {
     @Order(2)
     @DisplayName("Should create a new escape room successfully")
     void testCreateEscapeRoom() throws InputReadException {
-        // Simulate user input: escape room name, then option 4 to exit
         String input = "Test Escape Room\n4\n";
         Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         controller = new EscapeRoomMenuController(scanner);
 
-        // Manually trigger the create method
         escapeRoomService.createEscapeRoom(
                 new EscapeRoom(new Name("Test Escape Room"))
         );
 
-        // Verify the escape room was created
         var escapeRooms = escapeRoomService.getAllEscapeRooms();
         assertTrue(escapeRooms.stream()
                 .anyMatch(er -> er.getName().toString().equals("Test Escape Room")));
@@ -121,10 +113,8 @@ class EscapeRoomMenuControllerTest {
         );
         roomService.createRoom(room);
 
-        // Add room to escape room (in-memory)
         escapeRoom.addRoom(room);
 
-        // Verify
         assertEquals(1, escapeRoom.getRooms().size());
         assertTrue(escapeRoom.getRooms().contains(room));
     }
@@ -133,13 +123,11 @@ class EscapeRoomMenuControllerTest {
     @Order(5)
     @DisplayName("Should handle empty escape room list")
     void testEmptyEscapeRoomList() {
-        // Delete all escape rooms
         var allRooms = escapeRoomService.getAllEscapeRooms();
         for (EscapeRoom er : allRooms) {
             try {
                 escapeRoomDao.deleteByName(new Name(er.getName().toString()));
             } catch (Exception e) {
-                // Continue
             }
         }
 
@@ -153,11 +141,9 @@ class EscapeRoomMenuControllerTest {
     @Order(6)
     @DisplayName("Should create multiple rooms with different difficulty levels")
     void testCreateMultipleRoomsWithDifferentDifficulties() {
-        // Create escape room
         EscapeRoom escapeRoom = new EscapeRoom(new Name("Test Escape Room"));
         escapeRoomService.createEscapeRoom(escapeRoom);
 
-        // Create rooms with different difficulties
         Room easyRoom = new Room(
                 new Name("Easy Room"),
                 new Price(new BigDecimal("30.00")),
@@ -209,7 +195,6 @@ class EscapeRoomMenuControllerTest {
     @Order(9)
     @DisplayName("Should verify escape room details display")
     void testEscapeRoomDetails() {
-        // Create escape room with rooms
         EscapeRoom escapeRoom = new EscapeRoom(new Name("Test Escape Room"));
         escapeRoomService.createEscapeRoom(escapeRoom);
 
@@ -230,7 +215,7 @@ class EscapeRoomMenuControllerTest {
         escapeRoom.addRoom(room1);
         escapeRoom.addRoom(room2);
 
-        // Verify details
+
         assertEquals("Test Escape Room", escapeRoom.getName().toString());
         assertEquals(2, escapeRoom.getRooms().size());
     }
@@ -239,12 +224,10 @@ class EscapeRoomMenuControllerTest {
     @Order(10)
     @DisplayName("Should handle menu navigation input")
     void testMenuNavigation() {
-        // Simulate selecting option 4 (exit)
         String input = "4\n";
         Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
         controller = new EscapeRoomMenuController(scanner);
 
         assertNotNull(controller);
-        // Controller created successfully and can handle input
     }
 }
