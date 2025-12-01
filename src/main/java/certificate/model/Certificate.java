@@ -1,54 +1,53 @@
 package certificate.model;
 
+import commonValueObjects.Id;
+import player.model.Player;
+import room.model.Room;
+
+
 public class Certificate {
 
-    private int id;
-    private String textBody;
-    private CertificateRewardType reward;
-    private int playerId;
-    private int roomId;
+    private Id<Id> id;
+    private CertificateText textBody;
+    private final CertificateRewardType reward;
+    private final Id <Player> playerId;
+    private final Id <Room> roomId;
 
-    public Certificate(CertificateRewardType reward, int playerId, int roomId) {
+    public Certificate(CertificateRewardType reward, Id<Player> playerId, Id<Room> roomId) {
 
         if (reward == null) {
             throw new IllegalArgumentException("Reward cannot be null");
         }
-        if (playerId <= 0) {
-            throw new IllegalArgumentException("Invalid player ID");
-        }
-        if (roomId <= 0) {
-            throw new IllegalArgumentException("Invalid room ID");
-        }
 
         this.reward = reward;
-        this.textBody = reward.getDefaultText();
+        this.textBody = new CertificateText(reward.getDefaultText());
         this.playerId = playerId;
         this.roomId = roomId;
     }
 
-    public Certificate(int id, CertificateRewardType reward, String textBody, int playerId, int roomId) {
+    public Certificate(Id id, CertificateRewardType reward, CertificateText textBody, Id<Player> playerId, Id<Room> roomId) {
         this(reward, playerId, roomId);
         this.id = id;
         this.textBody = textBody;
     }
 
-    public int getId() {
+    public Id<Id> getId() {
         return id;
     }
 
     public String getTextBody() {
-        return textBody;
+        return textBody.toString();
     }
 
     public CertificateRewardType getReward() {
         return reward;
     }
 
-    public int getPlayerId() {
+    public Id<Player> getPlayerId() {
         return playerId;
     }
 
-    public int getRoomId() {
+    public Id<Room> getRoomId() {
         return roomId;
     }
 
@@ -62,6 +61,6 @@ public class Certificate {
                 PlayerId = %s,
                 RoomId = %s
                 }
-                """.formatted(id, reward, textBody, playerId, roomId);
+                """.formatted(id.getValue(), reward, textBody.toString(), playerId.getValue(), roomId.getValue());
     }
 }

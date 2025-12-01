@@ -1,5 +1,6 @@
 package certificate.model;
 
+import commonValueObjects.Id;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,8 +11,7 @@ class CertificateTest {
     void shouldThrowExceptionWhenRewardIsNull() {
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> new Certificate(null, 1, 1)
-        );
+                () -> new Certificate(null, new Id(1), new Id (1)));
         assertEquals("Reward cannot be null", ex.getMessage());
     }
 
@@ -19,21 +19,19 @@ class CertificateTest {
     void shouldThrowExceptionWhenPlayerIdInvalid() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new Certificate(CertificateRewardType.BRONZE_BADGE, 0, 1)
-        );
+                () -> new Certificate(CertificateRewardType.BRONZE_BADGE, new Id (0), new Id (1)));
     }
 
     @Test
     void shouldThrowExceptionWhenRoomIdInvalid() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new Certificate(CertificateRewardType.BRONZE_BADGE, 1, -5)
-        );
+                () -> new Certificate(CertificateRewardType.BRONZE_BADGE, new Id (1), new Id (-5)));
     }
 
     @Test
     void shouldUseDefaultTextFromReward() {
-        Certificate cert = new Certificate(CertificateRewardType.SILVER_BADGE, 10, 20);
+        Certificate cert = new Certificate(CertificateRewardType.SILVER_BADGE, new Id (10), new Id (20));
 
         assertEquals(
                 CertificateRewardType.SILVER_BADGE.getDefaultText(),
@@ -44,22 +42,22 @@ class CertificateTest {
     @Test
     void secondConstructorShouldOverrideTextBody() {
         Certificate cert = new Certificate(
-                99,
+                new Id (99),
                 CertificateRewardType.GOLD_TROPHY,
-                "Custom text",
-                11,
-                22
+                new CertificateText ("Custom text"),
+                new Id (11),
+                new Id (22)
         );
 
-        assertEquals(99, cert.getId());
+        assertEquals(99, cert.getId().getValue());
         assertEquals("Custom text", cert.getTextBody());
-        assertEquals(11, cert.getPlayerId());
-        assertEquals(22, cert.getRoomId());
+        assertEquals(11, cert.getPlayerId().getValue());
+        assertEquals(22, cert.getRoomId().getValue());
     }
 
     @Test
     void toStringShouldNotBeNull() {
-        Certificate cert = new Certificate(CertificateRewardType.BRONZE_BADGE, 1, 1);
+        Certificate cert = new Certificate(CertificateRewardType.BRONZE_BADGE, new Id (1),new Id (1));
         assertNotNull(cert.toString());
     }
 }

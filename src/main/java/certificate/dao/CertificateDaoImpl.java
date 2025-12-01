@@ -2,6 +2,7 @@ package certificate.dao;
 
 import certificate.model.Certificate;
 import certificate.model.CertificateRewardType;
+import certificate.model.CertificateText;
 import commonValueObjects.Id;
 import commonValueObjects.Name;
 import databaseconnection.DatabaseConnection;
@@ -65,8 +66,8 @@ public class CertificateDaoImpl implements CertificateDao {
 
             ps.setString(1, certificate.getTextBody());
             ps.setString(2, certificate.getReward().name());
-            ps.setInt(3, certificate.getPlayerId());
-            ps.setInt(4, certificate.getRoomId());
+            ps.setInt(3, certificate.getPlayerId().getValue());
+            ps.setInt(4, certificate.getRoomId().getValue());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -152,9 +153,9 @@ public class CertificateDaoImpl implements CertificateDao {
 
             ps.setString(1, certificate.getTextBody());
             ps.setString(2, certificate.getReward().name());
-            ps.setInt(3, certificate.getPlayerId());
-            ps.setInt(4, certificate.getRoomId());
-            ps.setInt(5, certificate.getId());
+            ps.setInt(3, certificate.getPlayerId().getValue());
+            ps.setInt(4, certificate.getRoomId().getValue());
+            ps.setInt(5, certificate.getId().getValue());
 
             return ps.executeUpdate() > 0;
 
@@ -203,13 +204,13 @@ public class CertificateDaoImpl implements CertificateDao {
     }
 
     private Certificate mapRow(ResultSet rs) throws SQLException {
-        int id = rs.getInt("id_certificate");
-        String textBody = rs.getString("text_body");
+        Id id = new Id (rs.getInt("id_certificate"));
+        CertificateText textBody = new CertificateText (rs.getString("text_body"));
         CertificateRewardType reward =
                 CertificateRewardType.valueOf(rs.getString("reward"));
 
-        int playerId = rs.getInt("player_id_player");
-        int roomId = rs.getInt("room_id_room");
+        Id playerId = new Id (rs.getInt("player_id_player"));
+        Id roomId = new Id (rs.getInt("room_id_room"));
 
         return new Certificate(id, reward, textBody, playerId, roomId);
     }
