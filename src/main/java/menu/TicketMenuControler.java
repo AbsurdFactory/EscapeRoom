@@ -4,6 +4,7 @@ import commonValueObjects.Id;
 import commonValueObjects.Name;
 import commonValueObjects.Price;
 import player.dao.PlayerDaoImpl;
+import player.service.PlayerService;
 import room.dao.RoomDaoImpl;
 import room.service.RoomService;
 import ticket.dao.TicketDaoImpl;
@@ -87,12 +88,13 @@ public class TicketMenuControler extends BaseMenuController {
 
                 RoomDaoImpl roomDao = new RoomDaoImpl();
                 RoomService roomService = new RoomService(roomDao);
-
+                Name roomName = roomService.getNameById(ticket.getRoomId());
 
                 PlayerDaoImpl playerDao = new PlayerDaoImpl();
-                Name playerName = playerDao.findNameById(ticket.getPlayerId());
+                PlayerService playerService = new PlayerService(playerDao);
+                Name playerName = playerService.findNameById(ticket.getPlayerId());
                 out.println("Player nickname: " + playerName);
-                out.println("Room: " + ticket.getRoomId());
+                out.println("Room: " + roomName);
                 out.println("Date: " + ticket.getLocalDateTime());
                 out.println("Price: " + ticket.getPrice().toBigDecimal() + "€");
             }

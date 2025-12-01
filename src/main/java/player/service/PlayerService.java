@@ -100,5 +100,8 @@ public class PlayerService {
     }
 
 
+    public Name findNameById(Id playerId) {
+        return playerDao.findNameById(playerId);
+    }
 }
 
