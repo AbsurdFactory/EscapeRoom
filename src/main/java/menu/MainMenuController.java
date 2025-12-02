@@ -150,7 +150,7 @@ public class MainMenuController extends BaseMenuController {
 
     private void handleCalculateTotalIncome() {
         System.out.println("\n--- Calculate total income from tickets ---");
-        System.out.println("This feature is not fully implemented yet.");
+        ticketMenuController.calculateTotalIncome();
     }
 
     private void handleNotifyPlayers() {
