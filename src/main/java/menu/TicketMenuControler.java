@@ -111,4 +111,39 @@ public class TicketMenuControler extends BaseMenuController {
         showTicketMenu();
     }
 
+    public void calculateTotalIncome() {
+        System.out.println("\n====================================");
+        System.out.println("   CALCULATE TOTAL INCOME");
+        System.out.println("====================================\n");
+
+        try {
+            ticket.dao.TicketDaoImpl ticketDao = new ticket.dao.TicketDaoImpl();
+            ticket.service.TicketService ticketService = new ticket.service.TicketService(ticketDao);
+
+            java.math.BigDecimal totalIncome = ticketService.calculateTotalIncome();
+            int totalTickets = ticketService.getTotalTicketCount();
+
+            if (totalTickets == 0) {
+                System.out.println("No tickets have been sold yet.");
+                System.out.println("Total income: 0.00€");
+            } else {
+                System.out.println("Total tickets sold: " + totalTickets);
+                System.out.println("Total income: " + String.format("%.2f€", totalIncome));
+
+                java.math.BigDecimal averageIncome = totalIncome.divide(
+                        java.math.BigDecimal.valueOf(totalTickets),
+                        2,
+                        java.math.RoundingMode.HALF_UP
+                );
+                System.out.println("Average income per ticket: " + String.format("%.2f€", averageIncome));
+            }
+
+            System.out.println("\n====================================");
+
+        } catch (Exception e) {
+            System.out.println("\nERROR calculating total income: " + e.getMessage());
+            System.out.println("Please try again later.");
+        }
+    }
+
 }

@@ -5,6 +5,7 @@ import exceptions.DataAccessException;
 import ticket.dao.TicketDaoImpl;
 import ticket.model.Ticket;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class TicketService {
@@ -61,6 +62,31 @@ public class TicketService {
             return ticketDaoImp.delete(id);
         } catch (Exception e) {
             throw new DataAccessException("Error deleting ticket", e);
+        }
+    }
+    public BigDecimal calculateTotalIncome() {
+        try {
+            List<Ticket> allTickets = ticketDaoImp.findAll();
+
+            if (allTickets == null || allTickets.isEmpty()) {
+                return BigDecimal.ZERO;
+            }
+
+            return allTickets.stream()
+                    .map(ticket -> ticket.getPrice().toBigDecimal())
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        } catch (Exception e) {
+            throw new DataAccessException("Error calculating total income", e);
+        }
+    }
+
+    public int getTotalTicketCount() {
+        try {
+            List<Ticket> allTickets = ticketDaoImp.findAll();
+            return allTickets != null ? allTickets.size() : 0;
+        } catch (Exception e) {
+            throw new DataAccessException("Error getting ticket count", e);
         }
     }
 }
